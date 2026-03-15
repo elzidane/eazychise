@@ -1,0 +1,301 @@
+@import "tailwindcss";
+
+:root {
+  --orange: #FF5C1A;
+  --orange-light: #FF8C42;
+  --yellow: #FFCF40;
+  --dark: #111111;
+  --cream: #FFF9F0;
+  --light: #FFF3E5;
+  --gray: #777777;
+  --green: #1B8C5A;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cream);
+  color: var(--dark);
+  overflow-x: hidden;
+}
+
+/* Marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 22s linear infinite;
+  display: flex;
+  white-space: nowrap;
+}
+
+/* Float */
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float { animation: floatY 3s ease-in-out infinite; }
+.animate-float-delay { animation: floatY 3s ease-in-out infinite 0.6s; }
+
+/* Fade animations */
+@keyframes fadeUp {
+  from { transform: translateY(28px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes fadeLeft {
+  from { transform: translateX(50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes dropDown {
+  from { transform: translateY(-80px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes pulse2 {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.animate-drop-down { animation: dropDown 0.6s ease both; }
+.animate-fade-up { animation: fadeUp 0.7s ease both; }
+.animate-fade-up-1 { animation: fadeUp 0.7s ease 0.1s both; }
+.animate-fade-up-2 { animation: fadeUp 0.7s ease 0.2s both; }
+.animate-fade-up-3 { animation: fadeUp 0.7s ease 0.3s both; }
+.animate-fade-up-4 { animation: fadeUp 0.7s ease 0.4s both; }
+.animate-fade-up-5 { animation: fadeUp 0.7s ease 0.5s both; }
+.animate-fade-up-6 { animation: fadeUp 0.7s ease 0.6s both; }
+.animate-fade-left { animation: fadeLeft 0.8s ease 0.4s both; }
+.animate-pulse2 { animation: pulse2 1.5s ease-in-out infinite; }
+
+/* Reveal on scroll (JS adds .revealed) */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card hover image scale */
+.img-zoom img {
+  transition: transform 0.5s ease;
+}
+.img-zoom:hover img {
+  transform: scale(1.08);
+}
+
+@import "tailwindcss";
+
+
+
+
+:root {
+  --orange: #FF5C1A;
+  --orange-light: #FF8C42;
+  --yellow: #FFCF40;
+  --dark: #111111;
+  --cream: #FFF9F0;
+  --light: #FFF3E5;
+  --gray: #777777;
+  --green: #1B8C5A;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cream);
+  color: var(--dark);
+  overflow-x: hidden;
+}
+
+/* Marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 22s linear infinite;
+  display: flex;
+  white-space: nowrap;
+}
+
+/* Float */
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float { animation: floatY 3s ease-in-out infinite; }
+.animate-float-delay { animation: floatY 3s ease-in-out infinite 0.6s; }
+
+/* Fade animations */
+@keyframes fadeUp {
+  from { transform: translateY(28px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes fadeLeft {
+  from { transform: translateX(50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes dropDown {
+  from { transform: translateY(-80px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes pulse2 {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.animate-drop-down { animation: dropDown 0.6s ease both; }
+.animate-fade-up { animation: fadeUp 0.7s ease both; }
+.animate-fade-up-1 { animation: fadeUp 0.7s ease 0.1s both; }
+.animate-fade-up-2 { animation: fadeUp 0.7s ease 0.2s both; }
+.animate-fade-up-3 { animation: fadeUp 0.7s ease 0.3s both; }
+.animate-fade-up-4 { animation: fadeUp 0.7s ease 0.4s both; }
+.animate-fade-up-5 { animation: fadeUp 0.7s ease 0.5s both; }
+.animate-fade-up-6 { animation: fadeUp 0.7s ease 0.6s both; }
+.animate-fade-left { animation: fadeLeft 0.8s ease 0.4s both; }
+.animate-pulse2 { animation: pulse2 1.5s ease-in-out infinite; }
+
+/* Reveal on scroll (JS adds .revealed) */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card hover image scale */
+.img-zoom img {
+  transition: transform 0.5s ease;
+}
+.img-zoom:hover img {
+  transform: scale(1.08);
+}
+
+/* Font utilities */
+.font-syne     { font-family: var(--font-syne), sans-serif; }
+.font-fraunces { font-family: var(--font-fraunces), serif; }
+.font-jakarta  { font-family: var(--font-jakarta), sans-serif; }
+
+@import "tailwindcss";
+
+
+
+
+:root {
+  --orange: #FF5C1A;
+  --orange-light: #FF8C42;
+  --yellow: #FFCF40;
+  --dark: #111111;
+  --cream: #FFF9F0;
+  --light: #FFF3E5;
+  --gray: #777777;
+  --green: #1B8C5A;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cream);
+  color: var(--dark);
+  overflow-x: hidden;
+}
+
+/* Marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 22s linear infinite;
+  display: flex;
+  white-space: nowrap;
+}
+
+/* Float */
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float { animation: floatY 3s ease-in-out infinite; }
+.animate-float-delay { animation: floatY 3s ease-in-out infinite 0.6s; }
+
+/* Fade animations */
+@keyframes fadeUp {
+  from { transform: translateY(28px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes fadeLeft {
+  from { transform: translateX(50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes dropDown {
+  from { transform: translateY(-80px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes pulse2 {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.animate-drop-down { animation: dropDown 0.6s ease both; }
+.animate-fade-up { animation: fadeUp 0.7s ease both; }
+.animate-fade-up-1 { animation: fadeUp 0.7s ease 0.1s both; }
+.animate-fade-up-2 { animation: fadeUp 0.7s ease 0.2s both; }
+.animate-fade-up-3 { animation: fadeUp 0.7s ease 0.3s both; }
+.animate-fade-up-4 { animation: fadeUp 0.7s ease 0.4s both; }
+.animate-fade-up-5 { animation: fadeUp 0.7s ease 0.5s both; }
+.animate-fade-up-6 { animation: fadeUp 0.7s ease 0.6s both; }
+.animate-fade-left { animation: fadeLeft 0.8s ease 0.4s both; }
+.animate-pulse2 { animation: pulse2 1.5s ease-in-out infinite; }
+
+/* Reveal on scroll (JS adds .revealed) */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card hover image scale */
+.img-zoom img {
+  transition: transform 0.5s ease;
+}
+.img-zoom:hover img {
+  transform: scale(1.08);
+}
+
+/* Font utilities */
+.font-syne     { font-family: var(--font-syne), sans-serif; }
+.font-fraunces { font-family: var(--font-fraunces), serif; }
+.font-jakarta  { font-family: var(--font-jakarta), sans-serif; }
+
+/* Shimmer on CTA button */
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+.btn-shimmer:hover::after {
+  transform: translateX(100%);
+}
+
+/* Extra float delay */
+.animate-float-slow { animation: floatY 4s ease-in-out infinite 1.2s; }
