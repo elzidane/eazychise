@@ -107,7 +107,7 @@ export default function FranchiseListings() {
             Semua Franchise F&B
           </p>
           <h2 className="font-fraunces font-black text-[clamp(1.9rem,3vw,3rem)] text-[#111111] leading-[1.08]">
-            Pilih Brand Sesuai{" "}
+            Pilih Brand Sesuai
             <em className="text-[#FF5C1A] not-italic">Budgetmu</em>
           </h2>
         </div>
@@ -148,15 +148,17 @@ export default function FranchiseListings() {
             key={f.name}
             className="f-card group bg-white rounded-[20px] overflow-hidden border border-black/5 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(0,0,0,0.09)] transition-all duration-300 flex flex-col"
           >
-            {/* Image */}
+            {/* Image - only show in development */}
             <div className="h-[190px] relative overflow-hidden flex-shrink-0">
-              <Image
-                src={f.img}
-                alt={f.alt}
-                fill
-                sizes="400px"
-                className="object-cover transition-transform duration-600 group-hover:scale-105"
-              />
+              {process.env.NODE_ENV === 'development' && (
+                <Image
+                  src={f.img}
+                  alt={f.alt}
+                  fill
+                  sizes="400px"
+                  className="object-cover transition-transform duration-600 group-hover:scale-105"
+                />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
               {/* Category pill */}
@@ -199,12 +201,12 @@ export default function FranchiseListings() {
 
               {/* Stats grid */}
               <div className="grid grid-cols-2 gap-3 mb-5">
-                {[
+                {([
                   { label: "Investasi", value: f.invest, highlight: false },
                   { label: "ROI", value: f.roi, highlight: true },
                   { label: "Omzet/Bulan", value: f.omzet, highlight: false },
                   { label: "Mitra Aktif", value: f.mitra, highlight: false },
-                ].map((stat) => (
+                ]).map((stat) => (
                   <div key={stat.label} className="bg-[#F8F8F6] rounded-xl px-3 py-2.5">
                     <p className="text-[0.62rem] text-[#999] uppercase tracking-wider font-semibold mb-0.5">
                       {stat.label}
