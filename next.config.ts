@@ -12,7 +12,10 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "jendelapuspita.com" },
       { protocol: "https", hostname: "www.julo.co.id" },
       { protocol: "https", hostname: "assets.unileversolutions.com" },
-      
+      { protocol: "https", hostname: "www.alfacart.com" },
+      { protocol: "https", hostname: "www.blibli.com" },
+      { protocol: "https", hostname: "www.tokopedia.com" },
+      { protocol: "https", hostname: "www.shopee.co.id" },
     ],
   },
 }
