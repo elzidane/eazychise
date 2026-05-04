@@ -148,17 +148,15 @@ export default function FranchiseListings() {
             key={f.name}
             className="f-card group bg-white rounded-[20px] overflow-hidden border border-black/5 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(0,0,0,0.09)] transition-all duration-300 flex flex-col"
           >
-            {/* Image - only show in development */}
+            {/* Image */}
             <div className="h-[190px] relative overflow-hidden flex-shrink-0">
-              {process.env.NODE_ENV === 'development' && (
-                <Image
-                  src={f.img}
-                  alt={f.alt}
-                  fill
-                  sizes="400px"
-                  className="object-cover transition-transform duration-600 group-hover:scale-105"
-                />
-              )}
+              <Image
+                src={f.img}
+                alt={f.alt}
+                fill
+                sizes="400px"
+                className="object-cover transition-transform duration-600 group-hover:scale-105"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
               {/* Category pill */}
