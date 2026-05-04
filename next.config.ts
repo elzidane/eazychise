@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "asset.kompas.com" },
       { protocol: "https", hostname: "www.dapurkobe.co.id" },
       { protocol: "https", hostname: "richcreme.com" },
+      { protocol: "https", hostname: "jendelapuspita.com" },
+      { protocol: "https", hostname: "www.julo.co.id" },
+      { protocol: "https", hostname: "assets.unileversolutions.com" },
+      
     ],
   },
 }
