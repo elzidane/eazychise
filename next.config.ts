@@ -1,42 +1,38 @@
 import type { NextConfig } from 'next'
 
-const nextConfig: NextConfig = {
-  reactStrictMode: true,
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
-    domains: [
-      'upload.wikimedia.org',
-      'images.unsplash.com',
-      'i.gojekapi.com',
-      'franchiseindo.co.id',
-      'cdn.sanity.io'
-    ],
-
     remotePatterns: [
-      { protocol: "https", hostname: "upload.wikimedia.org", pathname: "/**" },
-      { protocol: "https", hostname: "images.unsplash.com", pathname: "/**" },
-      { protocol: "https", hostname: "i.gojekapi.com", pathname: "/**" },
-      { protocol: "https", hostname: "franchiseindo.co.id", pathname: "/**" },
-      { protocol: "https", hostname: "cdn.sanity.io", pathname: "/**" },
+      {
+        protocol: "https",
+        hostname: "upload.wikimedia.org",
+      },
+      {
+        protocol: "https",
+        hostname: "arengaindonesia.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn1-production-images-kly.akamaized.net",
+      },
+      {
+        protocol: "https",
+        hostname: "asset.kompas.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.dapurkobe.co.id",
+      },
+      {
+        protocol: "https",
+        hostname: "richcreme.com",
+      },
+      // Tambahkan domain lain di sini kalau nambah gambar baru
     ],
-    unoptimized: process.env.NODE_ENV === 'development',
   },
-  compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
-  },
-  // Optional: Add experimental features if needed
-  experimental: {
-    // typedRoutes: true, // Enable if you want type-safe links
-  },
-  // Optional: Configure redirects if needed
-  // async redirects() {
-  //   return [
-  //     {
-  //       source: '/old-path',
-  //       destination: '/new-path',
-  //       permanent: true,
-  //     },
-  //   ]
-  // },
-}
+};
+
+module.exports = nextConfig;
 
 export default nextConfig
