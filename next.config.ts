@@ -15,7 +15,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "www.alfacart.com" },
       { protocol: "https", hostname: "www.blibli.com" },
       { protocol: "https", hostname: "www.tokopedia.com" },
-      { protocol: "https", hostname: "www.shopee.co.id" },
+      { protocol: "https", hostname: "cdn.sanity.io" },
+      { protocol: "https", hostname: "franchiseindo.co.id" },
+      { protocol: "https", hostname: "i.gojekapi.com" },
     ],
   },
 }

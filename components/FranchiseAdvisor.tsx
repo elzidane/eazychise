@@ -7,12 +7,18 @@ type Message = {
 };
 
 const QUICK_PROMPTS = [
-  { icon: "💰", label: "Modal < Rp 5 Juta", text: "Saya punya modal sekitar Rp 3-5 juta, franchise apa yang cocok untuk saya?" },
-  { icon: "☕", label: "Franchise Kopi", text: "Saya tertarik franchise kopi, apa yang perlu saya siapkan?" },
-  { icon: "🌱", label: "Pemula bisnis", text: "Saya belum pernah bisnis sebelumnya, franchise F&B apa yang cocok untuk pemula?" },
-  { icon: "⚡", label: "ROI tercepat", text: "Franchise mana yang paling cepat balik modalnya?" },
+  { icon: "💰", label: "Modal < Rp 5 Juta",  text: "Saya punya modal sekitar Rp 3-5 juta, franchise apa yang cocok untuk saya?" },
+  { icon: "☕", label: "Franchise Kopi",       text: "Saya tertarik franchise kopi, apa yang perlu saya siapkan?" },
+  { icon: "🌱", label: "Pemula bisnis",        text: "Saya belum pernah bisnis sebelumnya, franchise F&B apa yang cocok untuk pemula?" },
+  { icon: "⚡", label: "ROI tercepat",         text: "Franchise mana yang paling cepat balik modalnya?" },
 ];
 
+const GREETING: Message = {
+  role: "assistant",
+  content: "Halo! ✨ Saya EazyChise AI Advisor.\n\nSaya bisa bantu kamu menemukan franchise F&B terbaik — lengkap dengan kalkulasi BEP, estimasi profit, dan analisis risiko!\n\nCeritakan rencana bisnismu, atau pilih pertanyaan di bawah 👇",
+};
+
+// ─── Icons ────────────────────────────────────────────────────
 function SparkleIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
@@ -23,16 +29,20 @@ function SparkleIcon() {
   );
 }
 
+// ─── Typing indicator ─────────────────────────────────────────
 function TypingIndicator() {
   return (
     <div className="flex gap-2.5 items-end">
-      <div className="w-8 h-8 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg,#FF5C1A,#FF8C42)", boxShadow: "0 4px 14px rgba(255,92,26,0.35)" }}>
+      <div className="w-8 h-8 rounded-2xl flex items-center justify-center flex-shrink-0"
+        style={{ background: "linear-gradient(135deg,#FF5C1A,#FF8C42)", boxShadow: "0 4px 14px rgba(255,92,26,0.35)" }}>
         <SparkleIcon />
       </div>
-      <div className="px-4 py-3 rounded-2xl rounded-bl-sm" style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)" }}>
+      <div className="px-4 py-3 rounded-2xl rounded-bl-sm"
+        style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)" }}>
         <div className="flex gap-1.5 items-center" style={{ height: 16 }}>
-          {[0,1,2].map(i => (
-            <span key={i} className="w-1.5 h-1.5 rounded-full" style={{ background: "#FF7A3D", animation: `typingBounce 1.4s ease-in-out ${i*0.16}s infinite` }} />
+          {[0, 1, 2].map(i => (
+            <span key={i} className="w-1.5 h-1.5 rounded-full"
+              style={{ background: "#FF7A3D", animation: `typingBounce 1.4s ease-in-out ${i * 0.16}s infinite` }} />
           ))}
         </div>
       </div>
@@ -40,12 +50,17 @@ function TypingIndicator() {
   );
 }
 
+// ─── Message bubble ───────────────────────────────────────────
 function MessageBubble({ msg, isNew }: { msg: Message; isNew?: boolean }) {
   const isUser = msg.role === "user";
   return (
-    <div className={`flex gap-2.5 items-end ${isUser ? "flex-row-reverse" : "flex-row"}`} style={{ animation: isNew ? "msgSlideIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both" : "none" }}>
+    <div
+      className={`flex gap-2.5 items-end ${isUser ? "flex-row-reverse" : "flex-row"}`}
+      style={{ animation: isNew ? "msgSlideIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both" : "none" }}
+    >
       {!isUser && (
-        <div className="w-8 h-8 rounded-2xl flex items-center justify-center flex-shrink-0 mb-0.5" style={{ background: "linear-gradient(135deg,#FF5C1A,#FF8C42)", boxShadow: "0 4px 14px rgba(255,92,26,0.35)" }}>
+        <div className="w-8 h-8 rounded-2xl flex items-center justify-center flex-shrink-0 mb-0.5"
+          style={{ background: "linear-gradient(135deg,#FF5C1A,#FF8C42)", boxShadow: "0 4px 14px rgba(255,92,26,0.35)" }}>
           <SparkleIcon />
         </div>
       )}
@@ -62,54 +77,78 @@ function MessageBubble({ msg, isNew }: { msg: Message; isNew?: boolean }) {
   );
 }
 
+// ─── Main widget ──────────────────────────────────────────────
 export default function FranchiseAdvisor() {
-  const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", content: "Halo! ✨ Saya GoChise AI Advisor.\n\nSaya siap bantu kamu menemukan franchise F&B yang paling cocok sesuai modal, lokasi, dan tujuan bisnismu. Ceritakan sedikit tentang dirimu — atau pilih pertanyaan di bawah! 🚀" },
-  ]);
-  const [input, setInput] = useState("");
+  const [open, setOpen]       = useState(false);
+  const [messages, setMessages] = useState<Message[]>([GREETING]);
+  const [input, setInput]     = useState("");
   const [loading, setLoading] = useState(false);
-  const [hasNew, setHasNew] = useState(false);
-  const [newMsgIndex, setNewMsgIndex] = useState<number | null>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [hasNew, setHasNew]   = useState(false);
+  const [newMsgIdx, setNewMsgIdx] = useState<number | null>(null);
 
-  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, loading]);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const inputRef  = useRef<HTMLTextAreaElement>(null);
+
   useEffect(() => {
-    if (open) { setHasNew(false); setTimeout(() => inputRef.current?.focus(), 350); }
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
+
+  useEffect(() => {
+    if (open) {
+      setHasNew(false);
+      setTimeout(() => inputRef.current?.focus(), 350);
+    }
   }, [open]);
 
+  // ── Send ────────────────────────────────────────────────────
   async function send(text?: string) {
     const userText = (text ?? input).trim();
     if (!userText || loading) return;
     setInput("");
+
     const newMessages: Message[] = [...messages, { role: "user", content: userText }];
     setMessages(newMessages);
-    setNewMsgIndex(newMessages.length - 1);
+    setNewMsgIdx(newMessages.length - 1);
     setLoading(true);
+
     try {
       const res = await fetch("/api/advisor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages.map(m => ({ role: m.role, content: m.content })) }),
+        body: JSON.stringify({
+          messages: newMessages.map(m => ({ role: m.role, content: m.content })),
+        }),
       });
-      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error ?? `HTTP ${res.status}`); }
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error ?? `HTTP ${res.status}`);
+      }
+
       const data = await res.json();
-      const reply = data.reply ?? "Maaf, terjadi kesalahan.";
-      const next = [...newMessages, { role: "assistant" as const, content: reply }];
+      const reply = data.reply ?? "Maaf, tidak ada respons dari AI.";
+      const next: Message[] = [...newMessages, { role: "assistant", content: reply }];
       setMessages(next);
-      setNewMsgIndex(next.length - 1);
+      setNewMsgIdx(next.length - 1);
       if (!open) setHasNew(true);
+
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Koneksi bermasalah";
-      const next = [...newMessages, { role: "assistant" as const, content: `Maaf, ${msg} 🙏` }];
+      const next: Message[] = [...newMessages, { role: "assistant", content: `⚠️ ${msg}` }];
       setMessages(next);
-      setNewMsgIndex(next.length - 1);
-    } finally { setLoading(false); }
+      setNewMsgIdx(next.length - 1);
+    } finally {
+      setLoading(false);
+    }
   }
 
   function handleKey(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
+  }
+
+  function clearChat() {
+    setMessages([GREETING]);
+    setInput("");
   }
 
   const isGreeting = messages.length === 1 && !loading;
@@ -127,15 +166,19 @@ export default function FranchiseAdvisor() {
         .chat-msgs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:99px}
       `}</style>
 
-      {/* FAB */}
+      {/* ════════════════════ FAB ════════════════════ */}
       <button
         onClick={() => setOpen(o => !o)}
-        aria-label="Buka AI Advisor"
+        aria-label="Buka EazyChise AI Advisor"
         style={{
           position: "fixed", bottom: 24, right: 24, zIndex: 50,
           width: 56, height: 56, borderRadius: 16,
-          background: open ? "linear-gradient(135deg,#2a2a2e,#111)" : "linear-gradient(135deg,#FF5C1A,#FF8C42)",
-          boxShadow: open ? "0 8px 24px rgba(0,0,0,.5)" : "0 8px 32px rgba(255,92,26,.5)",
+          background: open
+            ? "linear-gradient(135deg,#2a2a2e,#111)"
+            : "linear-gradient(135deg,#FF5C1A,#FF8C42)",
+          boxShadow: open
+            ? "0 8px 24px rgba(0,0,0,.5)"
+            : "0 8px 32px rgba(255,92,26,.5)",
           animation: !open ? "fabGlow 2.5s ease-in-out infinite" : "none",
           border: "none", cursor: "pointer",
           display: "flex", alignItems: "center", justifyContent: "center",
@@ -155,7 +198,7 @@ export default function FranchiseAdvisor() {
         )}
       </button>
 
-      {/* Panel */}
+      {/* ════════════════════ PANEL ════════════════════ */}
       <div style={{
         position: "fixed", bottom: 92, right: 24, zIndex: 50,
         width: 380, maxWidth: "calc(100vw - 24px)", height: 560,
@@ -173,7 +216,7 @@ export default function FranchiseAdvisor() {
         pointerEvents: open ? "all" : "none",
       }}>
 
-        {/* Header */}
+        {/* ── Header ────────────────────────────────── */}
         <div style={{
           display: "flex", alignItems: "center", gap: 12,
           padding: "16px 20px",
@@ -181,6 +224,7 @@ export default function FranchiseAdvisor() {
           borderBottom: "1px solid rgba(255,255,255,.07)",
           flexShrink: 0,
         }}>
+          {/* Avatar */}
           <div style={{
             width: 40, height: 40, borderRadius: 14, flexShrink: 0,
             background: "linear-gradient(135deg,#FF5C1A,#FF8C42)",
@@ -190,6 +234,7 @@ export default function FranchiseAdvisor() {
             <SparkleIcon />
           </div>
 
+          {/* Name + status */}
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ fontFamily: "var(--font-syne,sans-serif)", fontWeight: 700, color: "white", fontSize: "0.92rem", letterSpacing: "-0.02em" }}>
@@ -211,11 +256,30 @@ export default function FranchiseAdvisor() {
                 display: "inline-block",
               }} />
               <span style={{ fontSize: "0.67rem", color: "rgba(255,255,255,.35)", letterSpacing: "0.01em" }}>
-                Analisis franchise · EazyChise AI
+                Powered by EazyAI · Aktif sekarang
               </span>
             </div>
           </div>
 
+          {/* Clear button */}
+          <button
+            onClick={clearChat}
+            title="Hapus chat"
+            style={{
+              width: 30, height: 30, borderRadius: 10, cursor: "pointer",
+              background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.08)",
+              color: "rgba(255,255,255,.4)", display: "flex", alignItems: "center", justifyContent: "center",
+              transition: "all .15s", marginRight: 4,
+            }}
+            onMouseEnter={e => { const b = e.currentTarget; b.style.background="rgba(255,255,255,.12)"; b.style.color="white"; }}
+            onMouseLeave={e => { const b = e.currentTarget; b.style.background="rgba(255,255,255,.05)"; b.style.color="rgba(255,255,255,.4)"; }}
+          >
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>
+            </svg>
+          </button>
+
+          {/* Close button */}
           <button
             onClick={() => setOpen(false)}
             style={{
@@ -233,14 +297,16 @@ export default function FranchiseAdvisor() {
           </button>
         </div>
 
-        {/* Messages */}
+        {/* ── Messages ──────────────────────────────── */}
         <div className="chat-msgs" style={{ flex: 1, overflowY: "auto", padding: "16px", display: "flex", flexDirection: "column", gap: 12 }}>
-          {messages.map((m, i) => <MessageBubble key={i} msg={m} isNew={i === newMsgIndex} />)}
+          {messages.map((m, i) => (
+            <MessageBubble key={i} msg={m} isNew={i === newMsgIdx} />
+          ))}
           {loading && <TypingIndicator />}
           <div ref={bottomRef} />
         </div>
 
-        {/* Quick prompts */}
+        {/* ── Quick prompts ────────────────────────── */}
         {isGreeting && (
           <div style={{ padding: "0 12px 12px", flexShrink: 0, borderTop: "1px solid rgba(255,255,255,.06)" }}>
             <p style={{ fontSize: "0.65rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,.22)", margin: "10px 4px 8px" }}>
@@ -267,7 +333,7 @@ export default function FranchiseAdvisor() {
           </div>
         )}
 
-        {/* Input */}
+        {/* ── Input ────────────────────────────────── */}
         <div style={{ padding: isGreeting ? "0 12px 12px" : "10px 12px 12px", flexShrink: 0, borderTop: isGreeting ? "none" : "1px solid rgba(255,255,255,.06)" }}>
           <div
             style={{
@@ -303,7 +369,9 @@ export default function FranchiseAdvisor() {
               disabled={!input.trim() || loading}
               style={{
                 width: 32, height: 32, borderRadius: 10, flexShrink: 0, cursor: "pointer",
-                background: input.trim() && !loading ? "linear-gradient(135deg,#FF5C1A,#FF8C42)" : "rgba(255,255,255,.08)",
+                background: input.trim() && !loading
+                  ? "linear-gradient(135deg,#FF5C1A,#FF8C42)"
+                  : "rgba(255,255,255,.08)",
                 boxShadow: input.trim() && !loading ? "0 4px 14px rgba(255,92,26,.4)" : "none",
                 border: "none", display: "flex", alignItems: "center", justifyContent: "center",
                 opacity: loading ? 0.5 : 1,
