@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Syne, Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+// @ts-ignore
 import "./globals.css";
 import GlobalEffects from "@/components/Globaleffect";
 
