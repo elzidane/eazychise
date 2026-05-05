@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 
 const links = [
   { href: "#cara-kerja", label: "Cara Kerja" },
-  { href: "#unggulan", label: "Unggulan" },
-  { href: "#franchise", label: "Franchise" },
-  { href: "#mengapa", label: "Tentang Kami" },
-  { href: "#ulasan", label: "Ulasan" },
+  { href: "#unggulan",   label: "Unggulan" },
+  { href: "#franchise",  label: "Franchise" },
+  { href: "#mengapa",    label: "Tentang Kami" },
+  { href: "#ulasan",     label: "Ulasan" },
 ];
 
 function scroll(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
@@ -17,7 +17,7 @@ function scroll(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [active, setActive] = useState("");
+  const [active, setActive]     = useState("");
 
   useEffect(() => {
     const onScroll = () => {
@@ -54,7 +54,8 @@ export default function Navbar() {
         >
           {/* Logo */}
           <a
-            href="/"
+            href="#hero"
+            onClick={(e) => scroll(e, "#hero")}
             className={`font-syne font-extrabold text-[1.45rem] tracking-[-1.5px] transition-colors ${
               scrolled ? "text-white" : "text-[#111111]"
             }`}
@@ -147,7 +148,7 @@ export default function Navbar() {
         </nav>
       </div>
 
-      {/* ── Mobile Drawer ── */}
+      {/* ── Mobile Backdrop ── */}
       <div
         onClick={() => setMenuOpen(false)}
         className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
@@ -155,15 +156,17 @@ export default function Navbar() {
         }`}
       />
 
+      {/* ── Mobile Drawer ── */}
       <div
         className={`fixed top-4 right-4 bottom-4 z-50 w-[270px] rounded-2xl bg-[#FFF9F0] shadow-[0_24px_60px_rgba(0,0,0,0.2)] border border-black/6 transition-all duration-300 ease-out lg:hidden flex flex-col overflow-hidden ${
           menuOpen ? "translate-x-0 opacity-100" : "translate-x-[110%] opacity-0"
         }`}
       >
-        {/* Header */}
+        {/* Drawer Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-black/6">
           <span className="font-syne font-extrabold text-[1.2rem] tracking-tight text-[#111]">
-            Go<span className="text-[#FF5C1A]">chise</span>
+            Eazy<span className="text-[#FF5C1A]">Chise</span>
+            {/* ← Fix: was "Gochise" */}
           </span>
           <button
             onClick={() => setMenuOpen(false)}
@@ -173,7 +176,7 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Links */}
+        {/* Drawer Links */}
         <ul className="flex flex-col p-3 gap-0.5 list-none flex-1">
           {links.map((l, i) => {
             const isActive = active === l.href;
@@ -196,7 +199,7 @@ export default function Navbar() {
           })}
         </ul>
 
-        {/* Footer */}
+        {/* Drawer Footer */}
         <div className="p-4 border-t border-black/6 flex flex-col gap-2.5">
           <a
             href="/masuk"
@@ -218,4 +221,4 @@ export default function Navbar() {
       </div>
     </>
   );
-} 
+}

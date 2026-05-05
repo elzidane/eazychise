@@ -19,16 +19,45 @@ export default function Home() {
       <ScrollReveal />
       <Navbar />
       <main>
-        <Hero />
-        <TrustMarquee />
-        <HowItWorks />
-        <FeaturedSection />
-        <FranchiseListings />
-        <WhyUs />
-        <ReactBitsShowcase />
-        <AIAdvisorSection />
-        <Testimonials />
-        <CTASection />
+        <section id="hero">
+          <Hero />
+        </section>
+
+        <section id="trust">
+          <TrustMarquee />
+        </section>
+
+        <section id="how-it-works">
+          <HowItWorks />
+        </section>
+
+        <section id="featured">
+          <FeaturedSection />
+        </section>
+
+        <section id="franchise">
+          <FranchiseListings />
+        </section>
+
+        <section id="why-us">
+          <WhyUs />
+        </section>
+
+        <section id="showcase">
+          <ReactBitsShowcase />
+        </section>
+
+        <section id="ai-advisor">
+          <AIAdvisorSection />
+        </section>
+
+        <section id="testimonials">
+          <Testimonials />
+        </section>
+
+        <section id="cta">
+          <CTASection />
+        </section>
       </main>
       <Footer />
       <FranchiseAdvisor />
