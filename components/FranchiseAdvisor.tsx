@@ -20,7 +20,7 @@ const QUICK_PROMPTS: QuickPrompt[] = [
   { icon: "⚡", label: "ROI tercepat",         text: "Franchise mana yang paling cepat balik modalnya?" },
 ];
 
-const GREETING = {
+const GREETING: Message = {
   role: "assistant",
   content: "Halo! ✨ Saya EazyChise AI Advisor.\n\nSaya bisa bantu kamu menemukan franchise F&B terbaik — lengkap dengan kalkulasi BEP, estimasi profit, dan analisis risiko!\n\nCeritakan rencana bisnismu, atau pilih pertanyaan di bawah 👇",
 };
@@ -246,7 +246,7 @@ export default function FranchiseAdvisor() {
     if (!userText || loading) return;
     setInput("");
 
-    const newMessages = [...messages, { role: "user", content: userText }];
+    const newMessages: Message[] = [...messages, { role: "user" as const, content: userText }];
     setMessages(newMessages);
     setNewMsgIdx(newMessages.length - 1);
     setLoading(true);
@@ -260,13 +260,13 @@ export default function FranchiseAdvisor() {
       if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error ?? `HTTP ${res.status}`); }
       const data = await res.json();
       const reply = data.reply ?? "Maaf, tidak ada respons dari AI.";
-      const next = [...newMessages, { role: "assistant", content: reply }];
+      const next: Message[] = [...newMessages, { role: "assistant" as const, content: reply }];
       setMessages(next);
       setNewMsgIdx(next.length - 1);
       if (!open) setHasNew(true);
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Koneksi bermasalah";
-      const next = [...newMessages, { role: "assistant", content: `⚠️ ${msg}` }];
+      const next: Message[] = [...newMessages, { role: "assistant" as const, content: `⚠️ ${msg}` }];
       setMessages(next);
       setNewMsgIdx(next.length - 1);
     } finally {
@@ -555,7 +555,7 @@ export default function FranchiseAdvisor() {
 
 // ─── Input field (extracted to avoid re-render flicker) ───────
 function InputField({ inputRef, value, onChange, onKeyDown, onSend, loading }: {
-  inputRef: React.RefObject<HTMLTextAreaElement | null>;
+  inputRef: React.RefObject<HTMLTextAreaElement>;
   value: string;
   onChange: (v: string) => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
@@ -594,7 +594,7 @@ function InputField({ inputRef, value, onChange, onKeyDown, onSend, loading }: {
           fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.005em",
         }}
         onInput={e => {
-          const el = e.target;
+          const el = e.target as HTMLTextAreaElement;
           el.style.height = "auto";
           el.style.height = Math.min(el.scrollHeight, 100) + "px";
         }}
