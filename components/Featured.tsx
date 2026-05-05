@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef } from "react";
 
 const items = [
@@ -60,20 +59,20 @@ export default function FeaturedSection() {
             <em className="text-[#FF5C1A] not-italic">Paling Diminati</em>
           </h2>
         </div>
-        <Link
-          href="/franchise"
+        <a
+          href="#franchise"
           className="hidden sm:flex items-center gap-2 text-white/30 hover:text-white/70 text-sm transition-colors group"
         >
           Lihat semua
           <span className="group-hover:translate-x-0.5 transition-transform inline-block">→</span>
-        </Link>
+        </a>
       </div>
 
       {/* ── Layout ── */}
       <div className="grid lg:grid-cols-[1.4fr_1fr] gap-3">
 
         {/* Main card — tall */}
-        <Link href={`/franchise/${main.title.toLowerCase().replace(/\s+/g, '-')}`} className="reveal relative rounded-[18px] overflow-hidden group cursor-pointer h-[440px] lg:h-auto block">
+        <div className="reveal relative rounded-[18px] overflow-hidden group cursor-pointer h-[440px] lg:h-auto">
           <Image
             src={main.src}
             alt={main.alt}
@@ -112,15 +111,14 @@ export default function FeaturedSection() {
               </div>
             </div>
           </div>
-        </Link>
+        </div>
 
         {/* Side cards */}
         <div className="flex flex-col gap-3">
           {rest.map((item, i) => (
-            <Link
-              href={`/franchise/${item.title.toLowerCase().replace(/\s+/g, '-')}`}
+            <div
               key={item.title}
-              className="reveal relative rounded-[18px] overflow-hidden group cursor-pointer flex-1 block"
+              className="reveal relative rounded-[18px] overflow-hidden group cursor-pointer flex-1"
               style={{ minHeight: 190, transitionDelay: `${(i + 1) * 80}ms` }}
             >
               <Image
@@ -145,11 +143,11 @@ export default function FeaturedSection() {
                   <span className="text-white font-semibold text-[0.78rem]">{item.rating}</span>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
 
-          <Link
-            href="/franchise"
+          <a
+            href="#franchise"
             className="reveal flex items-center justify-between px-6 py-4 rounded-[18px] border border-white/7 hover:border-white/15 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-300 group"
           >
             <span className="text-white/35 group-hover:text-white/60 text-[0.85rem] transition-colors">
@@ -158,7 +156,7 @@ export default function FeaturedSection() {
             <div className="w-7 h-7 rounded-full border border-white/10 group-hover:border-[#FF5C1A]/50 flex items-center justify-center text-white/30 group-hover:text-[#FF5C1A] group-hover:translate-x-0.5 transition-all text-xs">
               →
             </div>
-          </Link>
+          </a>
         </div>
       </div>
     </section>

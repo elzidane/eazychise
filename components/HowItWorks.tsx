@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef } from "react";
-import Link from "next/link";
 
 const steps = [
   {
@@ -196,13 +195,13 @@ export default function HowItWorks() {
               <p className="text-white/45 text-[0.78rem] mt-0.5">Rata-rata mitra buka usaha dalam 30 hari</p>
             </div>
           </div>
-          <Link
-            href="/franchise"
+          <a
+            href="#franchise"
             className="flex-shrink-0 flex items-center gap-2 bg-[#FF5C1A] text-white px-6 py-3 rounded-full font-bold text-[0.88rem] shadow-[0_4px_20px_rgba(255,92,26,0.4)] hover:bg-[#e04710] hover:-translate-y-0.5 transition-all"
           >
             Cari Franchise Sekarang
             <span className="text-[#FFCF40] font-black">→</span>
-          </Link>
+          </a>
         </div>
       </div>
 

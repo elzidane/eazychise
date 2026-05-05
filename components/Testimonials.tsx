@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef } from "react";
-import Link from "next/link";
 
 const testimonials = [
   {
@@ -156,13 +155,13 @@ export default function Testimonials() {
           <p className="text-[#555] text-[0.88rem]">
             Bergabung bersama <strong className="text-[#111]">9.000+ mitra aktif</strong> yang sudah membuktikan sendiri.
           </p>
-          <Link
-            href="/franchise"
+          <a
+            href="#franchise"
             className="flex-shrink-0 flex items-center gap-2 bg-[#FF5C1A] text-white px-6 py-2.5 rounded-full font-bold text-[0.85rem] hover:bg-[#e04710] hover:-translate-y-px transition-all shadow-[0_4px_16px_rgba(255,92,26,0.3)]"
           >
             Mulai Sekarang
             <span className="text-[#FFCF40]">→</span>
-          </Link>
+          </a>
         </div>
       </div>
     </section>

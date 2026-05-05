@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 export default function CTASection() {
   return (
     <section id="daftar" className="px-[5%] py-28 bg-[#111111] relative overflow-hidden">
@@ -55,14 +53,14 @@ export default function CTASection() {
 
         {/* CTAs */}
         <div className="flex flex-wrap justify-center gap-3 mb-12">
-          <Link
-            href="/daftar"
+          <a
+            href="#daftar"
             className="group relative flex items-center gap-2 bg-[#FF5C1A] text-white pl-7 pr-6 py-4 rounded-full font-bold text-[0.95rem] shadow-[0_8px_32px_rgba(255,92,26,0.4)] hover:shadow-[0_14px_40px_rgba(255,92,26,0.55)] hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
           >
             <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-500 bg-gradient-to-r from-transparent via-white/15 to-transparent" />
             <span className="relative">Daftar Gratis Sekarang</span>
             <span className="relative text-[#FFCF40] font-black">→</span>
-          </Link>
+          </a>
           <a
             href="https://wa.me/6281234567890?text=Halo%20GoChise%2C%20saya%20mau%20konsultasi%20franchise%20F%26B"
             className="flex items-center gap-2 border border-white/15 text-white/70 hover:text-white hover:border-white/30 px-7 py-4 rounded-full font-semibold text-[0.95rem] transition-all duration-200 hover:-translate-y-0.5"

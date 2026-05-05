@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
 
 type F = {
   img: string; alt: string; cat: string; catKey: string;
@@ -112,13 +111,13 @@ export default function FranchiseListings() {
             <em className="text-[#FF5C1A] not-italic">Budgetmu</em>
           </h2>
         </div>
-        <Link
-          href="/franchise"
+        <a
+          href="#franchise"
           className="group hidden sm:flex items-center gap-2 text-[#777] hover:text-[#FF5C1A] text-sm transition-colors"
         >
           Lihat 320+ franchise
           <span className="group-hover:translate-x-0.5 transition-transform inline-block">→</span>
-        </Link>
+        </a>
       </div>
 
       {/* ── Filter bar ── */}
@@ -221,12 +220,12 @@ export default function FranchiseListings() {
               </div>
 
               {/* CTA */}
-              <Link
-                href={`/franchise/${f.name.toLowerCase().replace(/\s+/g, '-')}`}
+              <a
+                href="#franchise"
                 className="mt-auto block text-center bg-[#111111] text-white py-3 rounded-[12px] font-bold text-[0.85rem] hover:bg-[#FF5C1A] transition-all duration-200 hover:-translate-y-px"
               >
                 Lihat Detail & Daftar
-              </Link>
+              </a>
             </div>
           </div>
         ))}

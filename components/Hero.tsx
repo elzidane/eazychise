@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { BlurText, CountUp, ShinyText, TiltCard } from "./Reactbitseffects";
 
@@ -141,22 +140,22 @@ export default function Hero() {
 
           {/* CTA Buttons */}
           <div className="animate-fade-up-3 flex flex-wrap gap-3 mb-10">
-            <Link
-              href="/franchise"
+            <a
+              href="#franchise"
               className="group relative flex items-center gap-2 bg-[#FF5C1A] text-white pl-6 pr-5 py-3.5 rounded-full font-bold text-[0.93rem] shadow-[0_6px_28px_rgba(255,92,26,0.38)] hover:shadow-[0_12px_36px_rgba(255,92,26,0.5)] hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
             >
               {/* Shimmer */}
               <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-500 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               <span className="relative">🔍 Cari Franchise F&amp;B</span>
               <span className="relative text-[#FFCF40] font-black">→</span>
-            </Link>
-            <Link
-              href="/daftar"
+            </a>
+            <a
+              href="#daftar"
               className="flex items-center gap-2 border-2 border-[#111111]/20 text-[#333] bg-white px-6 py-3.5 rounded-full font-bold text-[0.93rem] hover:border-[#111111] hover:text-[#111111] hover:-translate-y-0.5 transition-all duration-200 shadow-sm"
             >
               Daftarkan Brand
               <span className="text-[#FF5C1A]">→</span>
-            </Link>
+            </a>
           </div>
 
           {/* Stats */}
