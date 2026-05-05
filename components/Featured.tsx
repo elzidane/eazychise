@@ -4,33 +4,22 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 
+import { FRANCHISE_DATA } from "@/lib/franchise-data";
+
+// Get specific brands for the featured section
 const items = [
-  {
-    src: "https://jendelapuspita.com/wp-content/uploads/2025/08/Hotel-Vibes-Street-Food-Price-Nikmati-Promo-Cita-Rasa-Nusantara-di-Swiss-Belexpress-Cideng.jpg",
-    alt: "Street Food Jakarta",
-    cat: "Kuliner",
-    title: "Jajanan Street Food Nusantara",
-    price: "Rp 4 Juta",
-    rating: "4.9",
-    badge: "Terlaris",
-  },
-  {
-    src: "https://www.julo.co.id/sites/default/files/2024-10/Franchise%20XI%20BOBA.webp",
-    alt: "Bubble Tea",
-    cat: "Minuman",
-    title: "Bubble Tea Kekinian",
-    price: "Rp 3,5 Juta",
-    rating: "4.8",
-  },
-  {
-    src: "https://assets.unileversolutions.com/recipes-v2/257958.jpg",
-    alt: "Mie Ayam Bakso",
-    cat: "Kuliner",
-    title: "Mie Ayam & Bakso",
-    price: "Rp 8,5 Juta",
-    rating: "4.7",
-  },
-];
+  FRANCHISE_DATA.find(f => f.name === "Mie Ayam Bakso Mas Agus")!,
+  FRANCHISE_DATA.find(f => f.name === "BubbleBOOM Indonesia")!,
+  FRANCHISE_DATA.find(f => f.name === "Kopiku Nusantara")!,
+].map(f => ({
+  src: f.img,
+  alt: f.alt,
+  cat: f.cat,
+  title: f.name,
+  price: f.invest,
+  rating: f.rating.toString(),
+  badge: f.badge,
+}));
 
 export default function FeaturedSection() {
   const sectionRef = useRef<HTMLElement>(null);
