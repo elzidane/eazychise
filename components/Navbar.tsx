@@ -39,7 +39,7 @@ export default function Navbar() {
         style={{ animation: "dropDown 0.7s ease both" }}
       >
         <nav
-          className={`pointer-events-auto w-full max-w-5xl flex items-center justify-between px-5 rounded-2xl transition-all duration-500 ${
+          className={`pointer-events-auto w-full max-w-7xl flex items-center justify-between px-5 rounded-2xl transition-all duration-500 ${
             scrolled
               ? "bg-[#111111]/90 backdrop-blur-xl shadow-[0_8px_40px_rgba(0,0,0,0.35)] border border-white/8 py-3"
               : "bg-[#FFF9F0]/80 backdrop-blur-md border border-black/6 shadow-[0_4px_20px_rgba(0,0,0,0.06)] py-3.5"
