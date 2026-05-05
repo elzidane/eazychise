@@ -131,7 +131,7 @@ Berikan rekomendasi franchise yang paling cocok dari daftar GoChise (Kopiku Nusa
       const res = await fetch("/api/advisor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: [{ role: "user", content: prompt }] }),
+        body: JSON.stringify({ messages: [{ role: "user" as const, content: prompt }] }),
       });
       const data = await res.json();
       setResult(data.reply ?? "Maaf, terjadi kesalahan. Coba lagi ya!");
