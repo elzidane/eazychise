@@ -41,6 +41,11 @@ export const metadata: Metadata = {
   },
 };
 
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import ScrollReveal from "@/components/ScrollReveal";
+import FranchiseAdvisor from "@/components/FranchiseAdvisor";
+
 export default function RootLayout({
   children,
 }: {
@@ -50,7 +55,11 @@ export default function RootLayout({
     <html lang="id" className={`${syne.variable} ${fraunces.variable} ${jakarta.variable}`}>
       <body className="font-jakarta bg-[#FFF9F0] text-[#111111] overflow-x-hidden">
         <GlobalEffects />
+        <ScrollReveal />
+        <Navbar />
         {children}
+        <Footer />
+        <FranchiseAdvisor />
       </body>
     </html>
   );

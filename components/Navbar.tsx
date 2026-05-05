@@ -1,33 +1,26 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const links = [
-  { href: "#cara-kerja", label: "Cara Kerja" },
-  { href: "#unggulan",   label: "Unggulan" },
-  { href: "#franchise",  label: "Franchise" },
-  { href: "#mengapa",    label: "Tentang Kami" },
-  { href: "#ulasan",     label: "Ulasan" },
+  { href: "/",             label: "Beranda" },
+  { href: "/cara-kerja",   label: "Cara Kerja" },
+  { href: "/unggulan",     label: "Unggulan" },
+  { href: "/franchise",    label: "Franchise" },
+  { href: "/analisis-bep", label: "Analisis BEP" },
+  { href: "/tentang",      label: "Tentang Kami" },
+  { href: "/ulasan",       label: "Ulasan" },
 ];
-
-function scroll(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
-  e.preventDefault();
-  document.querySelector(href)?.scrollIntoView({ behavior: "smooth", block: "start" });
-}
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [active, setActive]     = useState("");
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 50);
-      for (const l of [...links].reverse()) {
-        const el = document.getElementById(l.href.slice(1));
-        if (el && window.scrollY >= el.offsetTop - 130) {
-          setActive(l.href); break;
-        }
-      }
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -53,26 +46,24 @@ export default function Navbar() {
           }`}
         >
           {/* Logo */}
-          <a
-            href="#hero"
-            onClick={(e) => scroll(e, "#hero")}
+          <Link
+            href="/"
             className={`font-syne font-extrabold text-[1.45rem] tracking-[-1.5px] transition-colors ${
               scrolled ? "text-white" : "text-[#111111]"
             }`}
           >
             Eazy<span className="text-[#FF5C1A]">Chise</span>
             <sup className="text-[0.4rem] text-[#FF5C1A] font-bold tracking-widest ml-0.5 align-super">F&B</sup>
-          </a>
+          </Link>
 
           {/* Desktop links */}
           <ul className="hidden lg:flex items-center gap-0.5 list-none">
             {links.map((l) => {
-              const isActive = active === l.href;
+              const isActive = pathname === l.href;
               return (
                 <li key={l.href}>
-                  <a
+                  <Link
                     href={l.href}
-                    onClick={(e) => scroll(e, l.href)}
                     className={`relative px-3.5 py-2 text-[0.83rem] font-medium rounded-xl transition-all duration-200 ${
                       isActive
                         ? scrolled
@@ -87,7 +78,7 @@ export default function Navbar() {
                     {isActive && (
                       <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#FF5C1A]" />
                     )}
-                  </a>
+                  </Link>
                 </li>
               );
             })}
@@ -95,33 +86,32 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
-            <a
+            <Link
               href="/masuk"
               className={`text-[0.83rem] font-semibold transition-colors ${
                 scrolled ? "text-white/50 hover:text-white" : "text-[#555] hover:text-[#111]"
               }`}
             >
               Masuk
-            </a>
-            <a
-              href="#daftar"
-              onClick={(e) => scroll(e, "#daftar")}
+            </Link>
+            <Link
+              href="/daftar"
               className="flex items-center gap-1.5 bg-[#FF5C1A] text-white pl-5 pr-4 py-2 rounded-xl text-[0.83rem] font-bold shadow-[0_4px_16px_rgba(255,92,26,0.35)] hover:bg-[#e04710] hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(255,92,26,0.45)] transition-all duration-200"
             >
               Mulai Gratis
               <span className="text-[#FFCF40] font-black text-[0.9rem]">→</span>
-            </a>
+            </Link>
           </div>
 
           {/* Mobile: CTA + Burger */}
           <div className="lg:hidden flex items-center gap-2.5">
-            <a
-              href="#daftar"
-              onClick={(e) => { scroll(e, "#daftar"); setMenuOpen(false); }}
+            <Link
+              href="/daftar"
+              onClick={() => setMenuOpen(false)}
               className="text-[0.75rem] font-bold bg-[#FF5C1A] text-white px-3.5 py-1.5 rounded-lg shadow-[0_4px_12px_rgba(255,92,26,0.3)]"
             >
               Mulai Gratis
-            </a>
+            </Link>
             <button
               onClick={() => setMenuOpen((o) => !o)}
               aria-label="Toggle menu"
@@ -179,12 +169,12 @@ export default function Navbar() {
         {/* Drawer Links */}
         <ul className="flex flex-col p-3 gap-0.5 list-none flex-1">
           {links.map((l, i) => {
-            const isActive = active === l.href;
+            const isActive = pathname === l.href;
             return (
               <li key={l.href} style={{ transitionDelay: `${i * 40}ms` }}>
-                <a
+                <Link
                   href={l.href}
-                  onClick={(e) => { scroll(e, l.href); setMenuOpen(false); }}
+                  onClick={() => setMenuOpen(false)}
                   className={`flex items-center justify-between px-4 py-3 rounded-xl text-[0.88rem] font-medium transition-all ${
                     isActive
                       ? "bg-[#FF5C1A]/10 text-[#FF5C1A]"
@@ -193,7 +183,7 @@ export default function Navbar() {
                 >
                   {l.label}
                   {isActive && <span className="w-1.5 h-1.5 rounded-full bg-[#FF5C1A]" />}
-                </a>
+                </Link>
               </li>
             );
           })}
@@ -201,19 +191,20 @@ export default function Navbar() {
 
         {/* Drawer Footer */}
         <div className="p-4 border-t border-black/6 flex flex-col gap-2.5">
-          <a
+          <Link
             href="/masuk"
+            onClick={() => setMenuOpen(false)}
             className="text-center py-2.5 rounded-xl text-[0.85rem] font-semibold text-[#555] hover:text-[#111] hover:bg-black/4 transition-all"
           >
             Masuk ke Akun
-          </a>
-          <a
-            href="#daftar"
-            onClick={(e) => { scroll(e, "#daftar"); setMenuOpen(false); }}
+          </Link>
+          <Link
+            href="/daftar"
+            onClick={() => setMenuOpen(false)}
             className="text-center bg-[#FF5C1A] text-white py-3 rounded-xl text-[0.88rem] font-bold shadow-[0_4px_16px_rgba(255,92,26,0.3)] hover:bg-[#e04710] transition-all"
           >
             Mulai Gratis Sekarang →
-          </a>
+          </Link>
           <p className="text-center text-[0.68rem] text-[#bbb]">
             320+ franchise F&amp;B terpercaya 🇮🇩
           </p>
