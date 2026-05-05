@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -76,14 +77,14 @@ function AnalysisCard({ content, onReset }: { content: string; onReset: () => vo
         >
           ↺ Ulangi Analisis
         </button>
-        <a
-          href="#franchise"
+        <Link
+          href="/franchise"
           style={{ flex: 2, padding: "11px", borderRadius: 12, cursor: "pointer", background: "linear-gradient(135deg,#FF5C1A,#FF8C42)", border: "none", color: "white", fontSize: "0.82rem", fontWeight: 700, textAlign: "center", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, boxShadow: "0 6px 20px rgba(255,92,26,.35)", transition: "transform .2s" }}
           onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.transform="translateY(-1px)"; }}
           onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.transform="translateY(0)"; }}
         >
           Lihat Franchise Cocok →
-        </a>
+        </Link>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Mail, Lock, ArrowRight, Github } from "lucide-react";
+import { Mail, Lock, ArrowRight, Github, ArrowLeft, ShieldCheck } from "lucide-react";
 
 export default function LoginPage() {
   const handleSubmit = (e: React.FormEvent) => {
@@ -10,7 +10,18 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#FFF9F0] flex items-center justify-center p-6 relative overflow-hidden">
+    <main className="min-h-screen bg-[#FFF9F0] flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      {/* Back Button */}
+      <Link 
+        href="/" 
+        className="fixed top-8 left-8 z-50 flex items-center gap-2 text-[#777] hover:text-[#111] font-bold text-sm transition-all group"
+      >
+        <div className="w-8 h-8 rounded-full border border-black/5 flex items-center justify-center bg-white shadow-sm group-hover:border-[#FF5C1A] group-hover:text-[#FF5C1A] transition-all">
+          <ArrowLeft className="w-4 h-4" />
+        </div>
+        Kembali ke Beranda
+      </Link>
+
       {/* Background Decor */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-0">
         <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-[#FF5C1A]/5 rounded-full blur-[120px]" />
@@ -20,42 +31,47 @@ export default function LoginPage() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md relative z-10"
+        className="w-full max-w-[440px] relative z-10"
       >
-        <div className="text-center mb-10">
-          <Link href="/" className="font-syne font-extrabold text-3xl text-[#111] tracking-tighter mb-4 inline-block">
-            Eazy<span className="text-[#FF5C1A]">Chise</span>
-          </Link>
-          <h1 className="font-syne font-extrabold text-4xl text-[#111] mb-2 tracking-tight">Selamat Datang</h1>
-          <p className="text-gray-500">Masuk untuk mengelola franchise impianmu.</p>
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 bg-[#FF5C1A]/10 text-[#FF5C1A] px-4 py-1.5 rounded-full text-[0.7rem] font-black uppercase tracking-widest mb-6">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            Secure Login
+          </div>
+          <h1 className="font-syne font-extrabold text-4xl text-[#111] mb-3 tracking-tighter leading-none">
+            Selamat <span className="text-[#FF5C1A]">Datang</span>
+          </h1>
+          <p className="text-gray-500 text-sm">Masuk untuk mengelola franchise impianmu.</p>
         </div>
 
-        <div className="bg-white p-8 sm:p-10 rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.06)] border border-black/5">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Card */}
+        <div className="bg-white p-8 sm:p-10 rounded-[40px] shadow-[0_32px_64px_rgba(0,0,0,0.06)] border border-black/5">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-bold text-[#111] mb-2">Alamat Email</label>
+              <label className="block text-[0.8rem] font-black text-[#111] uppercase tracking-wider mb-2 ml-1">Alamat Email</label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input 
                   type="email" 
                   placeholder="nama@email.com"
-                  className="w-full bg-[#F8F8F6] border border-black/5 rounded-2xl py-3.5 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-[#FF5C1A]/20 focus:border-[#FF5C1A] transition-all"
+                  className="w-full bg-[#F8F8F6] border border-black/5 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-4 focus:ring-[#FF5C1A]/10 focus:border-[#FF5C1A] transition-all font-medium"
                   required
                 />
               </div>
             </div>
 
             <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-sm font-bold text-[#111]">Password</label>
-                <Link href="#" className="text-xs font-bold text-[#FF5C1A] hover:underline">Lupa Password?</Link>
+              <div className="flex justify-between items-center mb-2 ml-1">
+                <label className="block text-[0.8rem] font-black text-[#111] uppercase tracking-wider">Password</label>
+                <Link href="#" className="text-xs font-bold text-[#FF5C1A] hover:underline">Lupa?</Link>
               </div>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input 
                   type="password" 
                   placeholder="••••••••"
-                  className="w-full bg-[#F8F8F6] border border-black/5 rounded-2xl py-3.5 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-[#FF5C1A]/20 focus:border-[#FF5C1A] transition-all"
+                  className="w-full bg-[#F8F8F6] border border-black/5 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-4 focus:ring-[#FF5C1A]/10 focus:border-[#FF5C1A] transition-all font-medium"
                   required
                 />
               </div>
@@ -63,10 +79,10 @@ export default function LoginPage() {
 
             <button 
               type="submit"
-              className="w-full bg-[#111111] text-white py-4 rounded-2xl font-bold text-lg shadow-[0_8px_24px_rgba(0,0,0,0.1)] hover:bg-[#FF5C1A] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+              className="w-full bg-[#111111] text-white py-4.5 rounded-2xl font-bold text-[0.95rem] shadow-[0_12px_24px_rgba(0,0,0,0.12)] hover:bg-[#FF5C1A] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 mt-2 group"
             >
               Masuk Sekarang
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </form>
 
@@ -74,25 +90,26 @@ export default function LoginPage() {
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-black/5"></div>
             </div>
-            <span className="relative px-4 bg-white text-xs font-bold text-gray-400 uppercase tracking-widest">Atau masuk dengan</span>
+            <span className="relative px-4 bg-white text-[0.65rem] font-black text-gray-400 uppercase tracking-widest">Atau masuk dengan</span>
           </div>
 
-          <div className="mt-8 grid grid-cols-2 gap-4">
-            <button className="flex items-center justify-center gap-2 bg-white border border-black/10 py-3 rounded-2xl hover:bg-gray-50 transition-colors">
+          <div className="mt-8 grid grid-cols-2 gap-3">
+            <button className="flex items-center justify-center gap-2.5 bg-white border border-black/5 py-3.5 rounded-2xl hover:bg-gray-50 transition-all hover:shadow-sm">
               <img src="https://www.google.com/favicon.ico" className="w-4 h-4" alt="Google" />
-              <span className="text-sm font-bold">Google</span>
+              <span className="text-sm font-bold text-[#333]">Google</span>
             </button>
-            <button className="flex items-center justify-center gap-2 bg-[#111] text-white py-3 rounded-2xl hover:bg-gray-800 transition-colors">
+            <button className="flex items-center justify-center gap-2.5 bg-[#111] text-white py-3.5 rounded-2xl hover:bg-gray-800 transition-all hover:shadow-sm">
               <Github className="w-4 h-4" />
               <span className="text-sm font-bold">Github</span>
             </button>
           </div>
         </div>
 
+        {/* Footer */}
         <div className="mt-8 text-center">
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-500 text-sm font-medium">
             Belum punya akun?{" "}
-            <Link href="/daftar" className="text-[#FF5C1A] font-bold hover:underline">
+            <Link href="/daftar" className="text-[#FF5C1A] font-bold hover:underline decoration-2 underline-offset-4">
               Daftar Gratis
             </Link>
           </p>

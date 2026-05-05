@@ -31,6 +31,11 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
+  // Hide Navbar on Login and Register pages
+  if (pathname === "/masuk" || pathname === "/daftar") {
+    return null;
+  }
+
   return (
     <>
       {/* ── Floating Nav ── */}

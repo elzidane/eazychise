@@ -212,7 +212,7 @@ export default function ReactBitsShowcase() {
             </p>
           </div>
           <a
-            href="#ai-advisor"
+            href="/"
             style={{
               padding: "14px 28px",
               borderRadius: 14,
