@@ -246,7 +246,7 @@ export default function FranchiseAdvisor() {
     if (!userText || loading) return;
     setInput("");
 
-    const newMessages = [...messages, { role: "user", content: userText }];
+    const newMessages: Message[] = [...messages, { role: "user" as const, content: userText }];
     setMessages(newMessages);
     setNewMsgIdx(newMessages.length - 1);
     setLoading(true);
@@ -260,13 +260,13 @@ export default function FranchiseAdvisor() {
       if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error ?? `HTTP ${res.status}`); }
       const data = await res.json();
       const reply = data.reply ?? "Maaf, tidak ada respons dari AI.";
-      const next = [...newMessages, { role: "assistant", content: reply }];
+      const next: Message[] = [...newMessages, { role: "assistant" as const, content: reply }];
       setMessages(next);
       setNewMsgIdx(next.length - 1);
       if (!open) setHasNew(true);
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Koneksi bermasalah";
-      const next = [...newMessages, { role: "assistant", content: `⚠️ ${msg}` }];
+      const next: Message[] = [...newMessages, { role: "assistant" as const, content: `⚠️ ${msg}` }];
       setMessages(next);
       setNewMsgIdx(next.length - 1);
     } finally {
