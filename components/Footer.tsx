@@ -4,21 +4,21 @@ type NavItem = { label: string; href: string };
 
 const navLinks: Record<string, NavItem[]> = {
   "Franchise F&B": [
-    { label: "Cari Franchise",       href: "#franchise" },
-    { label: "Franchise Terlaris",   href: "#unggulan" },
-    { label: "Modal < Rp 5 Juta",   href: "#franchise" },
-    { label: "Franchise Minuman",    href: "#franchise" },
-    { label: "Franchise Kuliner",    href: "#franchise" },
+    { label: "Cari Franchise",       href: "/franchise" },
+    { label: "Franchise Terlaris",   href: "/unggulan" },
+    { label: "Modal < Rp 5 Juta",   href: "/franchise" },
+    { label: "Franchise Minuman",    href: "/franchise" },
+    { label: "Franchise Kuliner",    href: "/franchise" },
   ],
   "Franchisor": [
-    { label: "Daftarkan Brand",  href: "#daftar" },
-    { label: "Kelola Mitra",     href: "/dashboard" },
-    { label: "Dashboard Brand",  href: "/dashboard" },
-    { label: "Paket Promosi",    href: "#daftar" },
-    { label: "Panduan Listing",  href: "#cara-kerja" },
+    { label: "Daftarkan Brand",  href: "/daftar" },
+    { label: "Kelola Mitra",     href: "/masuk" },
+    { label: "Dashboard Brand",  href: "/masuk" },
+    { label: "Paket Promosi",    href: "/daftar" },
+    { label: "Panduan Listing",  href: "/cara-kerja" },
   ],
   "Perusahaan": [
-    { label: "Tentang EazyChise",    href: "#mengapa" },
+    { label: "Tentang EazyChise",    href: "/tentang" },
     { label: "Blog & Tips Bisnis", href: "/blog" },
     { label: "Karir",              href: "/karir" },
     { label: "Hubungi Kami",       href: "https://wa.me/6281234567890" },
