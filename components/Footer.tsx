@@ -23,7 +23,7 @@ const navLinks: Record<string, NavItem[]> = {
     { label: "Tentang EazyChise", href: "/tentang" },
     { label: "Blog & Tips Bisnis", href: "/blog" },
     { label: "Karir", href: "/karir" },
-    { label: "Hubungi Kami", href: "https://wa.me/6281234567890" },
+    { label: "Hubungi Kami", href: "https://wa.me/6287792735999" },
     { label: "Syarat & Kebijakan", href: "/kebijakan" },
   ],
 };
@@ -51,7 +51,7 @@ const socials = [
   },
   {
     label: "WhatsApp",
-    href: "https://wa.me/6281234567890",
+    href: "https://wa.me/6287792735999",
     path: "M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z",
   },
 ];
