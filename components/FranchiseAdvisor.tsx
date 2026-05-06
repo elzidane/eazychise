@@ -396,10 +396,20 @@ export default function FranchiseAdvisor() {
         .eazy-msgs::-webkit-scrollbar-thumb{background:rgba(255,150,60,.18);border-radius:99px}
         .eazy-msgs::-webkit-scrollbar-thumb:hover{background:rgba(255,150,60,.35)}
         .eazy-input::placeholder{color:rgba(255,255,255,.25)!important}
+        
+        .eazy-fab-container {
+          right: 24px;
+          transition: right 0.5s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        @media (max-width: 1023px) {
+          body.nav-menu-open .eazy-fab-container {
+            right: calc(100% - 80px);
+          }
+        }
       `}</style>
 
       {/* ════ FAB ════ */}
-      <div style={{ position: "fixed", bottom: 24, right: 24, zIndex: 9999 }}>
+      <div className="eazy-fab-container" style={{ position: "fixed", bottom: 24, zIndex: 9999 }}>
         {/* Pulse rings (only when closed) */}
         {!open && (
           <>

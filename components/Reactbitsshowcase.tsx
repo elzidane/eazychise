@@ -205,7 +205,7 @@ export default function ReactBitsShowcase() {
           <div>
             <ShinyText
               text="Siap mulai perjalanan franchise-mu?"
-              speed={4}
+              speed={8}
               className="text-white font-bold text-[1.3rem] block mb-2"
             />
             <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.88rem" }}>
