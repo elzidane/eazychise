@@ -59,7 +59,7 @@ export function BlurText({ text, delay = 80, animateBy = "words", className = ""
               display: "inline-block",
               animation: visible ? `blurIn .6s cubic-bezier(.22,1,.36,1) ${i * delay}ms both` : "none",
               opacity: visible ? 1 : 0,
-              filter: visible ? "none" : "blur(12px)",
+              filter: visible ? "none" : "blur(4px)",
               whiteSpace: animateBy === "words" ? "pre" : "normal",
             }}
           >
@@ -134,13 +134,15 @@ export function ShinyText({ text, speed = 3, className = "", shimmerWidth = 100 
       <span
         className={className}
         style={{
-          background: `linear-gradient(90deg, currentColor 40%, rgba(255,255,255,0.9) 50%, rgba(255,200,100,1) 55%, rgba(255,255,255,0.9) 60%, currentColor 70%)`,
+          backgroundImage: `linear-gradient(90deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.75) 40%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.75) 60%, rgba(255,255,255,0.75) 100%)`,
+          backgroundColor: "transparent",
           backgroundSize: `${shimmerWidth * 3}% 100%`,
           backgroundClip: "text",
           WebkitBackgroundClip: "text",
           color: "transparent",
           animation: `shinyMove ${speed}s linear infinite`,
           display: "inline-block",
+          fontWeight: "inherit",
         }}
       >
         {text}
@@ -170,7 +172,8 @@ export function GradientText({ text, colors = ["#FF5C1A", "#FF8C42", "#FFCF40", 
       <span
         className={className}
         style={{
-          background: `linear-gradient(90deg, ${colors.join(", ")})`,
+          backgroundImage: `linear-gradient(90deg, ${colors.join(", ")})`,
+          backgroundColor: "transparent",
           backgroundSize: "300% 100%",
           backgroundClip: "text",
           WebkitBackgroundClip: "text",

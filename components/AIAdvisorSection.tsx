@@ -212,7 +212,13 @@ Berikan rekomendasi franchise yang paling cocok dari daftar EazyChise (Kopiku Nu
           </div>
           <h2 style={{ fontFamily: "var(--font-syne,sans-serif)", fontSize: "clamp(2rem,4vw,3rem)", fontWeight: 800, color: "white", letterSpacing: "-0.03em", lineHeight: 1.1, margin: "0 0 16px" }}>
             Temukan Franchise<br />
-            <span style={{ background: "linear-gradient(90deg,#FF5C1A,#FF8C42,#FFCF40)", backgroundClip: "text", WebkitBackgroundClip: "text", color: "transparent", backgroundSize: "200% auto", animation: "shimmer 4s linear infinite" }}>
+            <span style={{ 
+                backgroundImage: "linear-gradient(90deg,#FF5C1A 0%,#FFCF40 50%,#FF5C1A 100%)",
+                backgroundColor: "transparent",
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
+                color: "transparent",
+                backgroundSize: "200% auto", animation: "shimmer 3s linear infinite" }}>
               Paling Cocok
             </span>
             {" "}Untukmu

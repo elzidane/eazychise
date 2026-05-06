@@ -40,7 +40,8 @@ export default function CTASection() {
           <em
             className="not-italic relative inline-block"
             style={{
-              background: "linear-gradient(135deg, #FFCF40 0%, #FF8C42 100%)",
+              backgroundImage: "linear-gradient(135deg, #FFCF40 0%, #FF8C42 100%)",
+              backgroundColor: "transparent",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}

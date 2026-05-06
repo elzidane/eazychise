@@ -537,7 +537,8 @@ export default function FranchiseAdvisor() {
               <span style={{
                 fontFamily: "'Syne', sans-serif", fontWeight: 800,
                 fontSize: "0.95rem", letterSpacing: "-0.03em",
-                background: "linear-gradient(135deg,#fff 30%,rgba(255,180,80,0.9))",
+                backgroundImage: "linear-gradient(135deg,#fff 20%,#FFCF40 100%)",
+                backgroundColor: "transparent",
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
               }}>
