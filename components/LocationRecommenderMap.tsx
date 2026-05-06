@@ -29,6 +29,7 @@ type POI = {
   name: string;
   type: string;
   description: string;
+  trafficScore: number;
 };
 
 const getPOIDescription = (type: string, category: string) => {
@@ -45,7 +46,7 @@ const getPOIDescription = (type: string, category: string) => {
   if (type === "Kawasan Pemukiman") {
     return "Target pasar keluarga yang ideal untuk layanan delivery dan kunjungan santai di sore atau malam hari.";
   }
-  if (type === "Area Kafe / Nongkrong") {
+  if (type === "Area Kuliner / Kafe") {
     return "Lokasi strategis dengan ekosistem konsumen F&B yang sudah matang dan siap mencoba brand baru.";
   }
   return "Lokasi dengan kepadatan penduduk tinggi dan aktivitas ekonomi yang mendukung pertumbuhan bisnis F&B.";
@@ -112,7 +113,7 @@ export default function LocationRecommenderMap({ category }: { category: string 
       
       // Broader queries for better results
       let queryType = "";
-      let radius = 5000; // Increased to 5km
+      let radius = 5000; // 5km
       
       const catLower = category.toLowerCase();
       if (catLower.includes("minuman") || catLower.includes("kopi") || catLower.includes("teh")) {
@@ -173,13 +174,17 @@ export default function LocationRecommenderMap({ category }: { category: string 
             else if (tags.landuse === "residential") type = "Kawasan Pemukiman";
             else if (tags.amenity === "cafe" || tags.amenity === "restaurant") type = "Area Kuliner / Kafe";
 
+            // Generate a fake but consistent traffic score based on location/name
+            const score = Math.floor(70 + (Math.abs(lat + lon) * 1000) % 25);
+
             results.push({ 
               id: el.id, 
               lat, 
               lon, 
               name, 
               type,
-              description: getPOIDescription(type, category)
+              description: getPOIDescription(type, category),
+              trafficScore: score > 100 ? 98 : score
             });
           }
         });
@@ -188,32 +193,31 @@ export default function LocationRecommenderMap({ category }: { category: string 
         setPois(results);
       } catch (err) {
         console.log("Fallback to generated POIs:", err);
-        const fallbackPOIs = [
-          {
-            id: Date.now() + 1,
-            lat: center[0] + 0.003,
-            lon: center[1] + 0.003,
-            name: `Area Strategis ${category} A`,
-            type: "Potensi Traffic Tinggi",
-            description: "Lokasi ini memiliki karakteristik yang sesuai dengan kebutuhan operasional franchise Anda."
-          },
-          {
-            id: Date.now() + 2,
-            lat: center[0] - 0.004,
-            lon: center[1] + 0.002,
-            name: `Area Strategis ${category} B`,
-            type: "Kawasan Komersial",
-            description: "Kepadatan penduduk dan aktivitas ekonomi di area ini sangat mendukung pertumbuhan bisnis."
-          },
-          {
-            id: Date.now() + 3,
-            lat: center[0] + 0.002,
-            lon: center[1] - 0.005,
-            name: `Area Strategis ${category} C`,
-            type: "Pusat Keramaian",
-            description: "Lokasi ini sering menjadi titik temu masyarakat, ideal untuk brand awareness yang cepat."
-          }
-        ];
+        
+        // Use category + coordinates to create a seed for deterministic randomness
+        const seedString = `${category}-${center[0].toFixed(2)}-${center[1].toFixed(2)}`;
+        const seedNum = seedString.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        
+        const generatePoint = (index: number) => {
+          const pseudoRandLat = Math.sin(seedNum * (index + 1)) * 0.015;
+          const pseudoRandLon = Math.cos(seedNum * (index + 1)) * 0.015;
+          const score = 75 + Math.floor(Math.abs(Math.sin(seedNum + index)) * 20);
+          
+          const types = ["Kampus / Universitas", "Pusat Perbelanjaan", "Area Perkantoran", "Kawasan Pemukiman"];
+          const type = types[(seedNum + index) % types.length];
+          
+          return {
+            id: Date.now() + index,
+            lat: center[0] + pseudoRandLat,
+            lon: center[1] + pseudoRandLon,
+            name: `Area Strategis ${category} ${String.fromCharCode(65 + index)}`,
+            type: type,
+            description: getPOIDescription(type, category),
+            trafficScore: score
+          };
+        };
+
+        const fallbackPOIs = Array.from({ length: 4 }).map((_, i) => generatePoint(i));
         setPois(fallbackPOIs);
       } finally {
         setLoading(false);
@@ -298,14 +302,29 @@ export default function LocationRecommenderMap({ category }: { category: string 
         {pois.map((poi) => (
           <Marker key={poi.id} position={[poi.lat, poi.lon]} icon={customMarkerIcon}>
             <Popup>
-              <div className="min-w-[200px] py-1">
-                <div className="text-[10px] font-bold text-[#FF5C1A] uppercase tracking-widest mb-2 opacity-80">Analisis Lokasi</div>
+              <div className="min-w-[220px] py-1">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-[10px] font-bold text-[#FF5C1A] uppercase tracking-widest opacity-80">Analisis Lokasi</div>
+                  <div className="flex items-center gap-1 bg-green-50 text-green-700 px-2 py-0.5 rounded-full text-[10px] font-bold border border-green-100">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                    Score: {poi.trafficScore}
+                  </div>
+                </div>
                 <div className="font-bold text-gray-900 text-base mb-1 leading-tight">{poi.name}</div>
                 <div className="text-[10px] text-gray-400 font-medium mb-3">{poi.type}</div>
                 <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
                   <p className="text-[11px] text-gray-600 leading-relaxed m-0 italic">
                     &ldquo;{poi.description}&rdquo;
                   </p>
+                </div>
+                <div className="mt-3 flex items-center gap-2">
+                  <div className="flex-1 h-1 bg-gray-100 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-orange-400 to-[#FF5C1A]" 
+                      style={{ width: `${poi.trafficScore}%` }}
+                    />
+                  </div>
+                  <span className="text-[9px] font-bold text-gray-400 uppercase">Traffic</span>
                 </div>
               </div>
             </Popup>
