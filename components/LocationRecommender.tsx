@@ -33,7 +33,7 @@ export default function LocationRecommender({ category }: { category: string }) 
       </div>
       
       <p className="text-xs text-gray-400 mt-4 text-center">
-        * Peta menggunakan OpenStreetMap. Izinkan akses lokasi pada browser Anda untuk mendapatkan rekomendasi di kota Anda (Default: Jakarta).
+        Peta menggunakan OpenStreetMap. Izinkan akses lokasi pada browser Anda untuk mendapatkan rekomendasi di kota Anda.
       </p>
     </div>
   );
