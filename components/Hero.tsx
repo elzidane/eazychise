@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { BlurText, CountUp, ShinyText, TiltCard } from "./Reactbitseffects";
+import MagneticButton from "./MagneticButton";
 
 const stats = [
   { num: 320, suffix: "+", label: "Brand F&B Aktif" },
@@ -92,19 +93,19 @@ export default function Hero() {
         <div>
 
           {/* Badge */}
-          <div className="animate-fade-up inline-flex items-center gap-2.5 bg-white border border-[#FF5C1A]/20 px-4 py-2 rounded-full text-xs font-bold text-[#FF5C1A] mb-7 shadow-[0_2px_16px_rgba(255,92,26,0.12)]">
+          <div className="animate-fade-up inline-flex items-center gap-2.5 bg-[#111111] border border-white/10 px-4 py-2 rounded-full text-xs font-bold text-white mb-7 shadow-[0_8px_20px_rgba(0,0,0,0.25)]">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF5C1A] opacity-60" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF5C1A]" />
             </span>
-            Platform F&amp;B Franchise #1 Indonesia 🇮🇩
+            <ShinyText text="Platform F&B Franchise #1 Indonesia 🇮🇩" speed={10} />
           </div>
 
           {/* Headline */}
           <h1 className="animate-fade-up-1 text-[clamp(3rem,5.5vw,5.5rem)] leading-[0.98] mb-6">
             {/* Line 1 — Syne tegas */}
             <span className="block font-syne font-extrabold tracking-[-3px] text-[#111111]">
-              <BlurText text="Bisnis" delay={60} animateBy="chars" />
+              <BlurText text="Bisnis" delay={120} animateBy="chars" />
             </span>
             {/* Line 2 — Fraunces italic hangat, dengan underline dekoratif */}
             <span className="relative block font-fraunces font-black italic text-[#FF5C1A] leading-[1.1]">
@@ -128,28 +129,31 @@ export default function Hero() {
               className="block font-syne font-extrabold tracking-[-3px] mt-1"
               style={{ WebkitTextStroke: "2.5px #111111", color: "transparent" }}
             >
-              <BlurText text="Minuman" delay={40} animateBy="chars" />
+              <BlurText text="Minuman" delay={100} animateBy="chars" />
             </span>
           </h1>
 
           {/* Desc */}
           <p className="animate-fade-up-2 text-[#666] leading-[1.8] text-[1rem] max-w-[440px] mb-8">
-            GoChise menyatukan calon pemilik usaha F&amp;B dengan ratusan brand franchise makanan dan minuman terpercaya. Modal mulai{" "}
+            Eazy Chise menyatukan calon pemilik usaha F&amp;B dengan ratusan brand franchise makanan dan minuman terpercaya. Modal mulai{" "}
             <strong className="text-[#111111] font-semibold">Rp 2 juta</strong>,
             pendampingan dari nol sampai buka.
           </p>
 
           {/* CTA Buttons */}
-          <div className="animate-fade-up-3 flex flex-wrap gap-3 mb-10">
-            <Link
-              href="/franchise"
-              className="group relative flex items-center gap-2 bg-[#FF5C1A] text-white pl-6 pr-5 py-3.5 rounded-full font-bold text-[0.93rem] shadow-[0_6px_28px_rgba(255,92,26,0.38)] hover:shadow-[0_12px_36px_rgba(255,92,26,0.5)] hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
-            >
-              {/* Shimmer */}
-              <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-500 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-              <span className="relative">🔍 Cari Franchise F&amp;B</span>
-              <span className="relative text-[#FFCF40] font-black">→</span>
-            </Link>
+          <div className="animate-fade-up-3 flex flex-wrap gap-3 mb-10 items-center">
+            <MagneticButton strength={0.2}>
+              <Link
+                href="/franchise"
+                className="group relative flex items-center gap-2 bg-[#FF5C1A] text-white pl-6 pr-5 py-3.5 rounded-full font-bold text-[0.93rem] shadow-[0_6px_28px_rgba(255,92,26,0.38)] hover:shadow-[0_12px_36px_rgba(255,92,26,0.5)] transition-all duration-200 overflow-hidden"
+              >
+                {/* Shimmer */}
+                <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-500 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                <span className="relative">🔍 Cari Franchise F&amp;B</span>
+                <span className="relative text-[#FFCF40] font-black">→</span>
+              </Link>
+            </MagneticButton>
+            
             <Link
               href="/daftar"
               className="flex items-center gap-2 border-2 border-[#111111]/20 text-[#333] bg-white px-6 py-3.5 rounded-full font-bold text-[0.93rem] hover:border-[#111111] hover:text-[#111111] hover:-translate-y-0.5 transition-all duration-200 shadow-sm"

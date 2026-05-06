@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { FRANCHISE_DATA, Franchise } from "@/lib/franchise-data";
+import { TiltCard } from "./Reactbitseffects";
 
 const data = FRANCHISE_DATA;
 
@@ -93,9 +94,9 @@ export default function FranchiseListings() {
         className="grid md:grid-cols-2 lg:grid-cols-3 gap-5"
       >
         {filtered.map((f) => (
-          <div
+          <TiltCard
             key={f.name}
-            className="f-card group bg-white rounded-[20px] overflow-hidden border border-black/5 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(0,0,0,0.09)] transition-all duration-300 flex flex-col"
+            className="f-card group bg-white rounded-[20px] overflow-hidden border border-black/5 hover:shadow-[0_20px_50px_rgba(0,0,0,0.09)] transition-all duration-300 flex flex-col"
           >
             {/* Image */}
             <div className="h-[190px] relative overflow-hidden flex-shrink-0">
@@ -176,7 +177,7 @@ export default function FranchiseListings() {
                 Lihat Detail & Daftar
               </Link>
             </div>
-          </div>
+          </TiltCard>
         ))}
       </div>
 

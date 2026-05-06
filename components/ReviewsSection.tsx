@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, MessageSquare, Send, CheckCircle2 } from "lucide-react";
+import SpotlightCard from "./SpotlightCard";
 
 type Review = {
   id: number;
@@ -118,9 +119,7 @@ export default function ReviewsSection() {
           
           {/* Summary & Form Side */}
           <div className="space-y-10">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+            <SpotlightCard
               className="bg-white p-12 rounded-[40px] border border-black/5 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] relative overflow-hidden group"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF5C1A]/5 rounded-bl-[100px] transition-transform group-hover:scale-110" />
@@ -151,7 +150,7 @@ export default function ReviewsSection() {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </SpotlightCard>
 
             <AnimatePresence>
               {showForm && (

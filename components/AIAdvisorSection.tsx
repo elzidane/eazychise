@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import TextScramble from "./TextScramble";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -50,21 +51,21 @@ function AnalysisCard({ content, onReset }: { content: string; onReset: () => vo
 
       {/* Content */}
       <div
-        className="text-[0.85rem] leading-[1.8]"
+        className="text-[0.85rem] leading-[1.8] ai-scroll"
         style={{
           color: "rgba(255,255,255,.82)",
           background: "rgba(255,255,255,.04)",
           border: "1px solid rgba(255,255,255,.08)",
           borderRadius: 16, padding: "20px 22px",
           maxHeight: 280, overflowY: "auto",
-          whiteSpace: "pre-wrap",
         }}
       >
-        {lines.map((line, i) => (
-          <p key={i} style={{ marginBottom: line === "" ? 8 : 0, animation: `fadeUp .4s ease ${i * 0.04}s both` }}>
-            {line}
-          </p>
-        ))}
+        <TextScramble 
+          text={content} 
+          duration={2000}
+          className="whitespace-pre-wrap"
+          tag="div"
+        />
       </div>
 
       {/* CTA */}

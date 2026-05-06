@@ -26,7 +26,7 @@ function MarqueeRow({
             key={i}
             className="inline-flex items-center gap-3 px-8"
           >
-            <span className="text-[0.8rem] font-semibold text-white/40 uppercase tracking-[1.5px]">
+            <span className="text-[0.95rem] font-bold text-white/85 uppercase tracking-[2px]">
               {item}
             </span>
             <span className="w-1 h-1 rounded-full bg-[#FF5C1A]/40 flex-shrink-0" />
@@ -44,8 +44,8 @@ export default function TrustMarquee() {
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FF5C1A]/20 to-transparent" />
 
       <div className="py-5 flex flex-col gap-3">
-        <MarqueeRow items={row1} speed={30} />
-        <MarqueeRow items={row2} reverse speed={24} />
+        <MarqueeRow items={row1} speed={60} />
+        <MarqueeRow items={row2} reverse speed={50} />
       </div>
 
       {/* Left & right fade masks */}
