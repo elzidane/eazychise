@@ -34,12 +34,12 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "GoChise – Platform Franchise F&B Indonesia",
+  title: "EazyChise – Platform Franchise F&B Indonesia",
   description:
     "Platform franchise digital fokus makanan & minuman terpercaya untuk UMKM Indonesia. Modal kecil, dukungan penuh.",
   keywords: "franchise, makanan, minuman, UMKM, Indonesia, F&B, kopi, bubble tea",
   openGraph: {
-    title: "GoChise – Platform Franchise F&B Indonesia",
+    title: "EazyChise – Platform Franchise F&B Indonesia",
     description:
       "Temukan 320+ franchise makanan & minuman terpercaya. Modal mulai Rp 2 juta.",
     type: "website",

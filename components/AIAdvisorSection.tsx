@@ -125,7 +125,7 @@ export default function AIAdvisorSection() {
 - Preferensi kategori: ${answers.kategori}
 - Informasi tambahan: ${freeInput || "Tidak ada"}
 
-Berikan rekomendasi franchise yang paling cocok dari daftar GoChise (Kopiku Nusantara, BubbleBOOM Indonesia, Mie Ayam Bakso Mas Agus, Nasi Goreng Gila Express, Soto Betawi Pak Haji, Sweet Street Dessert Co.), beserta alasan konkret, estimasi ROI, dan 2-3 tips sukses untuk profil ini. Tulis dalam Bahasa Indonesia yang hangat dan profesional.`;
+Berikan rekomendasi franchise yang paling cocok dari daftar EazyChise (Kopiku Nusantara, BubbleBOOM Indonesia, Mie Ayam Bakso Mas Agus, Nasi Goreng Gila Express, Soto Betawi Pak Haji, Sweet Street Dessert Co.), beserta alasan konkret, estimasi ROI, dan 2-3 tips sukses untuk profil ini. Tulis dalam Bahasa Indonesia yang hangat dan profesional.`;
 
     try {
       const res = await fetch("/api/advisor", {
@@ -249,7 +249,7 @@ Berikan rekomendasi franchise yang paling cocok dari daftar GoChise (Kopiku Nusa
 
             {/* Content */}
             <div style={{ position: "relative", zIndex: 1 }}>
-              <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#FF5C1A", marginBottom: 16 }}>GoChise AI Advisor</p>
+              <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#FF5C1A", marginBottom: 16 }}>EazyChise AI Advisor</p>
               <h3 style={{ fontFamily: "var(--font-syne,sans-serif)", fontSize: "1.6rem", fontWeight: 800, color: "white", lineHeight: 1.2, letterSpacing: "-0.03em", marginBottom: 20 }}>
                 Analisis Cerdas<br />dalam 2 Menit
               </h3>

@@ -58,7 +58,7 @@ export default function ReactBitsShowcase() {
         <div style={{ textAlign: "center", marginBottom: 72 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 16px", borderRadius: 99, background: "rgba(255,92,26,.1)", border: "1px solid rgba(255,92,26,.2)", marginBottom: 24 }}>
             <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "#FF8C42", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-              Kenapa GoChise?
+              Kenapa EazyChise?
             </span>
           </div>
 
@@ -87,7 +87,7 @@ export default function ReactBitsShowcase() {
           </h2>
 
           <ScrollRevealText
-            text="Kami bukan sekadar marketplace. GoChise adalah ekosistem franchise F&B terlengkap dengan teknologi AI, verifikasi ketat, dan komunitas mitra terbesar."
+            text="Kami bukan sekadar marketplace. EazyChise adalah ekosistem franchise F&B terlengkap dengan teknologi AI, verifikasi ketat, dan komunitas mitra terbesar."
             stagger={40}
             from="bottom"
             className="text-[rgba(255,255,255,0.45)] text-[0.95rem] leading-[1.8] max-w-[560px] mx-auto"

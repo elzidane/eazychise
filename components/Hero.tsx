@@ -134,7 +134,7 @@ export default function Hero() {
 
           {/* Desc */}
           <p className="animate-fade-up-2 text-[#666] leading-[1.8] text-[1rem] max-w-[440px] mb-8">
-            GoChise menyatukan calon pemilik usaha F&amp;B dengan ratusan brand franchise makanan dan minuman terpercaya. Modal mulai{" "}
+            EazyChise menyatukan calon pemilik usaha F&amp;B dengan ratusan brand franchise makanan dan minuman terpercaya. Modal mulai{" "}
             <strong className="text-[#111111] font-semibold">Rp 2 juta</strong>,
             pendampingan dari nol sampai buka.
           </p>

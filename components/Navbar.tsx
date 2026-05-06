@@ -161,7 +161,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between px-5 py-4 border-b border-black/6">
           <span className="font-syne font-extrabold text-[1.2rem] tracking-tight text-[#111]">
             Eazy<span className="text-[#FF5C1A]">Chise</span>
-            {/* ← Fix: was "Gochise" */}
+            {/* ← Fix: was "EazyChise" */}
           </span>
           <button
             onClick={() => setMenuOpen(false)}
