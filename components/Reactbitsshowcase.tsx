@@ -1,5 +1,6 @@
 "use client";
 import { BlurText, CountUp, ShinyText, GradientText, Particles, TiltCard, ScrollRevealText } from "./Reactbitseffects";
+import MagicBento from "./MagicBento";
 
 const features = [
   {
@@ -58,7 +59,7 @@ export default function ReactBitsShowcase() {
         <div style={{ textAlign: "center", marginBottom: 72 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 16px", borderRadius: 99, background: "rgba(255,92,26,.1)", border: "1px solid rgba(255,92,26,.2)", marginBottom: 24 }}>
             <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "#FF8C42", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-              Kenapa GoChise?
+              Kenapa EazyChise?
             </span>
           </div>
 
@@ -87,7 +88,7 @@ export default function ReactBitsShowcase() {
           </h2>
 
           <ScrollRevealText
-            text="Kami bukan sekadar marketplace. GoChise adalah ekosistem franchise F&B terlengkap dengan teknologi AI, verifikasi ketat, dan komunitas mitra terbesar."
+            text="Kami bukan sekadar marketplace. EazyChise adalah ekosistem franchise F&B terlengkap dengan teknologi AI, verifikasi ketat, dan komunitas mitra terbesar."
             stagger={40}
             from="bottom"
             className="text-[rgba(255,255,255,0.45)] text-[0.95rem] leading-[1.8] max-w-[560px] mx-auto"
@@ -231,6 +232,91 @@ export default function ReactBitsShowcase() {
             ✨ Analisis AI Gratis →
           </a>
         </div>
+      </div>
+
+      {/* MagicBento Integration */}
+      <div style={{ marginTop: "120px", position: "relative", zIndex: 1, padding: "0 24px" }}>
+        <div style={{ textAlign: "center", marginBottom: "48px" }}>
+          <h3 style={{
+            fontFamily: "var(--font-syne,sans-serif)",
+            fontSize: "clamp(1.5rem, 3vw, 2.5rem)",
+            fontWeight: 800,
+            color: "white",
+            marginBottom: "16px"
+          }}>
+            Ekosistem EazyChise
+          </h3>
+          <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.95rem", maxWidth: "600px", margin: "0 auto" }}>
+            Semua yang Anda butuhkan untuk membangun dan mengembangkan bisnis franchise, terintegrasi dalam satu platform cerdas.
+          </p>
+        </div>
+        
+        <MagicBento 
+          items={[
+            {
+              color: 'linear-gradient(135deg, #0f0d12 60%, rgba(255,92,26,0.07))',
+              icon: '🛒',
+              title: 'Marketplace Franchise',
+              description: 'Temukan ratusan brand franchise F&B terkurasi yang telah diverifikasi dan siap bermitra langsung dengan Anda.',
+              label: 'Katalog',
+              stat: '300+',
+              statLabel: ' brand aktif'
+            },
+            {
+              color: 'linear-gradient(135deg, #0f0d12 60%, rgba(255,207,64,0.06))',
+              icon: '🤖',
+              title: 'AI Franchise Advisor',
+              description: 'Rekomendasi bisnis cerdas berbasis AI yang menyesuaikan pilihan franchise dengan modal dan preferensi Anda.',
+              label: 'Kecerdasan Buatan',
+              stat: '94%',
+              statLabel: ' akurasi AI'
+            },
+            {
+              color: 'linear-gradient(145deg, #0f0d12 40%, rgba(255,92,26,0.1))',
+              icon: '📊',
+              title: 'Kalkulator BEP & ROI',
+              description: 'Simulasikan titik balik modal, proyeksi keuntungan bulanan, dan analisis kelayakan investasi secara real-time. Tidak perlu spreadsheet — cukup masukkan data dan lihat hasilnya.',
+              label: 'Finansial',
+              stat: '3–6',
+              statLabel: ' bln rata-rata ROI'
+            },
+            {
+              color: 'linear-gradient(135deg, #0f0d12 60%, rgba(255,140,66,0.06))',
+              icon: '🔍',
+              title: 'Sistem Verifikasi 47-Poin',
+              description: 'Setiap brand melewati audit ketat mencakup legalitas, keuangan, operasional, dan rekam jejak mitra.',
+              label: 'Keamanan',
+              stat: '47',
+              statLabel: ' poin audit'
+            },
+            {
+              color: 'linear-gradient(135deg, #0f0d12 60%, rgba(255,92,26,0.05))',
+              icon: '🤝',
+              title: 'Komunitas Mitra',
+              description: 'Bergabung dengan jaringan pengusaha F&B aktif untuk berbagi insight, tips, dan peluang kolaborasi.',
+              label: 'Sosial',
+              stat: '9.000+',
+              statLabel: ' mitra aktif'
+            },
+            {
+              color: 'linear-gradient(135deg, #0f0d12 60%, rgba(255,207,64,0.05))',
+              icon: '🎓',
+              title: 'Mentoring & Kelas',
+              description: 'Akses eksklusif ke kelas bisnis, webinar, dan sesi mentoring dari para expert industri F&B.',
+              label: 'Edukasi'
+            }
+          ]}
+          textAutoHide={false}
+          enableStars={true}
+          enableSpotlight={true}
+          enableBorderGlow={true}
+          enableTilt={true}
+          enableMagnetism={true}
+          clickEffect={true}
+          spotlightRadius={300}
+          particleCount={12}
+          glowColor="255, 92, 26" 
+        />
       </div>
 
       <style>{`

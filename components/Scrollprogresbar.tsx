@@ -12,7 +12,7 @@ export default function ScrollProgressBar() {
     const sections = [
       { id: "hero",       label: "Beranda" },
       { id: "franchise",  label: "Franchise" },
-      { id: "why-us",     label: "Kenapa GoChise" },
+      { id: "why-us",     label: "Kenapa EazyChise" },
       { id: "ai-advisor", label: "AI Advisor" },
       { id: "testimony",  label: "Testimoni" },
     ];
