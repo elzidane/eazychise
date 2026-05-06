@@ -8,7 +8,6 @@ const links = [
   { href: "/cara-kerja",   label: "Cara Kerja" },
   { href: "/unggulan",     label: "Unggulan" },
   { href: "/franchise",    label: "Franchise" },
-  { href: "/#ai-advisor",  label: "AI Analisis" },
   { href: "/analisis-bep", label: "Analisis BEP" },
   { href: "/tentang",      label: "Tentang Kami" },
   { href: "/ulasan",       label: "Ulasan" },
