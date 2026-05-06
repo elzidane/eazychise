@@ -8,6 +8,7 @@ const links = [
   { href: "/cara-kerja",   label: "Cara Kerja" },
   { href: "/unggulan",     label: "Unggulan" },
   { href: "/franchise",    label: "Franchise" },
+  { href: "/#ai-advisor",  label: "AI Analisis" },
   { href: "/analisis-bep", label: "Analisis BEP" },
   { href: "/tentang",      label: "Tentang Kami" },
   { href: "/ulasan",       label: "Ulasan" },
@@ -28,7 +29,12 @@ export default function Navbar() {
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    if (menuOpen) document.body.classList.add("nav-menu-open");
+    else document.body.classList.remove("nav-menu-open");
+    return () => { 
+      document.body.style.overflow = ""; 
+      document.body.classList.remove("nav-menu-open");
+    };
   }, [menuOpen]);
 
   // Hide Navbar on Login and Register pages

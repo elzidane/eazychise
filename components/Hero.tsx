@@ -179,7 +179,7 @@ export default function Hero() {
           </div>
 
           {/* Social proof avatars */}
-          <div className="animate-fade-up-5 flex items-center gap-3 mt-7">
+          <div className="animate-fade-up-5 hidden lg:flex items-center gap-3 mt-7">
             <div className="flex -space-x-2">
               {["🧑🏽", "👩🏻", "👨🏾", "👩🏼", "🧑🏻"].map((emoji, i) => (
                 <div
@@ -321,7 +321,7 @@ export default function Hero() {
       </div>
 
       {/* ── Bottom scroll indicator ── */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 animate-fade-up-6 z-10">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-1.5 animate-fade-up-6 z-10">
         <span className="text-[0.7rem] font-semibold text-[#aaa] uppercase tracking-widest">Scroll</span>
         <div className="w-px h-8 bg-gradient-to-b from-[#FF5C1A]/60 to-transparent" />
       </div>

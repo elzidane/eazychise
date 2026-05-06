@@ -33,16 +33,16 @@ function AnalysisCard({ content, onReset }: { content: string; onReset: () => vo
   return (
     <div style={{ animation: "fadeUp .5s ease both" }}>
       {/* Result header */}
-      <div className="flex items-center gap-3 mb-5">
-        <div style={{ width: 44, height: 44, borderRadius: 14, background: "linear-gradient(135deg,#FF5C1A,#FF8C42)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 20px rgba(255,92,26,.4)" }}>
+      <div className="flex items-start md:items-center gap-3 mb-5">
+        <div className="flex-shrink-0" style={{ width: 44, height: 44, borderRadius: 14, background: "linear-gradient(135deg,#FF5C1A,#FF8C42)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 20px rgba(255,92,26,.4)" }}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L13.5 9.5L21 11L13.5 12.5L12 20L10.5 12.5L3 11L10.5 9.5L12 2Z" fill="white"/></svg>
         </div>
-        <div>
-          <p className="font-bold text-white text-[1rem]" style={{ fontFamily: "var(--font-syne,sans-serif)", letterSpacing: "-0.02em" }}>Hasil Analisis AI</p>
-          <p className="text-[0.72rem]" style={{ color: "rgba(255,255,255,.4)" }}>Rekomendasi personal berdasarkan profilmu</p>
+        <div className="flex-1">
+          <p className="font-bold text-white text-[0.95rem] md:text-[1rem] leading-tight mb-1" style={{ fontFamily: "var(--font-syne,sans-serif)", letterSpacing: "-0.02em" }}>Hasil Analisis AI</p>
+          <p className="text-[0.65rem] md:text-[0.72rem] leading-snug" style={{ color: "rgba(255,255,255,.4)" }}>Rekomendasi personal berdasarkan profilmu</p>
         </div>
-        <div className="ml-auto">
-          <span style={{ fontSize: "0.68rem", fontWeight: 700, padding: "4px 10px", borderRadius: 99, background: "rgba(34,197,94,.15)", color: "#4ade80", border: "1px solid rgba(34,197,94,.25)" }}>
+        <div className="flex-shrink-0 mt-1 md:mt-0">
+          <span style={{ fontSize: "0.68rem", fontWeight: 700, padding: "4px 10px", borderRadius: 99, background: "rgba(34,197,94,.15)", color: "#4ade80", border: "1px solid rgba(34,197,94,.25)", whiteSpace: "nowrap" }}>
             ✓ Selesai
           </span>
         </div>
@@ -50,25 +50,25 @@ function AnalysisCard({ content, onReset }: { content: string; onReset: () => vo
 
       {/* Content */}
       <div
-        className="text-[0.85rem] leading-[1.8]"
+        className="text-[0.8rem] md:text-[0.85rem] leading-[1.7] md:leading-[1.8] p-4 md:p-[20px_22px] ai-scroll"
         style={{
           color: "rgba(255,255,255,.82)",
           background: "rgba(255,255,255,.04)",
           border: "1px solid rgba(255,255,255,.08)",
-          borderRadius: 16, padding: "20px 22px",
+          borderRadius: 16,
           maxHeight: 280, overflowY: "auto",
           whiteSpace: "pre-wrap",
         }}
       >
         {lines.map((line, i) => (
-          <p key={i} style={{ marginBottom: line === "" ? 8 : 0, animation: `fadeUp .4s ease ${i * 0.04}s both` }}>
+          <p key={i} style={{ marginBottom: line === "" ? 8 : 0, animation: `fadeUp .6s ease ${i * 0.15}s both` }}>
             {line}
           </p>
         ))}
       </div>
 
       {/* CTA */}
-      <div className="flex gap-3 mt-5">
+      <div className="flex flex-col sm:flex-row gap-3 mt-5">
         <button
           onClick={onReset}
           style={{ flex: 1, padding: "11px", borderRadius: 12, cursor: "pointer", background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.1)", color: "rgba(255,255,255,.7)", fontSize: "0.82rem", fontWeight: 600, transition: "all .2s" }}
@@ -154,9 +154,9 @@ Berikan rekomendasi franchise yang paling cocok dari daftar GoChise (Kopiku Nusa
   return (
     <section
       id="ai-advisor"
+      className="py-16 lg:py-[120px]"
       style={{
         background: "#0a0a0c",
-        padding: "120px 0",
         position: "relative",
         overflow: "hidden",
       }}
@@ -172,6 +172,8 @@ Berikan rekomendasi franchise yang paling cocok dari daftar GoChise (Kopiku Nusa
         .option-btn:hover { transform:translateX(4px) !important; }
         .ai-scroll::-webkit-scrollbar{width:3px}
         .ai-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:99px}
+        .ai-advisor-grid { display: grid; grid-template-columns: 1fr; }
+        @media (min-width: 1024px) { .ai-advisor-grid { grid-template-columns: 1fr 1.1fr; } }
       `}</style>
 
       {/* BG orbs */}
@@ -189,7 +191,7 @@ Berikan rekomendasi franchise yang paling cocok dari daftar GoChise (Kopiku Nusa
         </svg>
       </div>
 
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
+      <div className="max-w-[1100px] mx-auto px-5 lg:px-6 relative z-10">
 
         {/* Section header */}
         <div style={{ textAlign: "center", marginBottom: 64, animation: "fadeUp .6s ease both" }}>
@@ -209,10 +211,8 @@ Berikan rekomendasi franchise yang paling cocok dari daftar GoChise (Kopiku Nusa
           </p>
         </div>
 
-        {/* Main card — 2 col layout */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1.1fr",
+        {/* Main card — responsive grid */}
+        <div className="ai-advisor-grid" style={{
           gap: 2,
           borderRadius: 28,
           overflow: "hidden",
@@ -221,15 +221,16 @@ Berikan rekomendasi franchise yang paling cocok dari daftar GoChise (Kopiku Nusa
         }}>
 
           {/* LEFT — Visual side */}
-          <div style={{
-            background: "linear-gradient(160deg,#1a0d06 0%,#0f0f12 60%,#0a0a0c 100%)",
-            padding: "52px 44px",
-            position: "relative",
-            overflow: "hidden",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}>
+          <div 
+            className="p-7 md:p-10 lg:p-[52px_44px]"
+            style={{
+              background: "linear-gradient(160deg,#1a0d06 0%,#0f0f12 60%,#0a0a0c 100%)",
+              position: "relative",
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}>
             {/* Orbit rings */}
             <div style={{ position: "absolute", top: "50%", right: -80, width: 400, height: 400, transform: "translateY(-50%)" }}>
               <OrbitRing size={400} duration={25} delay={0} opacity={0.06} />
@@ -294,18 +295,18 @@ Berikan rekomendasi franchise yang paling cocok dari daftar GoChise (Kopiku Nusa
           </div>
 
           {/* RIGHT — Interaction side */}
-          <div style={{
-            background: "rgba(18,18,22,0.98)",
-            padding: "52px 44px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            minHeight: 520,
-          }}>
+          <div 
+            className="p-7 md:p-10 lg:p-[52px_44px] min-h-[400px] lg:min-h-[520px]"
+            style={{
+              background: "rgba(18,18,22,0.98)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}>
 
             {/* INTRO STATE */}
             {step === 0 && (
-              <div style={{ animation: "fadeUp .5s ease both" }}>
+              <div style={{ animation: "fadeUp .8s ease both" }}>
                 <p style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,.3)", marginBottom: 16 }}>
                   Mulai Analisis Gratis
                 </p>
