@@ -31,11 +31,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "www.waralabaku.com"},
       { protocol: "https", hostname: "encrypted-tbn0.gstatic.com"},
       { protocol: "https", hostname: "cdn-jpr.jawapos.com"},
-      { protocol: "https", hostname: "disparekrafbudpora.gresikkab.go.id"},
+      { protocol: "https", hostname: "nahwatravel.co.id"},
       { protocol: "https", hostname: "sitespirit.co"},
-      { protocol: "https", hostname: "sitespirit.co"},
-
-
     ],
   },
 }

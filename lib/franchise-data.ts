@@ -115,7 +115,7 @@ export const FRANCHISE_DATA: Franchise[] = [
     badge: "Brand Artis", badgeColor: "#7C3AED",
   },
   {
-    img: "https://disparekrafbudpora.gresikkab.go.id/content/uploads/gacoan.jpg",
+    img: "https://nahwatravel.co.id/wp-content/uploads/2025/04/IMG_20250422_095834.jpg",
     alt: "Mie Pedas", cat: "Kuliner", catKey: "kuliner",
     name: "Mie Gacoan", rating: 4.9, city: "Jawa, Bali, Sumatera",
     invest: "Rp 30 Juta", investNum: 30_000_000, roi: "10–15 bln",
