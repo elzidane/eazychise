@@ -3,62 +3,10 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-type F = {
-  img: string; alt: string; cat: string; catKey: string;
-  name: string; rating: number; city: string;
-  invest: string; investNum: number; roi: string; omzet: string;
-  mitra: string; badge?: string; badgeColor?: string;
-};
+import { FRANCHISE_DATA, Franchise } from "@/lib/franchise-data";
+import { TiltCard } from "./Reactbitseffects";
 
-const data: F[] = [
-  {
-    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/1280px-A_small_cup_of_coffee.JPG",
-    alt: "Kopi", cat: "Minuman", catKey: "minuman",
-    name: "Kopiku Nusantara", rating: 4.9, city: "25+ kota Indonesia",
-    invest: "Rp 2,8 Juta", investNum: 2_800_000, roi: "3–5 bln",
-    omzet: "Rp 8–18 Juta", mitra: "3.100+",
-    badge: "Modal Kecil", badgeColor: "#1B8C5A",
-  },
-  {
-    img: "https://arengaindonesia.com/wp-content/uploads/2025/03/Rahasia-boba-kekinian-dengan-gula-aren-cair-premium.jpg",
-    alt: "Bubble Tea", cat: "Minuman", catKey: "minuman",
-    name: "BubbleBOOM Indonesia", rating: 4.8, city: "Jawa, Bali, Sumatera",
-    invest: "Rp 3,5 Juta", investNum: 3_500_000, roi: "4–6 bln",
-    omzet: "Rp 12–22 Juta", mitra: "2.300+",
-    badge: "Terpopuler", badgeColor: "#FF5C1A",
-  },
-  {
-    img: "https://cdn1-production-images-kly.akamaized.net/vM8lSOhUdwyTysWXZgFHPx6QR9A=/0x0:6000x3382/1200x675/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/3524401/original/066199400_1627521905-2021-07-28.jpg",
-    alt: "Mie Ayam", cat: "Kuliner", catKey: "kuliner",
-    name: "Mie Ayam Bakso Mas Agus", rating: 4.7, city: "Pulau Jawa & Bali",
-    invest: "Rp 8,5 Juta", investNum: 8_500_000, roi: "6–9 bln",
-    omzet: "Rp 18–30 Juta", mitra: "940+",
-    badge: "Best Seller", badgeColor: "#FF5C1A",
-  },
-  {
-    img: "https://asset.kompas.com/crops/VcgvggZKE2VHqIAUp1pyHFXXYCs=/202x66:1000x599/1200x800/data/photo/2023/05/07/6456a450d2edd.jpg",
-    alt: "Nasi Goreng", cat: "Kuliner", catKey: "kuliner",
-    name: "Nasi Goreng Gila Express", rating: 4.8, city: "20+ kota Indonesia",
-    invest: "Rp 7 Juta", investNum: 7_000_000, roi: "5–7 bln",
-    omzet: "Rp 14–25 Juta", mitra: "1.200+",
-    badge: "Trending", badgeColor: "#7C3AED",
-  },
-  {
-    img: "https://www.dapurkobe.co.id/wp-content/uploads/soto-ayam.jpg",
-    alt: "Soto Betawi", cat: "Kuliner", catKey: "kuliner",
-    name: "Soto Betawi Pak Haji", rating: 4.9, city: "Jabodetabek & Jawa Barat",
-    invest: "Rp 12 Juta", investNum: 12_000_000, roi: "6–8 bln",
-    omzet: "Rp 20–35 Juta", mitra: "520+",
-  },
-  {
-    img: "https://richcreme.com/wp-content/uploads/2022/11/18.RCWC-Nastar-Crumble-Dessert-Box.jpg",
-    alt: "Dessert", cat: "Dessert", catKey: "dessert",
-    name: "Sweet Street Dessert Co.", rating: 4.7, city: "Jawa, Bali & Makassar",
-    invest: "Rp 6,5 Juta", investNum: 6_500_000, roi: "5–8 bln",
-    omzet: "Rp 10–18 Juta", mitra: "780+",
-    badge: "Hits", badgeColor: "#FF5C1A",
-  },
-];
+const data = FRANCHISE_DATA;
 
 const FILTERS = [
   { label: "Semua", key: "all" },
@@ -67,9 +15,10 @@ const FILTERS = [
   { label: "Minuman", key: "minuman" },
   { label: "Kuliner", key: "kuliner" },
   { label: "Dessert", key: "dessert" },
+  { label: "Snack", key: "snack" },
 ];
 
-function applyFilter(list: F[], key: string) {
+function applyFilter(list: Franchise[], key: string) {
   if (key === "all") return list;
   if (key === "under5") return list.filter((f) => f.investNum < 5_000_000);
   if (key === "5to20") return list.filter((f) => f.investNum >= 5_000_000 && f.investNum <= 20_000_000);
@@ -145,9 +94,9 @@ export default function FranchiseListings() {
         className="grid md:grid-cols-2 lg:grid-cols-3 gap-5"
       >
         {filtered.map((f) => (
-          <div
+          <TiltCard
             key={f.name}
-            className="f-card group bg-white rounded-[20px] overflow-hidden border border-black/5 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(0,0,0,0.09)] transition-all duration-300 flex flex-col"
+            className="f-card group bg-white rounded-[20px] overflow-hidden border border-black/5 hover:shadow-[0_20px_50px_rgba(0,0,0,0.09)] transition-all duration-300 flex flex-col"
           >
             {/* Image */}
             <div className="h-[190px] relative overflow-hidden flex-shrink-0">
@@ -228,7 +177,7 @@ export default function FranchiseListings() {
                 Lihat Detail & Daftar
               </Link>
             </div>
-          </div>
+          </TiltCard>
         ))}
       </div>
 

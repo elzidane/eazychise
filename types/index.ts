@@ -41,3 +41,18 @@ export interface Stat {
   label: string;
   suffix?: string;
 }
+
+export interface Review {
+  id: number;
+  name: string;
+  rating: number;
+  comment: string;
+  date: string;
+}
+
+export interface AIAdvisorStep {
+  id: string;
+  q: string;
+  icon: string;
+  options: string[];
+}

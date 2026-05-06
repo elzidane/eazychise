@@ -20,7 +20,7 @@ const QUICK_PROMPTS: QuickPrompt[] = [
   { icon: "⚡", label: "ROI tercepat",         text: "Franchise mana yang paling cepat balik modalnya?" },
 ];
 
-const GREETING = {
+const GREETING: Message = {
   role: "assistant",
   content: "Halo! ✨ Saya EazyChise AI Advisor.\n\nSaya bisa bantu kamu menemukan franchise F&B terbaik — lengkap dengan kalkulasi BEP, estimasi profit, dan analisis risiko!\n\nCeritakan rencana bisnismu, atau pilih pertanyaan di bawah 👇",
 };
@@ -555,7 +555,7 @@ export default function FranchiseAdvisor() {
 
 // ─── Input field (extracted to avoid re-render flicker) ───────
 function InputField({ inputRef, value, onChange, onKeyDown, onSend, loading }: {
-  inputRef: React.RefObject<HTMLTextAreaElement | null>;
+  inputRef: React.RefObject<HTMLTextAreaElement>;
   value: string;
   onChange: (v: string) => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
@@ -594,7 +594,7 @@ function InputField({ inputRef, value, onChange, onKeyDown, onSend, loading }: {
           fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.005em",
         }}
         onInput={e => {
-          const el = e.target;
+          const el = e.target as HTMLTextAreaElement;
           el.style.height = "auto";
           el.style.height = Math.min(el.scrollHeight, 100) + "px";
         }}

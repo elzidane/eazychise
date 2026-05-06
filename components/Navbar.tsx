@@ -108,15 +108,8 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile: CTA + Burger */}
+          {/* Mobile: Burger */}
           <div className="lg:hidden flex items-center gap-2.5">
-            <Link
-              href="/daftar"
-              onClick={() => setMenuOpen(false)}
-              className="text-[0.75rem] font-bold bg-[#FF5C1A] text-white px-3.5 py-1.5 rounded-lg shadow-[0_4px_12px_rgba(255,92,26,0.3)]"
-            >
-              Mulai Gratis
-            </Link>
             <button
               onClick={() => setMenuOpen((o) => !o)}
               aria-label="Toggle menu"

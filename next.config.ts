@@ -18,6 +18,10 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "cdn.sanity.io" },
       { protocol: "https", hostname: "franchiseindo.co.id" },
       { protocol: "https", hostname: "i.gojekapi.com" },
+      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "awsimages.detik.net.id" },
+      { protocol: "https", hostname: "cdn.idntimes.com" },
+      { protocol: "https", hostname: "akcdn.detik.net.id" },
     ],
   },
 }
