@@ -61,6 +61,7 @@ const userIcon = L.divIcon({
 
 // ── Types ────────────────────────────────────────────────────────
 type POI = {
+  trafficScore: any;
   id: number;
   lat: number;
   lon: number;
@@ -256,6 +257,7 @@ export default function LocationRecommenderMap({ category }: { category: string 
             typeKey,
             score: SCORE[typeKey] ?? 2,
             why: WHY[typeKey] ?? WHY.default,
+            trafficScore: undefined
           });
         }
       }
@@ -398,6 +400,15 @@ export default function LocationRecommenderMap({ category }: { category: string 
                   <p style={{ fontSize: 11, color: "#4b5563", lineHeight: 1.55, margin: 0 }}>
                     {poi.why}
                   </p>
+                </div>
+                <div className="mt-3 flex items-center gap-2">
+                  <div className="flex-1 h-1 bg-gray-100 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-orange-400 to-[#FF5C1A]" 
+                      style={{ width: `${poi.trafficScore}%` }}
+                    />
+                  </div>
+                  <span className="text-[9px] font-bold text-gray-400 uppercase">Traffic</span>
                 </div>
               </div>
             </Popup>
