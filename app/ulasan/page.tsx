@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function UlasanPage() {
   return (
-    <main className="pt-20">
+    <main className="pt-24 lg:pt-28">
       <ReviewsSection />
     </main>
   );
