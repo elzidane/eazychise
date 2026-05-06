@@ -81,7 +81,7 @@ export default function Footer() {
             href="/"
             className="inline-flex items-baseline gap-0 font-syne font-extrabold text-[1.6rem] tracking-[-1px] text-white mb-4"
           >
-            Go<span className="text-[#FF5C1A]">Chise</span>
+            Eazy<span className="text-[#FF5C1A]">Chise</span>
             <sup className="text-[0.45rem] text-[#FF5C1A] font-bold ml-0.5 tracking-widest align-super">F&B</sup>
           </Link>
           <p className="text-[0.82rem] leading-[1.75] text-white/30 max-w-[260px] mb-6">
