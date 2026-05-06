@@ -26,7 +26,15 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "pacificplace.b-cdn.net" },
       { protocol: "https", hostname: "blue.kumparan.com"},
       { protocol: "https", hostname: "digital-bucket-v3.prod.bfi.co.id"},
-      { protocol: "https", hostname: "mediasentral.com"},
+      { protocol: "https", hostname: "hybrid.co.id"},
+      { protocol: "https", hostname: "bake.co.id"},
+      { protocol: "https", hostname: "www.waralabaku.com"},
+      { protocol: "https", hostname: "encrypted-tbn0.gstatic.com"},
+      { protocol: "https", hostname: "cdn-jpr.jawapos.com"},
+      { protocol: "https", hostname: "disparekrafbudpora.gresikkab.go.id"},
+      { protocol: "https", hostname: "sitespirit.co"},
+      { protocol: "https", hostname: "sitespirit.co"},
+
 
     ],
   },

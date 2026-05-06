@@ -9,7 +9,7 @@ import { FRANCHISE_DATA } from "@/lib/franchise-data";
 
 // Get specific brands for the featured section
 const items = [
-  FRANCHISE_DATA.find(f => f.name === "Mie Ayam Bakso Mas Agus")!,
+  FRANCHISE_DATA.find(f => f.name === "Wizzmie")!,
   FRANCHISE_DATA.find(f => f.name === "XIBOBA")!,
   FRANCHISE_DATA.find(f => f.name === "Kopi Kenangan")!,
 ].map(f => ({
