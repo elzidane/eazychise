@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Calculator, TrendingUp, DollarSign, Clock, Pencil } from "lucide-react";
+import { Calculator, TrendingUp, DollarSign, Clock, Pencil, Rocket, AlertCircle } from "lucide-react";
 
 export default function BEPCalculator() {
   const [modalAwal, setModalAwal] = useState<number>(50000000);
@@ -252,8 +252,12 @@ export default function BEPCalculator() {
                       <DollarSign className="w-5 h-5" />
                       <h4 className="font-medium text-lg">Laba Bersih / Bulan</h4>
                     </div>
-                    <div className="text-xs md:text-sm font-medium bg-white/20 text-white px-3 py-1.5 rounded-full backdrop-blur-sm border border-white/10 shadow-sm">
-                      {labaBersih > 0 ? '🚀 Menguntungkan' : '⚠️ Rugi'}
+                    <div className="text-xs md:text-sm font-medium bg-white/20 text-white px-3 py-1.5 rounded-full backdrop-blur-sm border border-white/10 shadow-sm flex items-center gap-1.5">
+                      {labaBersih > 0 ? (
+                        <><Rocket className="w-3.5 h-3.5" /> Menguntungkan</>
+                      ) : (
+                        <><AlertCircle className="w-3.5 h-3.5" /> Rugi</>
+                      )}
                     </div>
                   </div>
                   

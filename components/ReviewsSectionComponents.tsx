@@ -6,31 +6,34 @@ import { Review } from "../types";
 export function ReviewCard({ review, index }: { review: Review; index: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30, scale: 0.95 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.15, type: "spring", stiffness: 100 }}
-      whileHover={{ y: -8, boxShadow: "0 30px 60px -15px rgba(0,0,0,0.1)" }}
-      className="bg-white p-10 rounded-[40px] border border-black/5 transition-all duration-300 group relative"
+      transition={{ delay: index * 0.1 }}
+      className="bg-white p-6 md:p-8 rounded-[24px] border border-black/[0.04] shadow-sm hover:shadow-md transition-all duration-300 group relative"
     >
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-gradient-to-br from-[#FF5C1A] to-[#FF8C1A] rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg shadow-[#FF5C1A]/20">
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#FF5C1A] to-[#FF8C1A] flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-[#FF5C1A]/10">
             {review.name[0]}
           </div>
           <div>
-            <h4 className="font-bold text-xl text-[#111] tracking-tight group-hover:text-[#FF5C1A] transition-colors">{review.name}</h4>
-            <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">{review.date}</p>
+            <h4 className="font-bold text-[0.95rem] text-[#111] leading-none mb-1.5">{review.name}</h4>
+            <div className="flex items-center gap-2">
+              <div className="flex text-[#FFCF40] gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className={`w-3 h-3 ${i < review.rating ? "fill-current" : "text-gray-200"}`} />
+                ))}
+              </div>
+              <span className="w-1 h-1 rounded-full bg-gray-200" />
+              <p className="text-[0.68rem] text-gray-400 font-medium uppercase tracking-wider">{review.date}</p>
+            </div>
           </div>
-        </div>
-        <div className="flex text-[#FFCF40] gap-1 bg-gray-50 px-3 py-1.5 rounded-full border border-black/[0.03]">
-          {[...Array(review.rating)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
         </div>
       </div>
       <div className="relative">
-        <span className="absolute -top-4 -left-2 text-6xl text-gray-100 font-serif pointer-events-none opacity-50 group-hover:text-[#FF5C1A]/10 transition-colors">“</span>
-        <p className="text-gray-600 leading-relaxed font-medium text-lg relative z-10 italic">
-          {review.comment}
+        <p className="text-[#444] leading-relaxed text-[0.92rem] font-medium italic">
+          "{review.comment}"
         </p>
       </div>
     </motion.div>
@@ -50,59 +53,57 @@ export function ReviewForm({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40, scale: 0.9 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 40, scale: 0.9 }}
-      className="bg-white border border-black/5 rounded-[40px] p-10 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] relative z-20"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      className="bg-white border border-black/[0.04] rounded-[24px] p-6 md:p-8 shadow-sm relative z-20"
     >
       {!submitted ? (
         <form onSubmit={onSubmit} className="space-y-6">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="font-syne font-bold text-2xl text-[#111]">Tulis Ulasan</h3>
+            <h3 className="font-syne font-bold text-xl text-[#111]">Tulis Ulasan</h3>
             <div className="w-10 h-1 bg-[#FF5C1A] rounded-full" />
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <label className="text-sm font-bold text-gray-500 uppercase tracking-wider ml-1">Nama Lengkap</label>
+          <div className="grid grid-cols-1 gap-5">
+            <div className="space-y-2">
+              <label className="text-[0.7rem] font-bold text-gray-400 uppercase tracking-widest ml-1">Nama Lengkap</label>
               <input
                 required
                 type="text"
-                placeholder="Contoh: Budi Santoso"
-                className="w-full bg-gray-50 border-2 border-transparent rounded-2xl px-5 py-4 focus:outline-none focus:border-[#FF5C1A] focus:bg-white transition-all font-medium text-[#111] shadow-sm"
+                placeholder="Budi Santoso"
+                className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-4 py-3 focus:outline-none focus:border-[#FF5C1A] focus:bg-white transition-all font-medium text-[#111] text-sm"
                 value={newReview.name}
                 onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
               />
             </div>
 
-            <div className="space-y-3">
-              <label className="text-sm font-bold text-gray-500 uppercase tracking-wider ml-1">Rating Anda</label>
-              <div className="flex gap-2 bg-gray-50 p-3.5 rounded-2xl justify-center border-2 border-transparent shadow-sm">
+            <div className="space-y-2">
+              <label className="text-[0.7rem] font-bold text-gray-400 uppercase tracking-widest ml-1">Rating</label>
+              <div className="flex gap-2 bg-gray-50/50 p-3 rounded-xl border border-gray-100">
                 {[1, 2, 3, 4, 5].map((star) => (
-                  <motion.button
+                  <button
                     key={star}
                     type="button"
-                    whileHover={{ scale: 1.2, rotate: 10 }}
-                    whileTap={{ scale: 0.9 }}
                     onClick={() => setNewReview({ ...newReview, rating: star })}
-                    className="focus:outline-none"
+                    className="focus:outline-none transition-transform active:scale-90"
                   >
                     <Star 
-                      className={`w-7 h-7 transition-colors ${star <= newReview.rating ? "text-[#FFCF40] fill-current" : "text-gray-200"}`} 
+                      className={`w-5 h-5 transition-colors ${star <= newReview.rating ? "text-[#FFCF40] fill-current" : "text-gray-200"}`} 
                     />
-                  </motion.button>
+                  </button>
                 ))}
               </div>
             </div>
           </div>
 
-          <div className="space-y-3">
-            <label className="text-sm font-bold text-gray-500 uppercase tracking-wider ml-1">Isi Ulasan</label>
+          <div className="space-y-2">
+            <label className="text-[0.7rem] font-bold text-gray-400 uppercase tracking-widest ml-1">Isi Ulasan</label>
             <textarea
               required
-              rows={4}
-              placeholder="Ceritakan pengalaman Anda menggunakan platform kami..."
-              className="w-full bg-gray-50 border-2 border-transparent rounded-2xl px-5 py-4 focus:outline-none focus:border-[#FF5C1A] focus:bg-white transition-all resize-none font-medium text-[#111] shadow-sm"
+              rows={3}
+              placeholder="Ceritakan pengalaman Anda..."
+              className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-4 py-3 focus:outline-none focus:border-[#FF5C1A] focus:bg-white transition-all resize-none font-medium text-[#111] text-sm"
               value={newReview.comment}
               onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
             />
@@ -110,22 +111,22 @@ export function ReviewForm({
 
           <button
             type="submit"
-            className="w-full bg-[#FF5C1A] text-white py-5 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-xl shadow-[#FF5C1A]/20 hover:shadow-[#FF5C1A]/40 transition-all active:scale-[0.98] text-lg"
+            className="w-full bg-[#111] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-[#FF5C1A] transition-all active:scale-[0.98] text-[0.9rem]"
           >
-            Kirim Ulasan Sekarang <Send className="w-5 h-5" />
+            Kirim Ulasan <Send className="w-4 h-4" />
           </button>
         </form>
       ) : (
         <motion.div 
-          initial={{ opacity: 0, scale: 0.5 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="py-16 text-center"
+          className="py-10 text-center"
         >
-          <div className="w-24 h-24 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-8">
-            <CheckCircle2 className="w-12 h-12 text-green-500" />
+          <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <CheckCircle2 className="w-8 h-8 text-green-500" />
           </div>
-          <h3 className="text-3xl font-black text-[#111] mb-3">Terima Kasih!</h3>
-          <p className="text-gray-500 font-medium leading-relaxed">Ulasan Anda sangat berarti bagi komunitas EazyChise.</p>
+          <h3 className="text-xl font-black text-[#111] mb-2">Terima Kasih!</h3>
+          <p className="text-gray-500 text-sm font-medium">Ulasan Anda sangat berarti bagi komunitas.</p>
         </motion.div>
       )}
     </motion.div>
