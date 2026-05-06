@@ -22,6 +22,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "awsimages.detik.net.id" },
       { protocol: "https", hostname: "cdn.idntimes.com" },
       { protocol: "https", hostname: "akcdn.detik.net.id" },
+      // { protocol: "https", hostname: "i.gojekapi.com" },
+
     ],
   },
 }

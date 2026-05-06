@@ -58,7 +58,7 @@ export const FRANCHISE_DATA: Franchise[] = [
     badge: "Lokal Terbaik", badgeColor: "#FF5C1A",
   },
   {
-    img: "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=600&q=80",
+    img: "https://i.gojekapi.com/darkroom/gofood-indonesia/v2/images/uploads/e4f13c30-ae96-4e41-8d7c-654861057ae9_Oolong-Silken-Milk-Tea.jpg",
     alt: "Chatime Bubble Tea", cat: "Minuman", catKey: "minuman",
     name: "Chatime Indonesia", rating: 4.6, city: "50+ kota Indonesia",
     invest: "Rp 45 Juta", investNum: 45_000_000, roi: "12–18 bln",
