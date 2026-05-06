@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { 
   Wallet, 
   Coffee, 
@@ -94,9 +94,72 @@ function AIAvatar({ size = 34 }: { size?: number }) {
   );
 }
 
+// ─── Typewriter text ──────────────────────────────────────────
+function TypewriterText({ text, speed = 12, onDone }: { text: string; speed?: number; onDone?: () => void }) {
+  const [displayed, setDisplayed] = useState("");
+  const [done, setDone] = useState(false);
+  const idxRef = useRef(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const finish = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    setDisplayed(text);
+    setDone(true);
+    onDone?.();
+  }, [text, onDone]);
+
+  useEffect(() => {
+    idxRef.current = 0;
+    setDisplayed("");
+    setDone(false);
+    timerRef.current = setInterval(() => {
+      idxRef.current += 1;
+      setDisplayed(text.slice(0, idxRef.current));
+      if (idxRef.current >= text.length) {
+        if (timerRef.current) clearInterval(timerRef.current);
+        setDone(true);
+        onDone?.();
+      }
+    }, speed);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text]);
+
+  return (
+    <span style={{ whiteSpace: "pre-wrap", position: "relative", zIndex: 1 }}>
+      {displayed}
+      {!done && (
+        <span style={{
+          display: "inline-block", width: 2, height: "1em",
+          background: "linear-gradient(180deg,#FF8C42,#FFCF40)",
+          borderRadius: 2, marginLeft: 2, verticalAlign: "text-bottom",
+          animation: "eazyCursor 0.6s steps(1) infinite",
+        }} />
+      )}
+      {!done && (
+        <button
+          onClick={finish}
+          title="Skip"
+          style={{
+            marginLeft: 8, fontSize: "0.62rem", padding: "1px 7px",
+            borderRadius: 99, cursor: "pointer",
+            background: "rgba(255,140,60,0.15)",
+            border: "1px solid rgba(255,140,60,0.3)",
+            color: "#FFAB68", fontFamily: "inherit", verticalAlign: "middle",
+            transition: "all 0.18s",
+          }}
+        >
+          skip
+        </button>
+      )}
+    </span>
+  );
+}
+
 // ─── Message bubble ───────────────────────────────────────────
-function MessageBubble({ msg, isNew }: { msg: Message; isNew?: boolean }) {
+function MessageBubble({ msg, isNew, animate }: { msg: Message; isNew?: boolean; animate?: boolean }) {
   const isUser = msg.role === "user";
+  const showTypewriter = !isUser && isNew && animate;
   return (
     <div
       style={{
@@ -132,7 +195,10 @@ function MessageBubble({ msg, isNew }: { msg: Message; isNew?: boolean }) {
             pointerEvents: "none",
           }} />
         )}
-        <span style={{ whiteSpace: "pre-wrap", position: "relative", zIndex: 1 }}>{msg.content}</span>
+        {showTypewriter
+          ? <TypewriterText text={msg.content} speed={12} />
+          : <span style={{ whiteSpace: "pre-wrap", position: "relative", zIndex: 1 }}>{msg.content}</span>
+        }
       </div>
 
       {isUser && (
@@ -236,6 +302,7 @@ export default function FranchiseAdvisor() {
   const [loading, setLoading] = useState(false);
   const [hasNew, setHasNew]   = useState(false);
   const [newMsgIdx, setNewMsgIdx] = useState<number | null>(null);
+  const [animIdx, setAnimIdx]   = useState<number | null>(null);
   const [fabHover, setFabHover] = useState(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -274,6 +341,7 @@ export default function FranchiseAdvisor() {
       const next: Message[] = [...newMessages, { role: "assistant" as const, content: reply }];
       setMessages(next);
       setNewMsgIdx(next.length - 1);
+      setAnimIdx(next.length - 1);
       if (!open) setHasNew(true);
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Koneksi bermasalah";
@@ -329,6 +397,10 @@ export default function FranchiseAdvisor() {
           0%{transform:scale(0);opacity:0}
           70%{transform:scale(1.3)}
           100%{transform:scale(1);opacity:1}
+        }
+        @keyframes eazyCursor {
+          0%,49%{opacity:1}
+          50%,100%{opacity:0}
         }
         .eazy-msgs::-webkit-scrollbar{width:3px}
         .eazy-msgs::-webkit-scrollbar-track{background:transparent}
@@ -515,7 +587,7 @@ export default function FranchiseAdvisor() {
           }}
         >
           {messages.map((m, i) => (
-            <MessageBubble key={i} msg={m} isNew={i === newMsgIdx} />
+            <MessageBubble key={i} msg={m} isNew={i === newMsgIdx} animate={i === animIdx} />
           ))}
           {loading && <TypingIndicator />}
           <div ref={bottomRef} />
