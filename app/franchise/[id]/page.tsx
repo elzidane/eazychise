@@ -7,6 +7,7 @@ import { ArrowLeft, CheckCircle2, TrendingUp, Users, MapPin, Star, Download } fr
 import { generateProposalPDF } from "@/lib/pdf-generator";
 import { FRANCHISE_DATA } from "@/lib/franchise-data";
 import PartnershipModal from "@/components/PartnershipModal";
+import LocationRecommender from "@/components/LocationRecommender";
 
 export default function FranchiseDetailPage({
   params,
@@ -161,6 +162,9 @@ export default function FranchiseDetailPage({
             </ul>
           </div>
         </div>
+
+        {/* Location Recommender Integration */}
+        <LocationRecommender category={franchise.cat} />
 
         {/* Call to Action Bottom */}
         <div className="mt-12 bg-[#111] rounded-[32px] p-10 text-white flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden relative">
