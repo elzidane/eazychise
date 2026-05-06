@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -28,6 +28,27 @@ type POI = {
   lon: number;
   name: string;
   type: string;
+  description: string;
+};
+
+const getPOIDescription = (type: string, category: string) => {
+  const catLower = category.toLowerCase();
+  if (type === "Kampus / Universitas" || type === "Sekolah") {
+    return "Tinggi konsumsi pelajar dan mahasiswa yang mencari camilan atau minuman cepat saji di sela aktivitas.";
+  }
+  if (type === "Pusat Perbelanjaan") {
+    return "Memiliki traffic pengunjung yang sangat stabil setiap hari, terutama saat akhir pekan dan jam makan.";
+  }
+  if (type === "Area Perkantoran") {
+    return "Potensi market yang besar dari karyawan untuk kebutuhan makan siang, kopi sore, atau pesanan grup.";
+  }
+  if (type === "Kawasan Pemukiman") {
+    return "Target pasar keluarga yang ideal untuk layanan delivery dan kunjungan santai di sore atau malam hari.";
+  }
+  if (type === "Area Kafe / Nongkrong") {
+    return "Lokasi strategis dengan ekosistem konsumen F&B yang sudah matang dan siap mencoba brand baru.";
+  }
+  return "Lokasi dengan kepadatan penduduk tinggi dan aktivitas ekonomi yang mendukung pertumbuhan bisnis F&B.";
 };
 
 // Component to dynamically update map center
@@ -43,20 +64,28 @@ export default function LocationRecommenderMap({ category }: { category: string 
   const [center, setCenter] = useState<[number, number]>([-6.2088, 106.8456]); // Default: Jakarta
   const [pois, setPois] = useState<POI[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isLocating, setIsLocating] = useState(false);
+
+  const requestLocation = useCallback(() => {
+    if (!("geolocation" in navigator)) return;
+    
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setCenter([position.coords.latitude, position.coords.longitude]);
+        setIsLocating(false);
+      },
+      (error) => {
+        console.log("Geolocation error:", error);
+        setIsLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  }, []);
 
   useEffect(() => {
-    // Try to get user location
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setCenter([position.coords.latitude, position.coords.longitude]);
-        },
-        (error) => {
-          console.log("Geolocation error or denied, using default Jakarta:", error);
-        }
-      );
-    }
-  }, []);
+    requestLocation();
+  }, [requestLocation]);
 
   useEffect(() => {
     const fetchPOIs = async () => {
@@ -111,18 +140,25 @@ export default function LocationRecommenderMap({ category }: { category: string 
         data.elements.forEach((el: any) => {
           const lat = el.lat || el.center?.lat;
           const lon = el.lon || el.center?.lon;
-          const name = el.tags?.name;
+          const name = el.tags?.name || el.tags?.brand || el.tags?.operator || el.tags?.office || el.tags?.building || el.tags?.amenity?.replace(/_/g, ' ') || el.tags?.shop?.replace(/_/g, ' ') || el.tags?.tourism?.replace(/_/g, ' ');
           
           if (lat && lon && name) {
             let type = "Lokasi Strategis";
-            if (el.tags.amenity === "university") type = "Kampus / Universitas";
+            if (el.tags.amenity === "university" || el.tags.amenity === "college") type = "Kampus / Universitas";
             else if (el.tags.amenity === "school") type = "Sekolah";
-            else if (el.tags.shop === "mall") type = "Pusat Perbelanjaan";
-            else if (el.tags.building === "office") type = "Area Perkantoran";
-            else if (el.tags.landuse === "residential") type = "Kawasan Pemukiman";
-            else if (el.tags.amenity === "cafe") type = "Area Kafe / Nongkrong";
+            else if (el.tags.shop === "mall" || el.tags.amenity === "marketplace") type = "Pusat Perbelanjaan";
+            else if (el.tags.building === "office" || el.tags.office) type = "Area Perkantoran";
+            else if (el.tags.landuse === "residential" || el.tags.highway === "residential") type = "Kawasan Pemukiman";
+            else if (el.tags.amenity === "cafe" || el.tags.amenity === "restaurant") type = "Area Kafe / Nongkrong";
 
-            results.push({ id: el.id, lat, lon, name, type });
+            results.push({ 
+              id: el.id, 
+              lat, 
+              lon, 
+              name, 
+              type,
+              description: getPOIDescription(type, category)
+            });
           }
         });
 
@@ -135,13 +171,32 @@ export default function LocationRecommenderMap({ category }: { category: string 
       } catch (err) {
         console.log("Fallback to generated POIs:", err);
         // Generate 3-5 random points around center
-        const fallbackPOIs = Array.from({ length: 4 }).map((_, i) => ({
-          id: Date.now() + i,
-          lat: center[0] + (Math.random() - 0.5) * 0.02,
-          lon: center[1] + (Math.random() - 0.5) * 0.02,
-          name: `Potensi Lokasi Strategis #${i + 1}`,
-          type: catLower.includes("minuman") ? "Dekat Kampus/Sekolah" : "Area Padat Penduduk"
-        }));
+        const fallbackPOIs = [
+          {
+            id: Date.now() + 1,
+            lat: center[0] + 0.005,
+            lon: center[1] + 0.005,
+            name: catLower.includes("minuman") ? "Zona Pendidikan & Kampus" : "Pusat Perbelanjaan & Retail",
+            type: catLower.includes("minuman") ? "Kampus / Universitas" : "Pusat Perbelanjaan",
+            description: getPOIDescription(catLower.includes("minuman") ? "Kampus / Universitas" : "Pusat Perbelanjaan", category)
+          },
+          {
+            id: Date.now() + 2,
+            lat: center[0] - 0.004,
+            lon: center[1] + 0.008,
+            name: "Kawasan Perkantoran Utama",
+            type: "Area Perkantoran",
+            description: getPOIDescription("Area Perkantoran", category)
+          },
+          {
+            id: Date.now() + 3,
+            lat: center[0] + 0.007,
+            lon: center[1] - 0.003,
+            name: "Cluster Pemukiman Padat",
+            type: "Kawasan Pemukiman",
+            description: getPOIDescription("Kawasan Pemukiman", category)
+          }
+        ];
         setPois(fallbackPOIs);
       } finally {
         setLoading(false);
@@ -153,12 +208,33 @@ export default function LocationRecommenderMap({ category }: { category: string 
 
   return (
     <div className="w-full h-full relative rounded-2xl overflow-hidden border border-black/10 shadow-sm z-0">
-      {loading && (
+      {(loading || isLocating) && (
         <div className="absolute inset-0 bg-white/80 z-[1000] flex flex-col items-center justify-center">
           <div className="w-8 h-8 border-4 border-[#FF5C1A]/30 border-t-[#FF5C1A] rounded-full animate-spin mb-3"></div>
-          <p className="text-sm font-semibold text-gray-600">Menganalisis lokasi potensial...</p>
+          <p className="text-sm font-semibold text-gray-600">{isLocating ? "Mencari lokasi Anda..." : "Menganalisis lokasi potensial..."}</p>
         </div>
       )}
+
+      {/* Recenter Button */}
+      <button 
+        onClick={requestLocation}
+        className="absolute top-4 right-4 z-[500] bg-white p-2.5 rounded-xl shadow-lg border border-black/5 hover:bg-gray-50 active:scale-95 transition-all group"
+        title="Gunakan Lokasi Saya"
+      >
+        <svg 
+          width="20" height="20" viewBox="0 0 24 24" fill="none" 
+          stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+          className={`text-[#FF5C1A] ${isLocating ? 'animate-pulse' : ''}`}
+        >
+          <circle cx="12" cy="12" r="10" />
+          <circle cx="12" cy="12" r="3" />
+          <line x1="12" y1="2" x2="12" y2="4" />
+          <line x1="12" y1="20" x2="12" y2="22" />
+          <line x1="2" y1="12" x2="4" y2="12" />
+          <line x1="20" y1="12" x2="22" y2="12" />
+        </svg>
+      </button>
+
       <MapContainer center={center} zoom={13} style={{ height: "100%", width: "100%" }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -169,18 +245,22 @@ export default function LocationRecommenderMap({ category }: { category: string 
         {/* User Location Marker */}
         <Marker position={center}>
           <Popup>
-            <div className="text-center font-semibold">Pusat Area Anda</div>
+            <div className="text-center font-semibold text-sm">Lokasi Anda Sekarang</div>
           </Popup>
         </Marker>
 
-        {/* Recommended POIs */}
         {pois.map((poi) => (
           <Marker key={poi.id} position={[poi.lat, poi.lon]} icon={customMarkerIcon}>
             <Popup>
-              <div className="min-w-[150px]">
-                <div className="text-xs font-bold text-[#FF5C1A] uppercase tracking-wider mb-1">Rekomendasi</div>
-                <div className="font-bold text-gray-900 mb-1">{poi.name}</div>
-                <div className="text-xs text-gray-500 bg-gray-100 inline-block px-2 py-1 rounded">{poi.type}</div>
+              <div className="min-w-[200px] py-1">
+                <div className="text-[10px] font-bold text-[#FF5C1A] uppercase tracking-widest mb-2 opacity-80">Analisis Lokasi</div>
+                <div className="font-bold text-gray-900 text-base mb-1 leading-tight">{poi.name}</div>
+                <div className="text-[10px] text-gray-400 font-medium mb-3">{poi.type}</div>
+                <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                  <p className="text-[11px] text-gray-600 leading-relaxed m-0 italic">
+                    &ldquo;{poi.description}&rdquo;
+                  </p>
+                </div>
               </div>
             </Popup>
           </Marker>
