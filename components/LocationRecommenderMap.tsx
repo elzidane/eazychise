@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -64,20 +64,28 @@ export default function LocationRecommenderMap({ category }: { category: string 
   const [center, setCenter] = useState<[number, number]>([-6.2088, 106.8456]); // Default: Jakarta
   const [pois, setPois] = useState<POI[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isLocating, setIsLocating] = useState(false);
+
+  const requestLocation = useCallback(() => {
+    if (!("geolocation" in navigator)) return;
+    
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setCenter([position.coords.latitude, position.coords.longitude]);
+        setIsLocating(false);
+      },
+      (error) => {
+        console.log("Geolocation error:", error);
+        setIsLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  }, []);
 
   useEffect(() => {
-    // Try to get user location
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setCenter([position.coords.latitude, position.coords.longitude]);
-        },
-        (error) => {
-          console.log("Geolocation error or denied, using default Jakarta:", error);
-        }
-      );
-    }
-  }, []);
+    requestLocation();
+  }, [requestLocation]);
 
   useEffect(() => {
     const fetchPOIs = async () => {
@@ -200,12 +208,33 @@ export default function LocationRecommenderMap({ category }: { category: string 
 
   return (
     <div className="w-full h-full relative rounded-2xl overflow-hidden border border-black/10 shadow-sm z-0">
-      {loading && (
+      {(loading || isLocating) && (
         <div className="absolute inset-0 bg-white/80 z-[1000] flex flex-col items-center justify-center">
           <div className="w-8 h-8 border-4 border-[#FF5C1A]/30 border-t-[#FF5C1A] rounded-full animate-spin mb-3"></div>
-          <p className="text-sm font-semibold text-gray-600">Menganalisis lokasi potensial...</p>
+          <p className="text-sm font-semibold text-gray-600">{isLocating ? "Mencari lokasi Anda..." : "Menganalisis lokasi potensial..."}</p>
         </div>
       )}
+
+      {/* Recenter Button */}
+      <button 
+        onClick={requestLocation}
+        className="absolute top-4 right-4 z-[500] bg-white p-2.5 rounded-xl shadow-lg border border-black/5 hover:bg-gray-50 active:scale-95 transition-all group"
+        title="Gunakan Lokasi Saya"
+      >
+        <svg 
+          width="20" height="20" viewBox="0 0 24 24" fill="none" 
+          stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+          className={`text-[#FF5C1A] ${isLocating ? 'animate-pulse' : ''}`}
+        >
+          <circle cx="12" cy="12" r="10" />
+          <circle cx="12" cy="12" r="3" />
+          <line x1="12" y1="2" x2="12" y2="4" />
+          <line x1="12" y1="20" x2="12" y2="22" />
+          <line x1="2" y1="12" x2="4" y2="12" />
+          <line x1="20" y1="12" x2="22" y2="12" />
+        </svg>
+      </button>
+
       <MapContainer center={center} zoom={13} style={{ height: "100%", width: "100%" }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -216,7 +245,7 @@ export default function LocationRecommenderMap({ category }: { category: string 
         {/* User Location Marker */}
         <Marker position={center}>
           <Popup>
-            <div className="text-center font-semibold">Pusat Area Anda</div>
+            <div className="text-center font-semibold text-sm">Lokasi Anda Sekarang</div>
           </Popup>
         </Marker>
 
