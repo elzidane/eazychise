@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ArrowRight, X } from "lucide-react";
 
 const links = [
   { href: "/",             label: "Beranda" },
@@ -109,7 +110,7 @@ export default function Navbar() {
               className="flex items-center gap-1.5 bg-[#FF5C1A] text-white pl-5 pr-4 py-2 rounded-xl text-[0.83rem] font-bold shadow-[0_4px_16px_rgba(255,92,26,0.35)] hover:bg-[#e04710] hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(255,92,26,0.45)] transition-all duration-200"
             >
               Mulai Gratis
-              <span className="text-[#FFCF40] font-black text-[0.9rem]">→</span>
+              <ArrowRight className="w-4 h-4 text-[#FFCF40]" />
             </Link>
           </div>
 
@@ -163,9 +164,9 @@ export default function Navbar() {
           </span>
           <button
             onClick={() => setMenuOpen(false)}
-            className="w-7 h-7 flex items-center justify-center rounded-lg bg-black/5 hover:bg-[#FF5C1A]/10 text-[#777] hover:text-[#FF5C1A] transition-colors text-sm cursor-pointer"
+            className="w-7 h-7 flex items-center justify-center rounded-lg bg-black/5 hover:bg-[#FF5C1A]/10 text-[#777] hover:text-[#FF5C1A] transition-colors cursor-pointer"
           >
-            ✕
+            <X className="w-4 h-4" />
           </button>
         </div>
 
@@ -204,12 +205,16 @@ export default function Navbar() {
           <Link
             href="/daftar"
             onClick={() => setMenuOpen(false)}
-            className="text-center bg-[#FF5C1A] text-white py-3 rounded-xl text-[0.88rem] font-bold shadow-[0_4px_16px_rgba(255,92,26,0.3)] hover:bg-[#e04710] transition-all"
+            className="flex items-center justify-center gap-2 bg-[#FF5C1A] text-white py-3 rounded-xl text-[0.88rem] font-bold shadow-[0_4px_16px_rgba(255,92,26,0.3)] hover:bg-[#e04710] transition-all"
           >
-            Mulai Gratis Sekarang →
+            Mulai Gratis Sekarang <ArrowRight className="w-4 h-4" />
           </Link>
-          <p className="text-center text-[0.68rem] text-[#bbb]">
-            320+ franchise F&amp;B terpercaya 🇮🇩
+          <p className="text-center text-[0.68rem] text-[#bbb] flex items-center justify-center gap-1.5">
+            320+ franchise F&amp;B terpercaya
+            <span className="w-4 h-3 bg-red-500 relative flex flex-col rounded-[1px] overflow-hidden">
+              <span className="h-1/2 bg-[#FF0000] w-full" />
+              <span className="h-1/2 bg-white w-full" />
+            </span>
           </p>
         </div>
       </div>

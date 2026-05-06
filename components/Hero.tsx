@@ -4,6 +4,17 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { BlurText, CountUp, ShinyText, TiltCard } from "./Reactbitseffects";
 import MagneticButton from "./MagneticButton";
+import { 
+  Search, 
+  ArrowRight, 
+  Flame, 
+  CheckCircle2, 
+  Utensils, 
+  Coffee, 
+  User, 
+  Star,
+  Pizza
+} from "lucide-react";
 
 const stats = [
   { num: 320, suffix: "+", label: "Brand F&B Aktif" },
@@ -98,7 +109,13 @@ export default function Hero() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF5C1A] opacity-60" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF5C1A]" />
             </span>
-            <ShinyText text="Platform F&B Franchise #1 Indonesia 🇮🇩" speed={10} />
+            <div className="flex items-center gap-2">
+              <ShinyText text="Platform F&B Franchise #1 Indonesia" speed={10} />
+              <span className="w-4 h-3 bg-red-500 relative flex flex-col rounded-[1px] overflow-hidden">
+                <span className="h-1/2 bg-[#FF0000] w-full" />
+                <span className="h-1/2 bg-white w-full" />
+              </span>
+            </div>
           </div>
 
           {/* Headline */}
@@ -149,8 +166,10 @@ export default function Hero() {
               >
                 {/* Shimmer */}
                 <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-500 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                <span className="relative">🔍 Cari Franchise F&amp;B</span>
-                <span className="relative text-[#FFCF40] font-black">→</span>
+                <span className="relative flex items-center gap-2">
+                  <Search className="w-4 h-4" /> Cari Franchise F&amp;B
+                </span>
+                <span className="relative text-[#FFCF40] font-black"><ArrowRight className="w-4 h-4" /></span>
               </Link>
             </MagneticButton>
             
@@ -159,7 +178,7 @@ export default function Hero() {
               className="flex items-center gap-2 border-2 border-[#111111]/20 text-[#333] bg-white px-6 py-3.5 rounded-full font-bold text-[0.93rem] hover:border-[#111111] hover:text-[#111111] hover:-translate-y-0.5 transition-all duration-200 shadow-sm"
             >
               Daftarkan Brand
-              <span className="text-[#FF5C1A]">→</span>
+              <ArrowRight className="w-4 h-4 text-[#FF5C1A]" />
             </Link>
           </div>
 
@@ -181,12 +200,18 @@ export default function Hero() {
           {/* Social proof avatars */}
           <div className="animate-fade-up-5 hidden lg:flex items-center gap-3 mt-7">
             <div className="flex -space-x-2">
-              {["🧑🏽", "👩🏻", "👨🏾", "👩🏼", "🧑🏻"].map((emoji, i) => (
+              {[
+                "https://i.pravatar.cc/100?u=1",
+                "https://i.pravatar.cc/100?u=2",
+                "https://i.pravatar.cc/100?u=3",
+                "https://i.pravatar.cc/100?u=4",
+                "https://i.pravatar.cc/100?u=5"
+              ].map((url, i) => (
                 <div
                   key={i}
-                  className="w-8 h-8 rounded-full bg-[#FFF3E5] border-2 border-[#FFF9F0] flex items-center justify-center text-sm shadow-sm"
+                  className="w-8 h-8 rounded-full border-2 border-[#FFF9F0] overflow-hidden shadow-sm relative bg-[#FFF3E5]"
                 >
-                  {emoji}
+                  <img src={url} alt="Mitra" className="w-full h-full object-cover" />
                 </div>
               ))}
             </div>
@@ -196,7 +221,7 @@ export default function Hero() {
               </p>
               <div className="flex gap-0.5 mt-0.5">
                 {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-[#FFCF40] text-[0.65rem]">★</span>
+                  <Star key={i} className="w-2.5 h-2.5 fill-[#FFCF40] text-[#FFCF40]" />
                 ))}
                 <span className="text-[0.68rem] text-[#888] ml-1">4.9/5</span>
               </div>
@@ -222,15 +247,19 @@ export default function Hero() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                 {/* Category chip top */}
-                <div className="absolute top-3 left-3 bg-[#FF5C1A] text-white text-[0.65rem] font-bold px-2.5 py-1 rounded-full">
-                  🍜 Kuliner
+                <div className="absolute top-3 left-3 bg-[#FF5C1A] text-white text-[0.65rem] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-lg">
+                  <Utensils className="w-3 h-3" /> Kuliner
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <p className="text-white font-bold text-sm leading-tight">{images[0].name}</p>
                   <p className="text-white/60 text-[0.68rem] mt-0.5">{images[0].meta}</p>
                   {/* Rating */}
                   <div className="flex items-center gap-1 mt-1.5">
-                    <span className="text-[#FFCF40] text-[0.7rem]">★★★★★</span>
+                    <div className="flex gap-0.5">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-2.5 h-2.5 fill-[#FFCF40] text-[#FFCF40]" />
+                      ))}
+                    </div>
                     <span className="text-white/50 text-[0.65rem]">4.9</span>
                   </div>
                 </div>
@@ -246,8 +275,8 @@ export default function Hero() {
                   sizes="240px"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
-                <div className="absolute top-2.5 left-2.5 bg-black/50 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full">
-                  ☕ Minuman
+                <div className="absolute top-2.5 left-2.5 bg-black/50 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <Coffee className="w-2.5 h-2.5" /> Minuman
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-3">
                   <p className="text-white font-bold text-xs">{images[1].name}</p>
@@ -265,8 +294,8 @@ export default function Hero() {
                   sizes="240px"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
-                <div className="absolute top-2.5 left-2.5 bg-black/50 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full">
-                  🍗 Kuliner
+                <div className="absolute top-2.5 left-2.5 bg-black/50 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <Pizza className="w-2.5 h-2.5" /> Kuliner
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-3">
                   <p className="text-white font-bold text-xs">{images[2].name}</p>
@@ -281,7 +310,9 @@ export default function Hero() {
               className="absolute -top-6 -right-6 bg-[#FFCF40] rounded-2xl px-4 py-3 shadow-[0_12px_36px_rgba(0,0,0,0.14)] flex items-center gap-3 z-20 animate-float"
               style={{ minWidth: 170 }}
             >
-              <div className="w-10 h-10 rounded-xl bg-white/30 flex items-center justify-center text-xl flex-shrink-0">🔥</div>
+              <div className="w-10 h-10 rounded-xl bg-white/30 flex items-center justify-center text-[#111] flex-shrink-0">
+                <Flame className="w-6 h-6 fill-[#FF5C1A] text-[#FF5C1A]" />
+              </div>
               <div>
                 <p className="font-extrabold text-[0.88rem] text-[#111] leading-none">Terlaris Bulan Ini</p>
                 <p className="text-[0.7rem] text-black/55 mt-0.5">Kopi Susu Kekinian</p>
@@ -293,7 +324,9 @@ export default function Hero() {
               className="absolute -bottom-5 -left-7 bg-white rounded-2xl px-4 py-3 shadow-[0_12px_36px_rgba(0,0,0,0.1)] flex items-center gap-3 z-20 animate-float-delay"
               style={{ minWidth: 190 }}
             >
-              <div className="w-10 h-10 rounded-xl bg-[#1B8C5A]/10 flex items-center justify-center text-xl flex-shrink-0">✅</div>
+              <div className="w-10 h-10 rounded-xl bg-[#1B8C5A]/10 flex items-center justify-center text-[#1B8C5A] flex-shrink-0">
+                <CheckCircle2 className="w-6 h-6" />
+              </div>
               <div>
                 <p className="font-extrabold text-[0.88rem] text-[#1B8C5A] leading-none">Semua Terverifikasi</p>
                 <p className="text-[0.7rem] text-[#888] mt-0.5">BPOM &amp; Halal MUI</p>

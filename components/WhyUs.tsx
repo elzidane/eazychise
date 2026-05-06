@@ -1,25 +1,33 @@
 "use client";
-import Image from "next/image";
 import { useEffect, useRef } from "react";
+import Image from "next/image";
+import { 
+  CheckCircle2, 
+  ShieldCheck, 
+  UserRound, 
+  BarChart3, 
+  ArrowRight, 
+  Star 
+} from "lucide-react";
 
 const features = [
   {
-    icon: "✅",
+    icon: CheckCircle2,
     title: "Terverifikasi BPOM & Halal MUI",
     desc: "Setiap brand melewati cek dokumen legal dan sertifikasi resmi sebelum tayang di platform.",
   },
   {
-    icon: "🛡️",
+    icon: ShieldCheck,
     title: "Dana Investasi 100% Aman",
     desc: "Uang tersimpan di rekening escrow. Dicairkan ke franchisor hanya setelah perjanjian sah.",
   },
   {
-    icon: "👨‍🍳",
+    icon: UserRound,
     title: "Pelatihan & SOP Gratis",
     desc: "Pelatihan langsung dari dapur brand, SOP operasional, dan panduan promosi siap pakai.",
   },
   {
-    icon: "📊",
+    icon: BarChart3,
     title: "Dashboard Bisnis Real-Time",
     desc: "Monitor omzet, stok, dan performa gerai langsung dari HP via aplikasi EazyChise.",
   },
@@ -96,8 +104,8 @@ export default function WhyUs() {
                 style={{ transitionDelay: `${i * 80}ms` }}
               >
                 {/* Icon box */}
-                <div className="w-10 h-10 rounded-xl bg-white/8 border border-white/10 flex items-center justify-center text-lg flex-shrink-0 group-hover:bg-[#FF5C1A]/20 group-hover:border-[#FF5C1A]/30 transition-colors duration-300">
-                  {f.icon}
+                <div className="w-10 h-10 rounded-xl bg-white/8 border border-white/10 flex items-center justify-center text-[#FF5C1A] flex-shrink-0 group-hover:bg-[#FF5C1A]/20 group-hover:border-[#FF5C1A]/30 transition-colors duration-300">
+                  {(() => { const Icon = f.icon; return <Icon className="w-5 h-5" />; })()}
                 </div>
                 <div>
                   <h4 className="text-white font-bold text-[0.95rem] mb-1 group-hover:text-[#FF5C1A] transition-colors duration-300">
@@ -106,8 +114,8 @@ export default function WhyUs() {
                   <p className="text-white/40 text-[0.82rem] leading-[1.65]">{f.desc}</p>
                 </div>
                 {/* Right arrow — appears on hover */}
-                <div className="ml-auto pl-2 text-white/15 group-hover:text-[#FF5C1A]/60 transition-colors duration-300 flex-shrink-0 self-center text-sm">
-                  →
+                <div className="ml-auto pl-2 text-white/15 group-hover:text-[#FF5C1A]/60 transition-colors duration-300 flex-shrink-0 self-center">
+                  <ArrowRight className="w-4 h-4" />
                 </div>
               </li>
             ))}
@@ -178,8 +186,8 @@ export default function WhyUs() {
                 <p className="text-white font-bold text-[0.8rem] leading-tight">Mie Ayam</p>
                 <p className="text-white/50 text-[0.65rem]">Rp 7 Juta • Kuliner</p>
               </div>
-              <div className="bg-[#FFCF40] text-[#111] text-[0.65rem] font-bold px-2 py-1 rounded-full">
-                ★ 4.8
+              <div className="bg-[#FFCF40] text-[#111] text-[0.65rem] font-bold px-2 py-1 rounded-full flex items-center gap-1">
+                <Star className="w-2.5 h-2.5 fill-current" /> 4.8
               </div>
             </div>
           </div>

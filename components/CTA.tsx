@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 export default function CTASection() {
   return (
@@ -61,7 +62,7 @@ export default function CTASection() {
           >
             <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-500 bg-gradient-to-r from-transparent via-white/15 to-transparent" />
             <span className="relative">Daftar Gratis Sekarang</span>
-            <span className="relative text-[#FFCF40] font-black">→</span>
+            <ArrowRight className="w-4 h-4 text-[#FFCF40]" />
           </Link>
           <a
             href="https://wa.me/6281234567890?text=Halo%20GoChise%2C%20saya%20mau%20konsultasi%20franchise%20F%26B"
@@ -74,12 +75,12 @@ export default function CTASection() {
         {/* Trust signals */}
         <div className="flex items-center justify-center gap-6 flex-wrap">
           {[
-            { icon: "✓", text: "Gratis daftar" },
-            { icon: "✓", text: "Tanpa biaya tersembunyi" },
-            { icon: "✓", text: "Dukungan 24/7" },
+            { text: "Gratis daftar" },
+            { text: "Tanpa biaya tersembunyi" },
+            { text: "Dukungan 24/7" },
           ].map((s) => (
             <div key={s.text} className="flex items-center gap-1.5 text-white/30 text-[0.78rem]">
-              <span className="text-[#1B8C5A] font-bold text-sm">{s.icon}</span>
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#1B8C5A]" />
               {s.text}
             </div>
           ))}

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { ArrowRight, Star } from "lucide-react";
 
 import { FRANCHISE_DATA } from "@/lib/franchise-data";
 
@@ -54,7 +55,7 @@ export default function FeaturedSection() {
           className="hidden sm:flex items-center gap-2 text-white/30 hover:text-white/70 text-sm transition-colors group"
         >
           Lihat semua
-          <span className="group-hover:translate-x-0.5 transition-transform inline-block">→</span>
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         </Link>
       </div>
 
@@ -96,7 +97,7 @@ export default function FeaturedSection() {
                 </p>
               </div>
               <div className="flex items-center gap-1.5 bg-white/8 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                <span className="text-[#FFCF40] text-xs">★</span>
+                <Star className="w-3 h-3 fill-[#FFCF40] text-[#FFCF40]" />
                 <span className="text-white font-semibold text-sm">{main.rating}</span>
               </div>
             </div>
@@ -130,7 +131,7 @@ export default function FeaturedSection() {
                   <p className="text-[#FFCF40] font-bold text-[0.9rem] mt-1.5">{item.price}</p>
                 </div>
                 <div className="flex items-center gap-1 bg-white/8 backdrop-blur-sm px-2.5 py-1 rounded-full flex-shrink-0 ml-3">
-                  <span className="text-[#FFCF40] text-[0.65rem]">★</span>
+                  <Star className="w-2.5 h-2.5 fill-[#FFCF40] text-[#FFCF40]" />
                   <span className="text-white font-semibold text-[0.78rem]">{item.rating}</span>
                 </div>
               </div>
@@ -145,7 +146,7 @@ export default function FeaturedSection() {
               Lihat 320+ franchise lainnya
             </span>
             <div className="w-7 h-7 rounded-full border border-white/10 group-hover:border-[#FF5C1A]/50 flex items-center justify-center text-white/30 group-hover:text-[#FF5C1A] group-hover:translate-x-0.5 transition-all text-xs">
-              →
+              <ArrowRight className="w-4 h-4" />
             </div>
           </Link>
         </div>

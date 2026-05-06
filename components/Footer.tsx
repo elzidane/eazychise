@@ -137,8 +137,12 @@ export default function Footer() {
 
       {/* ── Bottom bar ── */}
       <div className="border-t border-white/[0.06] pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <p className="text-[0.75rem] text-white/20">
-          © 2025 EazyChise. Platform F&amp;B Franchise Indonesia 🇮🇩
+        <p className="text-[0.75rem] text-white/20 flex items-center gap-1.5">
+          © 2025 EazyChise. Platform F&amp;B Franchise Indonesia
+          <span className="w-3.5 h-2.5 bg-red-500 relative flex flex-col rounded-[1px] overflow-hidden opacity-40">
+            <span className="h-1/2 bg-[#FF0000] w-full" />
+            <span className="h-1/2 bg-white w-full" />
+          </span>
         </p>
         <div className="flex items-center gap-3 flex-wrap justify-center">
           {["Kemenkominfo", "Kemenkop UKM", "BPOM Partner"].map((badge) => (

@@ -1,14 +1,25 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { 
+  Wallet, 
+  MapPin, 
+  Briefcase, 
+  Utensils, 
+  CheckCircle2, 
+  RotateCcw, 
+  ArrowRight, 
+  Sparkles,
+  MessageCircle
+} from "lucide-react";
 
 type Message = { role: "user" | "assistant"; content: string };
 
 const STEPS = [
-  { id: "modal", q: "Berapa modal yang kamu siapkan?", icon: "💰", options: ["< Rp 3 Juta", "Rp 3–7 Juta", "Rp 7–15 Juta", "> Rp 15 Juta"] },
-  { id: "lokasi", q: "Di mana kamu akan buka usaha?", icon: "📍", options: ["Jabodetabek", "Jawa Tengah/DIY", "Jawa Timur", "Luar Jawa"] },
-  { id: "pengalaman", q: "Pengalaman bisnismu sejauh ini?", icon: "🧩", options: ["Belum pernah", "Pernah, tapi gagal", "Punya bisnis sampingan", "Sudah berpengalaman"] },
-  { id: "kategori", q: "Kategori F&B yang paling menarik?", icon: "🍽️", options: ["Kopi & Minuman", "Makanan Berat", "Dessert & Snack", "Semua cocok"] },
+  { id: "modal", q: "Berapa modal yang kamu siapkan?", icon: Wallet, options: ["< Rp 3 Juta", "Rp 3–7 Juta", "Rp 7–15 Juta", "> Rp 15 Juta"] },
+  { id: "lokasi", q: "Di mana kamu akan buka usaha?", icon: MapPin, options: ["Jabodetabek", "Jawa Tengah/DIY", "Jawa Timur", "Luar Jawa"] },
+  { id: "pengalaman", q: "Pengalaman bisnismu sejauh ini?", icon: Briefcase, options: ["Belum pernah", "Pernah, tapi gagal", "Punya bisnis sampingan", "Sudah berpengalaman"] },
+  { id: "kategori", q: "Kategori F&B yang paling menarik?", icon: Utensils, options: ["Kopi & Minuman", "Makanan Berat", "Dessert & Snack", "Semua cocok"] },
 ];
 
 function OrbitRing({ size, duration, delay, opacity }: { size: number; duration: number; delay: number; opacity: number }) {
@@ -42,8 +53,8 @@ function AnalysisCard({ content, onReset }: { content: string; onReset: () => vo
           <p className="text-[0.65rem] md:text-[0.72rem] leading-snug" style={{ color: "rgba(255,255,255,.4)" }}>Rekomendasi personal berdasarkan profilmu</p>
         </div>
         <div className="flex-shrink-0 mt-1 md:mt-0">
-          <span style={{ fontSize: "0.68rem", fontWeight: 700, padding: "4px 10px", borderRadius: 99, background: "rgba(34,197,94,.15)", color: "#4ade80", border: "1px solid rgba(34,197,94,.25)", whiteSpace: "nowrap" }}>
-            ✓ Selesai
+          <span style={{ fontSize: "0.68rem", fontWeight: 700, padding: "4px 10px", borderRadius: 99, background: "rgba(34,197,94,.15)", color: "#4ade80", border: "1px solid rgba(34,197,94,.25)", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 4 }}>
+            <CheckCircle2 className="w-3 h-3" /> Selesai
           </span>
         </div>
       </div>
@@ -71,11 +82,11 @@ function AnalysisCard({ content, onReset }: { content: string; onReset: () => vo
       <div className="flex flex-col sm:flex-row gap-3 mt-5">
         <button
           onClick={onReset}
-          style={{ flex: 1, padding: "11px", borderRadius: 12, cursor: "pointer", background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.1)", color: "rgba(255,255,255,.7)", fontSize: "0.82rem", fontWeight: 600, transition: "all .2s" }}
+          style={{ flex: 1, padding: "11px", borderRadius: 12, cursor: "pointer", background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.1)", color: "rgba(255,255,255,.7)", fontSize: "0.82rem", fontWeight: 600, transition: "all .2s", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
           onMouseEnter={e => { const b = e.currentTarget; b.style.background="rgba(255,255,255,.1)"; b.style.color="white"; }}
           onMouseLeave={e => { const b = e.currentTarget; b.style.background="rgba(255,255,255,.06)"; b.style.color="rgba(255,255,255,.7)"; }}
         >
-          ↺ Ulangi Analisis
+          <RotateCcw className="w-4 h-4" /> Ulangi Analisis
         </button>
         <Link
           href="/franchise"
@@ -284,11 +295,14 @@ Berikan rekomendasi franchise yang paling cocok dari daftar EazyChise (Kopiku Nu
                   <div style={{ height: "100%", borderRadius: 99, background: "linear-gradient(90deg,#FF5C1A,#FF8C42)", width: `${progress}%`, transition: "width .6s cubic-bezier(.4,0,.2,1)" }} />
                 </div>
                 <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
-                  {STEPS.map((s, i) => (
-                    <div key={s.id} style={{ fontSize: "0.65rem", padding: "3px 8px", borderRadius: 99, background: i <= currentQ && step > 0 ? "rgba(255,92,26,.2)" : "rgba(255,255,255,.05)", color: i <= currentQ && step > 0 ? "#FF8C42" : "rgba(255,255,255,.25)", border: i <= currentQ && step > 0 ? "1px solid rgba(255,92,26,.3)" : "1px solid rgba(255,255,255,.07)", transition: "all .3s" }}>
-                      {s.icon} {s.id}
-                    </div>
-                  ))}
+                  {STEPS.map((s, i) => {
+                    const Icon = s.icon;
+                    return (
+                      <div key={s.id} style={{ fontSize: "0.65rem", padding: "3px 8px", borderRadius: 99, background: i <= currentQ && step > 0 ? "rgba(255,92,26,.2)" : "rgba(255,255,255,.05)", color: i <= currentQ && step > 0 ? "#FF8C42" : "rgba(255,255,255,.25)", border: i <= currentQ && step > 0 ? "1px solid rgba(255,92,26,.3)" : "1px solid rgba(255,255,255,.07)", transition: "all .3s", display: "flex", alignItems: "center", gap: 4 }}>
+                        <Icon className="w-3 h-3" /> {s.id}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -319,8 +333,10 @@ Berikan rekomendasi franchise yang paling cocok dari daftar EazyChise (Kopiku Nu
 
                 {/* Feature pills */}
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 36 }}>
-                  {["✓ Gratis selamanya", "✓ Hasil instan", "✓ Personal & akurat"].map(f => (
-                    <span key={f} style={{ fontSize: "0.73rem", padding: "5px 12px", borderRadius: 99, background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.08)", color: "rgba(255,255,255,.55)" }}>{f}</span>
+                  {["Gratis selamanya", "Hasil instan", "Personal & akurat"].map(f => (
+                    <span key={f} style={{ fontSize: "0.73rem", padding: "5px 12px", borderRadius: 99, background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.08)", color: "rgba(255,255,255,.55)", display: "flex", alignItems: "center", gap: 4 }}>
+                      <CheckCircle2 className="w-3 h-3 text-[#FF5C1A]" /> {f}
+                    </span>
                   ))}
                 </div>
 
@@ -349,8 +365,11 @@ Berikan rekomendasi franchise yang paling cocok dari daftar EazyChise (Kopiku Nu
                 <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#FF5C1A", marginBottom: 10 }}>
                   Pertanyaan {currentQ + 1} / {STEPS.length}
                 </p>
-                <h3 style={{ fontFamily: "var(--font-syne,sans-serif)", fontSize: "1.3rem", fontWeight: 800, color: "white", lineHeight: 1.3, letterSpacing: "-0.02em", marginBottom: 28 }}>
-                  {STEPS[currentQ].icon} {STEPS[currentQ].q}
+                <h3 style={{ fontFamily: "var(--font-syne,sans-serif)", fontSize: "1.3rem", fontWeight: 800, color: "white", lineHeight: 1.3, letterSpacing: "-0.02em", marginBottom: 28, display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,92,26,.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#FF5C1A" }}>
+                    {(() => { const Icon = STEPS[currentQ].icon; return <Icon className="w-5 h-5" />; })()}
+                  </div>
+                  {STEPS[currentQ].q}
                 </h3>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -388,8 +407,11 @@ Berikan rekomendasi franchise yang paling cocok dari daftar EazyChise (Kopiku Nu
             {step === 5 && (
               <div style={{ animation: "fadeUp .4s ease both" }}>
                 <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#FF5C1A", marginBottom: 10 }}>Langkah Terakhir</p>
-                <h3 style={{ fontFamily: "var(--font-syne,sans-serif)", fontSize: "1.3rem", fontWeight: 800, color: "white", lineHeight: 1.3, letterSpacing: "-0.02em", marginBottom: 8 }}>
-                  💬 Ada hal lain yang ingin diceritakan?
+                <h3 style={{ fontFamily: "var(--font-syne,sans-serif)", fontSize: "1.3rem", fontWeight: 800, color: "white", lineHeight: 1.3, letterSpacing: "-0.02em", marginBottom: 8, display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,92,26,.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#FF5C1A" }}>
+                    <MessageCircle className="w-5 h-5" />
+                  </div>
+                  Ada hal lain yang ingin diceritakan?
                 </h3>
                 <p style={{ fontSize: "0.82rem", color: "rgba(255,255,255,.4)", marginBottom: 24, lineHeight: 1.7 }}>
                   Opsional — ceritakan situasi spesifikmu agar analisis lebih akurat.

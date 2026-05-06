@@ -1,5 +1,16 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import { 
+  Wallet, 
+  Coffee, 
+  Leaf, 
+  Zap, 
+  User, 
+  Sparkles, 
+  ChevronDown,
+  Trash2,
+  X
+} from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────
 type Message = {
@@ -8,21 +19,21 @@ type Message = {
 };
 
 type QuickPrompt = {
-  icon: string;
+  icon: any;
   label: string;
   text: string;
 };
 
 const QUICK_PROMPTS: QuickPrompt[] = [
-  { icon: "💰", label: "Modal < Rp 5 Juta",  text: "Saya punya modal sekitar Rp 3-5 juta, franchise apa yang cocok untuk saya?" },
-  { icon: "☕", label: "Franchise Kopi",       text: "Saya tertarik franchise kopi, apa yang perlu saya siapkan?" },
-  { icon: "🌱", label: "Pemula bisnis",        text: "Saya belum pernah bisnis sebelumnya, franchise F&B apa yang cocok untuk pemula?" },
-  { icon: "⚡", label: "ROI tercepat",         text: "Franchise mana yang paling cepat balik modalnya?" },
+  { icon: Wallet, label: "Modal < Rp 5 Juta",  text: "Saya punya modal sekitar Rp 3-5 juta, franchise apa yang cocok untuk saya?" },
+  { icon: Coffee, label: "Franchise Kopi",       text: "Saya tertarik franchise kopi, apa yang perlu saya siapkan?" },
+  { icon: Leaf, label: "Pemula bisnis",        text: "Saya belum pernah bisnis sebelumnya, franchise F&B apa yang cocok untuk pemula?" },
+  { icon: Zap, label: "ROI tercepat",         text: "Franchise mana yang paling cepat balik modalnya?" },
 ];
 
 const GREETING: Message = {
   role: "assistant",
-  content: "Halo! ✨ Saya EazyChise AI Advisor.\n\nSaya bisa bantu kamu menemukan franchise F&B terbaik — lengkap dengan kalkulasi BEP, estimasi profit, dan analisis risiko!\n\nCeritakan rencana bisnismu, atau pilih pertanyaan di bawah 👇",
+  content: "Halo! Saya EazyChise AI Advisor.\n\nSaya bisa bantu kamu menemukan franchise F&B terbaik — lengkap dengan kalkulasi BEP, estimasi profit, dan analisis risiko!\n\nCeritakan rencana bisnismu, atau pilih pertanyaan di bawah ini.",
 };
 
 // ─── Sparkle SVG ──────────────────────────────────────────────
@@ -130,9 +141,9 @@ function MessageBubble({ msg, isNew }: { msg: Message; isNew?: boolean }) {
           background: "rgba(255,255,255,0.07)",
           border: "1px solid rgba(255,255,255,0.12)",
           display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: "0.85rem",
+          color: "rgba(255,255,255,0.5)",
         }}>
-          👤
+          <User className="w-4 h-4" />
         </div>
       )}
     </div>
@@ -153,13 +164,13 @@ function QuickBtn({ q, onSend }: { q: QuickPrompt; onSend: (t: string) => void }
         border: hover ? "1px solid rgba(255,120,30,0.4)" : "1px solid rgba(255,255,255,0.07)",
         color: hover ? "#FFAB68" : "rgba(255,255,255,0.62)",
         fontSize: "0.74rem", fontWeight: 500, transition: "all 0.2s cubic-bezier(0.34,1.56,0.64,1)",
-        lineHeight: 1.35, display: "flex", alignItems: "flex-start", gap: 7,
+        lineHeight: 1.35, display: "flex", alignItems: "center", gap: 8,
         transform: hover ? "translateY(-2px)" : "translateY(0)",
         boxShadow: hover ? "0 6px 20px rgba(255,92,26,0.15)" : "none",
         fontFamily: "inherit",
       }}
     >
-      <span style={{ fontSize: "1rem", lineHeight: 1.2, flexShrink: 0 }}>{q.icon}</span>
+      <q.icon className="w-4 h-4 flex-shrink-0" />
       <span>{q.label}</span>
     </button>
   );
@@ -487,14 +498,10 @@ export default function FranchiseAdvisor() {
 
           {/* Actions */}
           <IconBtn onClick={() => setMessages([GREETING])} title="Hapus chat">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>
-            </svg>
+            <Trash2 className="w-3.5 h-3.5" />
           </IconBtn>
           <IconBtn onClick={() => setOpen(false)} title="Tutup">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <path d="M18 6L6 18M6 6l12 12"/>
-            </svg>
+            <X className="w-3.5 h-3.5" />
           </IconBtn>
         </div>
 

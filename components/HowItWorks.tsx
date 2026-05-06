@@ -1,11 +1,20 @@
 "use client";
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import { 
+  Search, 
+  Handshake, 
+  Rocket, 
+  Check, 
+  ArrowDown, 
+  Zap, 
+  ArrowRight 
+} from "lucide-react";
 
 const steps = [
   {
     n: "01",
-    icon: "🔍",
+    icon: Search,
     accent: "#FF5C1A",
     accentBg: "rgba(255,92,26,0.12)",
     tag: "Temukan",
@@ -15,7 +24,7 @@ const steps = [
   },
   {
     n: "02",
-    icon: "🤝",
+    icon: Handshake,
     accent: "#FFCF40",
     accentBg: "rgba(255,207,64,0.15)",
     tag: "Negosiasi",
@@ -25,7 +34,7 @@ const steps = [
   },
   {
     n: "03",
-    icon: "🚀",
+    icon: Rocket,
     accent: "#1B8C5A",
     accentBg: "rgba(27,140,90,0.12)",
     tag: "Mulai Cuan",
@@ -124,10 +133,10 @@ export default function HowItWorks() {
                   </div>
                   {/* Icon */}
                   <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center text-[1.4rem] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
-                    style={{ background: s.accentBg }}
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
+                    style={{ background: s.accentBg, color: s.accent }}
                   >
-                    {s.icon}
+                    <s.icon className="w-6 h-6" />
                   </div>
                 </div>
 
@@ -154,10 +163,10 @@ export default function HowItWorks() {
                   {s.detail.map((d) => (
                     <li key={d} className="flex items-center gap-2 text-[0.8rem] text-[#555] font-medium">
                       <span
-                        className="w-4 h-4 rounded-full flex items-center justify-center text-[0.6rem] font-bold flex-shrink-0"
+                        className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
                         style={{ background: s.accentBg, color: s.accent }}
                       >
-                        ✓
+                        <Check className="w-2.5 h-2.5" />
                       </span>
                       {d}
                     </li>
@@ -179,7 +188,7 @@ export default function HowItWorks() {
                     style={{ color: s.accent }}
                   >
                     <div className="w-px h-5 bg-current opacity-30" />
-                    <span className="text-sm opacity-60">↓</span>
+                    <ArrowDown className="w-4 h-4 opacity-60" />
                   </div>
                 </div>
               )}
@@ -190,7 +199,9 @@ export default function HowItWorks() {
         {/* ── Bottom CTA bar ── */}
         <div className="mt-14 bg-[#111111] rounded-[24px] px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-5">
           <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-[#FF5C1A]/15 flex items-center justify-center text-xl">⚡</div>
+            <div className="w-11 h-11 rounded-xl bg-[#FF5C1A]/15 flex items-center justify-center text-[#FF5C1A]">
+              <Zap className="w-5 h-5 fill-[#FF5C1A]" />
+            </div>
             <div>
               <p className="font-syne font-extrabold text-white text-[1rem]">Mulai sekarang, gratis!</p>
               <p className="text-white/45 text-[0.78rem] mt-0.5">Rata-rata mitra buka usaha dalam 30 hari</p>
@@ -201,7 +212,7 @@ export default function HowItWorks() {
             className="flex-shrink-0 flex items-center gap-2 bg-[#FF5C1A] text-white px-6 py-3 rounded-full font-bold text-[0.88rem] shadow-[0_4px_20px_rgba(255,92,26,0.4)] hover:bg-[#e04710] hover:-translate-y-0.5 transition-all"
           >
             Cari Franchise Sekarang
-            <span className="text-[#FFCF40] font-black">→</span>
+            <ArrowRight className="w-4 h-4 text-[#FFCF40]" />
           </Link>
         </div>
       </div>

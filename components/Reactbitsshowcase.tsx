@@ -1,10 +1,21 @@
 "use client";
 import { BlurText, CountUp, ShinyText, GradientText, Particles, TiltCard, ScrollRevealText } from "./Reactbitseffects";
 import MagicBento from "./MagicBento";
+import { 
+  Bot, 
+  Search, 
+  TrendingUp, 
+  Handshake, 
+  Sparkles, 
+  ShoppingBag, 
+  BarChart3, 
+  GraduationCap,
+  ArrowRight
+} from "lucide-react";
 
 const features = [
   {
-    icon: "🤖",
+    icon: Bot,
     title: "AI Franchise Matcher",
     desc: "Teknologi AI kami menganalisis ratusan data franchise dan profil bisnismu untuk memberikan rekomendasi yang paling akurat.",
     stat: 94,
@@ -12,7 +23,7 @@ const features = [
     color: "#FF5C1A",
   },
   {
-    icon: "🔍",
+    icon: Search,
     title: "Verifikasi Menyeluruh",
     desc: "Setiap brand melewati 47 poin verifikasi ketat — legalitas, keuangan, sistem operasional, dan rekam jejak mitra.",
     stat: 47,
@@ -20,7 +31,7 @@ const features = [
     color: "#FF8C42",
   },
   {
-    icon: "📈",
+    icon: TrendingUp,
     title: "ROI Tercepat",
     desc: "Franchise pilihan kami rata-rata balik modal dalam 3–6 bulan. Kami hanya tampilkan brand yang terbukti menguntungkan.",
     stat: 4.5,
@@ -28,7 +39,7 @@ const features = [
     color: "#FFCF40",
   },
   {
-    icon: "🤝",
+    icon: Handshake,
     title: "Pendampingan Penuh",
     desc: "Tim mentor berpengalaman mendampingi mulai dari persiapan modal, pemilihan lokasi, hingga operasional hari pertama.",
     stat: 320,
@@ -119,11 +130,11 @@ export default function ReactBitsShowcase() {
                     background: `rgba(255,92,26,0.12)`,
                     border: `1px solid rgba(255,92,26,0.2)`,
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: "1.4rem",
+                    color: "#FF5C1A",
                     animation: `float ${3 + i * 0.5}s ease-in-out ${i * 0.3}s infinite`,
                   }}
                 >
-                  {f.icon}
+                  {(() => { const Icon = f.icon; return <Icon className="w-6 h-6" />; })()}
                 </div>
               </div>
 
@@ -213,7 +224,7 @@ export default function ReactBitsShowcase() {
             </p>
           </div>
           <a
-            href="/"
+            href="/#ai-advisor"
             style={{
               padding: "14px 28px",
               borderRadius: 14,
@@ -225,11 +236,14 @@ export default function ReactBitsShowcase() {
               boxShadow: "0 8px 28px rgba(255,92,26,.35)",
               transition: "all .2s",
               whiteSpace: "nowrap",
+              display: "flex",
+              alignItems: "center",
+              gap: 8
             }}
             onMouseEnter={e => { const a = e.currentTarget as HTMLAnchorElement; a.style.transform="translateY(-2px)"; a.style.boxShadow="0 14px 36px rgba(255,92,26,.5)"; }}
             onMouseLeave={e => { const a = e.currentTarget as HTMLAnchorElement; a.style.transform="translateY(0)"; a.style.boxShadow="0 8px 28px rgba(255,92,26,.35)"; }}
           >
-            ✨ Analisis AI Gratis →
+            <Sparkles className="w-4 h-4" /> Analisis AI Gratis <ArrowRight className="w-4 h-4" />
           </a>
         </div>
       </div>
@@ -255,7 +269,7 @@ export default function ReactBitsShowcase() {
           items={[
             {
               color: 'linear-gradient(135deg, #0f0d12 60%, rgba(255,92,26,0.07))',
-              icon: '🛒',
+              icon: <ShoppingBag className="w-5 h-5 text-[#FF5C1A]" />,
               title: 'Marketplace Franchise',
               description: 'Temukan ratusan brand franchise F&B terkurasi yang telah diverifikasi dan siap bermitra langsung dengan Anda.',
               label: 'Katalog',
@@ -264,7 +278,7 @@ export default function ReactBitsShowcase() {
             },
             {
               color: 'linear-gradient(135deg, #0f0d12 60%, rgba(255,207,64,0.06))',
-              icon: '🤖',
+              icon: <Bot className="w-5 h-5 text-[#FFCF40]" />,
               title: 'AI Franchise Advisor',
               description: 'Rekomendasi bisnis cerdas berbasis AI yang menyesuaikan pilihan franchise dengan modal dan preferensi Anda.',
               label: 'Kecerdasan Buatan',
@@ -273,7 +287,7 @@ export default function ReactBitsShowcase() {
             },
             {
               color: 'linear-gradient(145deg, #0f0d12 40%, rgba(255,92,26,0.1))',
-              icon: '📊',
+              icon: <BarChart3 className="w-5 h-5 text-[#FF8C42]" />,
               title: 'Kalkulator BEP & ROI',
               description: 'Simulasikan titik balik modal, proyeksi keuntungan bulanan, dan analisis kelayakan investasi secara real-time. Tidak perlu spreadsheet — cukup masukkan data dan lihat hasilnya.',
               label: 'Finansial',
@@ -282,7 +296,7 @@ export default function ReactBitsShowcase() {
             },
             {
               color: 'linear-gradient(135deg, #0f0d12 60%, rgba(255,140,66,0.06))',
-              icon: '🔍',
+              icon: <Search className="w-5 h-5 text-[#FF8C42]" />,
               title: 'Sistem Verifikasi 47-Poin',
               description: 'Setiap brand melewati audit ketat mencakup legalitas, keuangan, operasional, dan rekam jejak mitra.',
               label: 'Keamanan',
@@ -291,7 +305,7 @@ export default function ReactBitsShowcase() {
             },
             {
               color: 'linear-gradient(135deg, #0f0d12 60%, rgba(255,92,26,0.05))',
-              icon: '🤝',
+              icon: <Handshake className="w-5 h-5 text-[#FF5C1A]" />,
               title: 'Komunitas Mitra',
               description: 'Bergabung dengan jaringan pengusaha F&B aktif untuk berbagi insight, tips, dan peluang kolaborasi.',
               label: 'Sosial',
@@ -300,7 +314,7 @@ export default function ReactBitsShowcase() {
             },
             {
               color: 'linear-gradient(135deg, #0f0d12 60%, rgba(255,207,64,0.05))',
-              icon: '🎓',
+              icon: <GraduationCap className="w-5 h-5 text-[#FFCF40]" />,
               title: 'Mentoring & Kelas',
               description: 'Akses eksklusif ke kelas bisnis, webinar, dan sesi mentoring dari para expert industri F&B.',
               label: 'Edukasi'

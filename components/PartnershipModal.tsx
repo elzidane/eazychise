@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CheckCircle2, Loader2, Send } from "lucide-react";
+import { X, CheckCircle2, Loader2, Send, ChevronLeft } from "lucide-react";
 
 type PartnershipModalProps = {
   isOpen: boolean;
@@ -19,6 +19,16 @@ export default function PartnershipModal({ isOpen, onClose, franchiseName }: Par
     location: "",
     message: "",
   });
+
+  // Body scroll lock
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,12 +58,22 @@ export default function PartnershipModal({ isOpen, onClose, franchiseName }: Par
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-[32px] shadow-2xl z-[101] overflow-hidden"
+            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-[32px] shadow-2xl z-[101] overflow-y-auto max-h-[90vh] md:max-h-[min(800px,90vh)]"
           >
-            <div className="p-8">
+            <div className="p-6 sm:p-8 relative">
+              {/* Back Button (Mobile) */}
               <button 
                 onClick={onClose}
-                className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors"
+                className="md:hidden flex items-center gap-1 text-gray-500 font-bold text-sm mb-6 hover:text-[#FF5C1A] transition-colors"
+              >
+                <ChevronLeft className="w-5 h-5" />
+                Kembali
+              </button>
+
+              {/* Close Button (Desktop) */}
+              <button 
+                onClick={onClose}
+                className="hidden md:block absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors"
               >
                 <X className="w-6 h-6 text-gray-400" />
               </button>

@@ -22,12 +22,12 @@ export default function RegisterPage() {
       {/* Back Button */}
       <Link 
         href="/" 
-        className="fixed top-8 left-8 z-50 flex items-center gap-2 text-[#777] hover:text-[#111] font-bold text-sm transition-all group lg:text-white/50 lg:hover:text-white"
+        className="fixed top-6 left-6 lg:top-8 lg:left-8 z-50 flex items-center gap-2 text-[#777] hover:text-[#111] font-bold text-sm transition-all group lg:text-white/50 lg:hover:text-white"
       >
-        <div className="w-8 h-8 rounded-full border border-black/5 lg:border-white/10 flex items-center justify-center bg-white lg:bg-white/5 shadow-sm group-hover:border-[#FF5C1A] group-hover:text-[#FF5C1A] transition-all">
+        <div className="w-9 h-9 lg:w-8 lg:h-8 rounded-full border border-black/5 lg:border-white/10 flex items-center justify-center bg-white lg:bg-white/5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] lg:shadow-sm group-hover:border-[#FF5C1A] group-hover:text-[#FF5C1A] transition-all">
           <ArrowLeft className="w-4 h-4" />
         </div>
-        Kembali ke Beranda
+        <span className="hidden lg:inline">Kembali ke Beranda</span>
       </Link>
 
       {/* ── Left Side: Branding/Visual (Hidden on Mobile) ── */}
