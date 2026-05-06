@@ -93,7 +93,9 @@ export default function FranchiseListings() {
         ref={gridRef}
         className="grid md:grid-cols-2 lg:grid-cols-3 gap-5"
       >
-        {filtered.map((f) => (
+        {filtered.map((f) => {
+          if (!f) return null;
+          return (
           <TiltCard
             key={f.name}
             className="f-card group bg-white rounded-[20px] overflow-hidden border border-black/5 hover:shadow-[0_20px_50px_rgba(0,0,0,0.09)] transition-all duration-300 flex flex-col"
@@ -178,7 +180,8 @@ export default function FranchiseListings() {
               </Link>
             </div>
           </TiltCard>
-        ))}
+          );
+        })}
       </div>
 
       {/* Empty state */}

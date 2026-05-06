@@ -22,7 +22,11 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "awsimages.detik.net.id" },
       { protocol: "https", hostname: "cdn.idntimes.com" },
       { protocol: "https", hostname: "akcdn.detik.net.id" },
-      // { protocol: "https", hostname: "i.gojekapi.com" },
+      { protocol: "https", hostname: "images.glints.com" },
+      { protocol: "https", hostname: "pacificplace.b-cdn.net" },
+      { protocol: "https", hostname: "blue.kumparan.com"},
+      { protocol: "https", hostname: "digital-bucket-v3.prod.bfi.co.id"},
+      { protocol: "https", hostname: "mediasentral.com"},
 
     ],
   },
