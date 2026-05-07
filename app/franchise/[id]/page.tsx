@@ -11,6 +11,7 @@ import LocationRecommender from "@/components/LocationRecommender";
 import SpotlightCard from "@/components/SpotlightCard";
 import Typewriter from "@/components/Typewriter";
 import { Brain, Sparkles, Zap } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function FranchiseDetailPage({
   params,
