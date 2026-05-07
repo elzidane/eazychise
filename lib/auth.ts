@@ -76,6 +76,35 @@ export function login(email: string, password: string): { success: boolean; erro
   return { success: true, user: userWithoutPassword };
 }
 
+export function loginWithGoogle(role: UserRole = "franchisee"): { success: boolean; user?: User } {
+  const users = getUsers();
+  const emailKey = "google_user@demo.com";
+  
+  if (!users[emailKey]) {
+    // Create mock user if doesn't exist
+    users[emailKey] = {
+      name: "Google User",
+      email: emailKey,
+      phone: "-",
+      password: "google_oauth_mock",
+      role: role,
+      createdAt: new Date().toISOString(),
+      savedFranchises: [],
+      searchHistory: [],
+    };
+    saveUsers(users);
+  } else {
+    // If logging in again but with different intended role during registration, we update it for demo purposes
+    users[emailKey].role = role;
+    saveUsers(users);
+  }
+
+  const { password: _, ...userWithoutPassword } = users[emailKey];
+  localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userWithoutPassword));
+  
+  return { success: true, user: userWithoutPassword };
+}
+
 export function logout() {
   if (typeof window !== "undefined") {
     localStorage.removeItem(CURRENT_USER_KEY);

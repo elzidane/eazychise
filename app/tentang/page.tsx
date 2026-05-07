@@ -7,12 +7,14 @@ import {
 } from "lucide-react";
 import WhyUs from "@/components/WhyUs";
 
+import Image from "next/image";
+
 const team = [
-  { name: "Ahmad Rizky", role: "Project Lead", emoji: "👨‍💼", color: "#FF5C1A" },
-  { name: "Sari Indah", role: "UI/UX Designer", emoji: "🎨", color: "#7C3AED" },
-  { name: "Budi Prasetyo", role: "Frontend Developer", emoji: "💻", color: "#1B8C5A" },
-  { name: "Dina Maharani", role: "Backend Developer", emoji: "⚙️", color: "#FF8C42" },
-  { name: "Eko Saputra", role: "Business Analyst", emoji: "📊", color: "#FFCF40" },
+  { name: "Ahmad Rizky", role: "Project Lead", image: "/images/team/avatar_rizky.png", color: "#FF5C1A" },
+  { name: "Sari Indah", role: "UI/UX Designer", image: "/images/team/avatar_sari.png", color: "#7C3AED" },
+  { name: "Budi Prasetyo", role: "Frontend Developer", image: "/images/team/avatar_budi.png", color: "#1B8C5A" },
+  { name: "Dina Maharani", role: "Backend Developer", image: "/images/team/avatar_dina.png", color: "#FF8C42" },
+  { name: "Eko Saputra", role: "Business Analyst", image: "/images/team/avatar_eko.png", color: "#FFCF40" },
 ];
 
 const values = [
@@ -166,10 +168,16 @@ export default function TentangPage() {
                 className="group bg-white rounded-2xl p-6 border border-black/5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)] hover:border-transparent transition-all text-center"
               >
                 <div 
-                  className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center text-3xl"
-                  style={{ background: `${member.color}15` }}
+                  className="w-16 h-16 rounded-2xl mx-auto mb-4 overflow-hidden relative shadow-sm"
+                  style={{ background: `${member.color}15`, border: `2px solid ${member.color}30` }}
                 >
-                  {member.emoji}
+                  <Image 
+                    src={member.image} 
+                    alt={member.name}
+                    fill
+                    className="object-cover"
+                    sizes="64px"
+                  />
                 </div>
                 <h3 className="font-bold text-[#111] text-sm mb-1 group-hover:text-[#FF5C1A] transition-colors">
                   {member.name}

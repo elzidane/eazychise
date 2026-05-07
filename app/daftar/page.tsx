@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { User, Mail, Lock, Phone, ArrowRight, CheckCircle2, ArrowLeft, ShieldCheck, Sparkles, Eye, EyeOff } from "lucide-react";
-import { register, UserRole } from "@/lib/auth";
+import { FcGoogle } from "react-icons/fc";
+import { register, loginWithGoogle, UserRole } from "@/lib/auth";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -54,6 +55,21 @@ export default function RegisterPage() {
       } else {
         setError(result.error || "Terjadi kesalahan.");
         setLoading(false);
+      }
+    }, 600);
+  };
+
+  const handleGoogleRegister = () => {
+    if (!formData.agreeTerms) {
+      setError("Kamu harus menyetujui syarat & ketentuan.");
+      return;
+    }
+    setError("");
+    setLoading(true);
+    setTimeout(() => {
+      const result = loginWithGoogle(formData.role);
+      if (result.success) {
+        router.push("/dashboard");
       }
     }, 600);
   };
@@ -319,6 +335,22 @@ export default function RegisterPage() {
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
+              </button>
+
+              <div className="relative flex items-center py-4">
+                <div className="flex-grow border-t border-gray-200"></div>
+                <span className="flex-shrink-0 mx-4 text-gray-400 text-sm font-medium">Atau</span>
+                <div className="flex-grow border-t border-gray-200"></div>
+              </div>
+
+              <button 
+                type="button"
+                onClick={handleGoogleRegister}
+                disabled={loading}
+                className="w-full bg-white border border-gray-200 text-[#333] py-4 rounded-2xl font-bold text-[0.95rem] hover:bg-gray-50 hover:shadow-sm transition-all flex items-center justify-center gap-3 disabled:opacity-60"
+              >
+                <FcGoogle className="w-6 h-6" />
+                Daftar dengan Google
               </button>
             </form>
           </div>

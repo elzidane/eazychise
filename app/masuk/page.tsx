@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Mail, Lock, ArrowRight, ArrowLeft, ShieldCheck, Eye, EyeOff } from "lucide-react";
-import { login } from "@/lib/auth";
+import { FcGoogle } from "react-icons/fc";
+import { login, loginWithGoogle } from "@/lib/auth";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -24,11 +25,24 @@ export default function LoginPage() {
       if (result.success) {
         router.push("/dashboard");
       } else {
-        setError(result.error || "Terjadi kesalahan.");
+        setError(result.error || "Gagal masuk");
         setLoading(false);
       }
-    }, 600); // slight delay for UX
+    }, 800);
   };
+
+  const handleGoogleLogin = () => {
+    setError("");
+    setLoading(true);
+    setTimeout(() => {
+      const result = loginWithGoogle("franchisee");
+      if (result.success) {
+        router.push("/dashboard");
+      }
+    }, 600);
+  };
+
+
 
   return (
     <main className="min-h-screen bg-[#FFF9F0] flex flex-col items-center justify-center p-6 relative overflow-hidden">
@@ -136,6 +150,22 @@ export default function LoginPage() {
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </>
               )}
+            </button>
+
+            <div className="relative flex items-center py-4">
+              <div className="flex-grow border-t border-gray-200"></div>
+              <span className="flex-shrink-0 mx-4 text-gray-400 text-sm font-medium">Atau</span>
+              <div className="flex-grow border-t border-gray-200"></div>
+            </div>
+
+            <button 
+              type="button"
+              onClick={handleGoogleLogin}
+              disabled={loading}
+              className="w-full bg-white border border-gray-200 text-[#333] py-4 rounded-2xl font-bold text-[0.95rem] hover:bg-gray-50 hover:shadow-sm transition-all flex items-center justify-center gap-3 disabled:opacity-60"
+            >
+              <FcGoogle className="w-6 h-6" />
+              Lanjutkan dengan Google
             </button>
           </form>
 

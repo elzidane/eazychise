@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Star, MapPin, Coffee, TrendingUp, Users, Award, Calendar, ChevronRight } from "lucide-react";
+import { MdLocalCafe, MdEmojiFoodBeverage, MdFastfood, MdBakeryDining } from "react-icons/md";
 import { FRANCHISE_DATA } from "@/lib/franchise-data";
 
 const FEATURED_PARTNERS = [
@@ -16,7 +17,7 @@ const FEATURED_PARTNERS = [
     joinedDate: "Januari 2025",
     rating: 5,
     quote: "Dari karyawan swasta jadi bos sendiri. EazyChise bantu saya dari nol sampai grand opening!",
-    emoji: "☕",
+    icon: MdLocalCafe,
     color: "#FF5C1A",
   },
   {
@@ -30,7 +31,7 @@ const FEATURED_PARTNERS = [
     joinedDate: "Maret 2025",
     rating: 5,
     quote: "AI Advisor EazyChise sangat membantu saya pilih franchise yang pas dengan budget dan lokasi.",
-    emoji: "🧋",
+    icon: MdEmojiFoodBeverage,
     color: "#7C3AED",
   },
   {
@@ -44,7 +45,7 @@ const FEATURED_PARTNERS = [
     joinedDate: "Februari 2025",
     rating: 4,
     quote: "Sekarang punya 2 outlet! BEP Calculator EazyChise bantu saya planning ekspansi.",
-    emoji: "🍔",
+    icon: MdFastfood,
     color: "#1B8C5A",
   },
   {
@@ -58,7 +59,7 @@ const FEATURED_PARTNERS = [
     joinedDate: "Desember 2024",
     rating: 5,
     quote: "Ibu rumah tangga bisa punya bisnis sendiri! Modal kecil, untung besar. Alhamdulillah.",
-    emoji: "🍌",
+    icon: MdBakeryDining,
     color: "#FFCF40",
   },
 ];
@@ -123,10 +124,10 @@ export default function MitraPage() {
               {/* Header */}
               <div className="flex items-center gap-4 mb-5">
                 <div 
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
-                  style={{ background: `${partner.color}15` }}
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0"
+                  style={{ background: `${partner.color}15`, color: partner.color }}
                 >
-                  {partner.emoji}
+                  <partner.icon />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-bold text-[#111] text-lg group-hover:text-[#FF5C1A] transition-colors">{partner.name}</h3>

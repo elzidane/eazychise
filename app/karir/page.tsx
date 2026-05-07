@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, MapPin, Clock, Briefcase, Code, Palette, BarChart3, Heart } from "lucide-react";
+import { MdRocketLaunch, MdHandshake, MdLightbulb, MdFavorite } from "react-icons/md";
 
 const positions = [
   {
@@ -65,13 +66,15 @@ export default function KarirPage() {
           className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16"
         >
           {[
-            { icon: "🚀", label: "Growth Mindset" },
-            { icon: "🤝", label: "Kolaboratif" },
-            { icon: "💡", label: "Inovatif" },
-            { icon: "❤️", label: "Impact Driven" },
+            { icon: MdRocketLaunch, label: "Growth Mindset", color: "#FF5C1A" },
+            { icon: MdHandshake, label: "Kolaboratif", color: "#7C3AED" },
+            { icon: MdLightbulb, label: "Inovatif", color: "#FFCF40" },
+            { icon: MdFavorite, label: "Impact Driven", color: "#E11D48" },
           ].map((v) => (
             <div key={v.label} className="bg-white rounded-2xl p-5 border border-black/5 text-center">
-              <span className="text-2xl">{v.icon}</span>
+              <div className="w-12 h-12 rounded-xl mx-auto flex items-center justify-center text-2xl" style={{ background: `${v.color}15`, color: v.color }}>
+                <v.icon />
+              </div>
               <p className="text-sm font-bold text-[#555] mt-2">{v.label}</p>
             </div>
           ))}
