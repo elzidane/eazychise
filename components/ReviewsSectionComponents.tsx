@@ -9,33 +9,47 @@ export function ReviewCard({ review, index }: { review: Review; index: number })
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
-      className="bg-white p-6 md:p-8 rounded-[24px] border border-black/[0.04] shadow-sm hover:shadow-md transition-all duration-300 group relative"
+      transition={{ delay: index * 0.05 }}
+      className="bg-white p-6 rounded-2xl border border-black/[0.04] shadow-sm hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all group h-full flex flex-col"
     >
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#FF5C1A] to-[#FF8C1A] flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-[#FF5C1A]/10">
-            {review.name[0]}
+      <div className="flex items-start gap-4 mb-4">
+        <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-2 border-[#FF5C1A]/10 shadow-sm">
+          <img src={review.avatar} alt={review.name} className="w-full h-full object-cover" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between gap-2">
+            <h4 className="font-bold text-[#111] text-[0.95rem] truncate">{review.name}</h4>
+            <span className="text-[0.65rem] text-[#bbb] font-bold uppercase tracking-wider whitespace-nowrap">{review.date}</span>
           </div>
-          <div>
-            <h4 className="font-bold text-[0.95rem] text-[#111] leading-none mb-1.5">{review.name}</h4>
-            <div className="flex items-center gap-2">
-              <div className="flex text-[#FFCF40] gap-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className={`w-3 h-3 ${i < review.rating ? "fill-current" : "text-gray-200"}`} />
-                ))}
-              </div>
-              <span className="w-1 h-1 rounded-full bg-gray-200" />
-              <p className="text-[0.68rem] text-gray-400 font-medium uppercase tracking-wider">{review.date}</p>
+          <div className="flex items-center gap-1.5 mt-0.5">
+            <span className="text-[0.7rem] text-[#999] flex items-center gap-1">
+              {review.city}
+            </span>
+            <span className="w-1 h-1 rounded-full bg-gray-200" />
+            <span className="text-[0.7rem] text-[#FF5C1A] font-bold">
+              {review.franchise}
+            </span>
+          </div>
+          <div className="flex items-center gap-1 mt-1">
+            <div className="bg-green-50 text-green-600 text-[0.6rem] font-black px-2 py-0.5 rounded-full flex items-center gap-1">
+              <CheckCircle2 className="w-2.5 h-2.5" /> MITRA TERVERIFIKASI
             </div>
           </div>
         </div>
       </div>
-      <div className="relative">
-        <p className="text-[#444] leading-relaxed text-[0.92rem] font-medium italic">
-          "{review.comment}"
-        </p>
+
+      <div className="flex gap-0.5 mb-3">
+        {[...Array(5)].map((_, i) => (
+          <Star 
+            key={i} 
+            className={`w-3.5 h-3.5 ${i < review.rating ? "fill-[#FFCF40] text-[#FFCF40]" : "text-gray-200"}`} 
+          />
+        ))}
       </div>
+
+      <p className="text-[#555] text-[0.88rem] leading-[1.6] italic flex-1">
+        "{review.comment}"
+      </p>
     </motion.div>
   );
 }

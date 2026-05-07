@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { BlurText, CountUp, ShinyText, TiltCard } from "./Reactbitseffects";
 import MagneticButton from "./MagneticButton";
+import { STATS } from "@/lib/constants";
 import { 
   Search, 
   ArrowRight, 
@@ -13,18 +14,21 @@ import {
   Coffee, 
   User, 
   Star,
-  Pizza
+  Pizza,
+  Shield,
+  Phone,
+  Award
 } from "lucide-react";
 
 const stats = [
-  { num: 20, suffix: "+", label: "Brand F&B Dikurasi" },
-  { num: 34, suffix: "", label: "Provinsi Terjangkau" },
+  { num: STATS.totalBrand, suffix: "+", label: "Brand F&B Terkurasi" },
+  { num: STATS.totalProvinsi, suffix: "", label: "Provinsi Terjangkau" },
   { num: 4, suffix: "", label: "Kategori F&B" },
 ];
 
 const images = [
   {
-    src: "https://i.gojekapi.com/darkroom/gofood-indonesia/v2/images/uploads/b5c9d124-ac38-4461-ad28-6b847b0dc223_Combo-Jiwa-Toast.jpg",
+    src: "https://richcreme.com/wp-content/uploads/2022/11/18.RCWC-Nastar-Crumble-Dessert-Box.jpg",
     alt: "Jiwa Toast",
     name: "Janji Jiwa",
     meta: "Modal Rp 5 Juta • Kuliner",
@@ -180,6 +184,21 @@ export default function Hero() {
               Daftarkan Brand
               <ArrowRight className="w-4 h-4 text-[#FF5C1A]" />
             </Link>
+          </div>
+
+          {/* Trust Badges */}
+          <div className="animate-fade-up-3 flex flex-wrap gap-2 mb-8">
+            {[
+              { icon: Shield, text: "SSL Terenkripsi" },
+              { icon: CheckCircle2, text: "BPOM & Halal MUI" },
+              { icon: Phone, text: "Support 24/7" },
+              { icon: Award, text: "#1 Platform Franchise" },
+            ].map((b) => (
+              <span key={b.text} className="inline-flex items-center gap-1.5 bg-white/80 backdrop-blur-sm border border-black/5 text-[0.68rem] font-semibold text-[#555] px-3 py-1.5 rounded-full">
+                <b.icon className="w-3 h-3 text-[#FF5C1A]" />
+                {b.text}
+              </span>
+            ))}
           </div>
 
           {/* Stats */}

@@ -1,8 +1,10 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Calculator, TrendingUp, DollarSign, Clock, Pencil, Rocket, AlertCircle } from "lucide-react";
+import { Calculator, TrendingUp, DollarSign, Clock, Pencil, Rocket, AlertCircle, Brain, Sparkles, Zap } from "lucide-react";
 import { MdLightbulb } from "react-icons/md";
+import { formatRupiah } from "@/lib/utils/formatRupiah";
+import Typewriter from "@/components/Typewriter";
 
 export default function BEPCalculator() {
   const [modalAwal, setModalAwal] = useState<number>(50000000);
@@ -10,6 +12,8 @@ export default function BEPCalculator() {
   const [hppPercent, setHppPercent] = useState<number>(45);
   const [biayaOperasional, setBiayaOperasional] = useState<number>(8000000);
   const [editingField, setEditingField] = useState<string | null>(null);
+  const [analysis, setAnalysis] = useState("");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   // Calculations
   const hppValue = (omsetBulan * hppPercent) / 100;
@@ -20,13 +24,44 @@ export default function BEPCalculator() {
   const bepBulan = labaBersih > 0 ? (modalAwal / labaBersih).toFixed(1) : "Tidak BEP (Rugi)";
   const roiTahunan = labaBersih > 0 ? (((labaBersih * 12) / modalAwal) * 100).toFixed(1) : "0";
 
-  const formatRupiah = (number: number) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    }).format(number);
+  const generateAIAnalysis = async () => {
+    if (isAnalyzing) return;
+    setIsAnalyzing(true);
+    setAnalysis("");
+
+    const prompt = `Berikan analisis bisnis profesional berdasarkan simulasi BEP berikut:
+- Modal Awal: ${formatRupiah(modalAwal)}
+- Estimasi Omzet: ${formatRupiah(omsetBulan)}/bln
+- HPP: ${hppPercent}%
+- Biaya Operasional: ${formatRupiah(biayaOperasional)}/bln
+- Laba Bersih: ${formatRupiah(labaBersih)}/bln
+- BEP: ${bepBulan} bulan
+- ROI Tahunan: ${roiTahunan}%
+
+Tolong berikan:
+1. Evaluasi kesehatan finansial.
+2. 2 strategi konkret untuk mempercepat BEP.
+3. Analisis risiko jika omzet turun 20%.`;
+
+    try {
+      const res = await fetch("/api/advisor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: [{ role: "user", content: prompt }] }),
+      });
+      const data = await res.json();
+      if (data.reply) {
+        setAnalysis(data.reply);
+      } else {
+        setAnalysis("Maaf, AI sedang sibuk. Silakan coba beberapa saat lagi.");
+      }
+    } catch (err) {
+      setAnalysis("Maaf, terjadi masalah koneksi. Silakan periksa internet Anda.");
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
+
 
   return (
     <section className="py-20 relative overflow-hidden">
@@ -314,6 +349,136 @@ export default function BEPCalculator() {
               </div>
             </motion.div>       
             
+            {/* ── Business Projection Chart ── */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="bg-white rounded-3xl p-7 border border-black/5 shadow-sm"
+            >
+              <h4 className="font-syne font-bold text-lg mb-6">Proyeksi Bulanan</h4>
+              <div className="space-y-6">
+                {/* Revenue Bar */}
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-gray-400">
+                    <span>Omzet (100%)</span>
+                    <span className="text-[#111]">{formatRupiah(omsetBulan)}</span>
+                  </div>
+                  <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: "100%" }}
+                      className="h-full bg-gradient-to-r from-blue-400 to-blue-500" 
+                    />
+                  </div>
+                </div>
+
+                {/* Expenses Breakdown */}
+                <div className="space-y-4 pt-2">
+                  {/* HPP */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-[0.65rem] font-bold uppercase tracking-wider text-gray-400">
+                      <span>HPP ({hppPercent}%)</span>
+                      <span className="text-red-400">{formatRupiah(hppValue)}</span>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${hppPercent}%` }}
+                        className="h-full bg-red-400" 
+                      />
+                    </div>
+                  </div>
+                  {/* Opex */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-[0.65rem] font-bold uppercase tracking-wider text-gray-400">
+                      <span>Operasional</span>
+                      <span className="text-red-500">{formatRupiah(biayaOperasional)}</span>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${(biayaOperasional/omsetBulan)*100}%` }}
+                        className="h-full bg-red-500" 
+                      />
+                    </div>
+                  </div>
+                  {/* Profit */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-[0.65rem] font-bold uppercase tracking-wider text-gray-400">
+                      <span>Laba Bersih</span>
+                      <span className="text-green-500 font-black">{formatRupiah(labaBersih)}</span>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${Math.max(0, (labaBersih/omsetBulan)*100)}%` }}
+                        className="h-full bg-green-500" 
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* AI Analysis Section */}
+            {!analysis && !isAnalyzing ? (
+              <button
+                onClick={generateAIAnalysis}
+                className="w-full bg-[#111] text-white py-4 rounded-2xl font-bold hover:bg-[#FF5C1A] transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95 group"
+              >
+                <Brain className="w-5 h-5 text-[#FFCF40] group-hover:scale-110 transition-transform" />
+                Dapatkan Analisis Strategis AI
+              </button>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-white rounded-3xl p-7 border border-[#FF5C1A]/10 shadow-xl relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF5C1A]/5 rounded-full blur-2xl -mr-16 -mt-16" />
+                
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FF5C1A] to-[#FF8C1A] flex items-center justify-center shadow-md">
+                    <Brain className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-syne font-bold text-lg text-[#111] leading-none mb-1.5">AI Business Insight</h4>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                      <span className="text-[0.65rem] font-bold text-[#999] uppercase tracking-widest">Analysis Active</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="prose prose-orange max-w-none">
+                  {isAnalyzing ? (
+                    <div className="space-y-3">
+                      <div className="h-3 w-full bg-gray-100 rounded-full animate-pulse" />
+                      <div className="h-3 w-4/5 bg-gray-100 rounded-full animate-pulse" />
+                      <div className="h-3 w-3/4 bg-gray-100 rounded-full animate-pulse" />
+                      <p className="text-[0.7rem] text-gray-400 font-bold italic mt-3">AI sedang membedah angka finansial Anda...</p>
+                    </div>
+                  ) : (
+                    <div className="text-[#444] text-[0.88rem] leading-[1.7] whitespace-pre-wrap">
+                      <Typewriter text={analysis} speed={8} />
+                    </div>
+                  )}
+                </div>
+
+                {!isAnalyzing && (
+                  <div className="mt-6 pt-6 border-t border-black/5 flex justify-end">
+                    <button
+                      onClick={generateAIAnalysis}
+                      className="text-xs font-bold text-[#FF5C1A] hover:underline flex items-center gap-1.5"
+                    >
+                      <Zap className="w-3 h-3" /> Refresh Analisis
+                    </button>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
             {/* Disclaimer */}
             <div className="bg-[#FFCF40]/20 p-5 rounded-2xl border border-[#FFCF40]/30">
               <p className="text-sm text-[#8A6A1C] flex items-start gap-2">

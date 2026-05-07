@@ -6,8 +6,10 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function SplashScreen() {
   const [isVisible, setIsVisible] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     document.body.style.overflow = "hidden";
 
     // Animate progress bar
@@ -35,6 +37,8 @@ export default function SplashScreen() {
     };
   }, []);
 
+  if (!mounted) return null;
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -43,6 +47,7 @@ export default function SplashScreen() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
+          suppressHydrationWarning
           style={{
             position: "fixed",
             inset: 0,

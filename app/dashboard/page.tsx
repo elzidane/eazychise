@@ -11,6 +11,7 @@ import {
 import { getUser, logout, User, removeSavedFranchise } from "@/lib/auth";
 import { FRANCHISE_DATA } from "@/lib/franchise-data";
 import { generateBrandReportPDF } from "@/lib/pdf-generator";
+import { formatRupiah, formatJuta, formatAngkaSingkat } from "@/lib/utils/formatRupiah";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -313,7 +314,7 @@ export default function DashboardPage() {
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                   {[
-                    { label: "Dilihat", value: "1.2k", icon: Eye, color: "#7C3AED" },
+                    { label: "Dilihat", value: formatAngkaSingkat(1240), icon: Eye, color: "#7C3AED" },
                     { label: "Leads", value: "45", icon: UserIcon, color: "#FF5C1A" },
                     { label: "Konversi", value: "3.6%", icon: TrendingUp, color: "#1B8C5A" },
                     { label: "Rating", value: "4.8", icon: Star, color: "#FFCF40" },
@@ -330,7 +331,7 @@ export default function DashboardPage() {
 
                 <div className="p-4 rounded-2xl border border-black/5 flex items-center gap-4 bg-white hover:border-[#FF5C1A]/20 transition-all group">
                   <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
-                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80" alt="Kopi Nusantara" className="w-full h-full object-cover" />
+                    <img src="https://blue.kumparan.com/image/upload/fl_progressive,fl_lossy,c_fill,f_auto,q_auto:best,w_640/v1642665363/h2jq4cvxrovsvl03r0os.png" alt="Kopi Nusantara" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-[#111]">Kopi Nusantara</h3>
@@ -503,7 +504,7 @@ export default function DashboardPage() {
               <div className="p-6 border-b border-black/5 flex items-center justify-between bg-white relative z-10">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">
-                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80" alt="Brand Ku" className="w-full h-full object-cover" />
+                    <img src="https://blue.kumparan.com/image/upload/fl_progressive,fl_lossy,c_fill,f_auto,q_auto:best,w_640/v1642665363/h2jq4cvxrovsvl03r0os.png" alt="Brand Ku" className="w-full h-full object-cover" />
                   </div>
                   <div>
                     <h3 className="font-syne font-bold text-xl text-[#111] leading-none mb-1">Kopi Nusantara</h3>
@@ -524,7 +525,7 @@ export default function DashboardPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
                   <div className="bg-[#F8F8F6] p-4 rounded-2xl border border-black/5">
                     <p className="text-xs text-[#777] font-semibold uppercase mb-1">Dilihat</p>
-                    <p className="text-2xl font-bold text-[#111]">1,240</p>
+                    <p className="text-2xl font-bold text-[#111]">{formatAngkaSingkat(1240)}</p>
                     <p className="text-xs text-green-600 font-bold flex items-center gap-1 mt-1">
                       <TrendingUp className="w-3 h-3" /> +12%
                     </p>
@@ -717,8 +718,8 @@ export default function DashboardPage() {
                       <label className="text-xs font-bold text-[#999] uppercase tracking-wider">Modal Investasi (Rp)</label>
                       <input 
                         type="text" 
-                        placeholder="Contoh: 50 Juta - 100 Juta" 
-                        defaultValue={formMode === 'edit' ? '50 Juta - 100 Juta' : ''}
+                        placeholder="Contoh: 50.000.000" 
+                        defaultValue={formMode === 'edit' ? '50000000' : ''}
                         className="w-full px-4 py-3 rounded-xl bg-[#F8F8F6] border border-transparent focus:border-[#FF5C1A] focus:bg-white outline-none transition-all text-sm font-medium"
                       />
                     </div>

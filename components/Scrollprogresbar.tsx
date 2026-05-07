@@ -95,16 +95,18 @@ export default function ScrollProgressBar() {
         </div>
 
         {/* Percent badge */}
-        <div style={{
-          fontSize: "0.62rem", fontWeight: 700,
-          padding: "3px 8px", borderRadius: 99,
-          background: "rgba(255,92,26,.12)",
-          border: "1px solid rgba(255,92,26,.25)",
-          color: "#FF8C42",
-          letterSpacing: "0.04em",
-        }}>
-          {Math.round(progress)}%
-        </div>
+        {Math.round(progress) > 0 && (
+          <div style={{
+            fontSize: "0.62rem", fontWeight: 700,
+            padding: "3px 8px", borderRadius: 99,
+            background: "rgba(255,92,26,.12)",
+            border: "1px solid rgba(255,92,26,.25)",
+            color: "#FF8C42",
+            letterSpacing: "0.04em",
+          }}>
+            {Math.round(progress)}%
+          </div>
+        )}
       </div>
     </>
   );

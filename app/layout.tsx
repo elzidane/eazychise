@@ -9,6 +9,8 @@ import ScrollReveal from "@/components/ScrollReveal";
 import FranchiseAdvisor from "@/components/FranchiseAdvisor";
 import SplashScreen from "@/components/SplashScreen";
 
+import { ToastProvider } from "@/components/ui/Toast";
+
 // Logo & UI accent — geometric, tegas
 const syne = Syne({
   subsets: ["latin"],
@@ -55,13 +57,15 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${syne.variable} ${fraunces.variable} ${jakarta.variable}`}>
       <body className="font-jakarta bg-[#FFF9F0] text-[#111111] overflow-x-hidden">
-        <SplashScreen />
-        <ScrollReveal />
-        <GlobalEffects />
-        <Navbar />
-        {children}
-        <Footer />
-        <FranchiseAdvisor />
+        <ToastProvider>
+          <SplashScreen />
+          <ScrollReveal />
+          <GlobalEffects />
+          <Navbar />
+          {children}
+          <Footer />
+          <FranchiseAdvisor />
+        </ToastProvider>
       </body>
     </html>
   );

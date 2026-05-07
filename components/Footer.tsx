@@ -30,23 +30,18 @@ const navLinks: Record<string, NavItem[]> = {
 
 const socials = [
   {
-    label: "Facebook",
-    href: "https://facebook.com/EazyChise.id",
-    path: "M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z",
-  },
-  {
     label: "Instagram",
-    href: "https://instagram.com/EazyChise.id",
+    href: "#",
     path: "M16 3H8a5 5 0 0 0-5 5v8a5 5 0 0 0 5 5h8a5 5 0 0 0 5-5V8a5 5 0 0 0-5-5zm-4 5a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm4.5-.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2z",
   },
   {
     label: "X / Twitter",
-    href: "https://twitter.com/EazyChise_id",
+    href: "#",
     path: "M4 4l16 16M4 20L20 4",
   },
   {
     label: "YouTube",
-    href: "https://youtube.com/@EazyChise",
+    href: "#",
     path: "M22 8s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C15.6 3.8 12 3.8 12 3.8s-3.6 0-5.8.1c-.6.1-1.9.1-3 1.3C2.3 6 2 8 2 8S1.7 10.2 1.7 12.4v2c0 2.2.3 4.4.3 4.4s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C8.2 23 12 23 12 23s3.6 0 5.8-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.2.3-4.4v-2C22 10.2 22 8 22 8z M9.5 15.5v-7l7 3.5-7 3.5z",
   },
   {
@@ -94,8 +89,14 @@ export default function Footer() {
               <Link
                 key={s.label}
                 href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                onClick={(e) => {
+                  if (s.href === "#") {
+                    e.preventDefault();
+                    alert(`Fitur Sosial Media (${s.label}) sedang dalam tahap pengembangan. Ikuti kami terus ya! 😊`);
+                  }
+                }}
+                target={s.href === "#" ? undefined : "_blank"}
+                rel={s.href === "#" ? undefined : "noopener noreferrer"}
                 aria-label={s.label}
                 className="w-8 h-8 rounded-lg bg-white/5 border border-white/7 flex items-center justify-center hover:bg-[#FF5C1A] hover:border-[#FF5C1A] transition-all duration-200 group"
               >

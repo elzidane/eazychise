@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function CounterUp({
-  to, duration = 1800, prefix = "", suffix = "",
+  to, duration = 800, prefix = "", suffix = "",
   className = "", style, decimals = 0,
 }: Props) {
   const [val, setVal] = useState(to); // Start at target to prevent FOUC
@@ -41,7 +41,7 @@ export default function CounterUp({
   }, [to, duration, decimals]);
 
   return (
-    <span ref={ref} className={className} style={style}>
+    <span ref={ref} className={className} style={style} suppressHydrationWarning>
       {prefix}{val.toLocaleString("id-ID")}{suffix}
     </span>
   );

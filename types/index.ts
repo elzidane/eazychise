@@ -48,6 +48,10 @@ export interface Review {
   rating: number;
   comment: string;
   date: string;
+  avatar: string;
+  city: string;
+  franchise: string;
+  category: string;
 }
 
 export interface AIAdvisorStep {

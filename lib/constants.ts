@@ -1,39 +1,61 @@
 import { Review, Stat, AIAdvisorStep } from "../types";
 import { MdAttachMoney, MdLocationOn, MdExtension, MdRestaurant } from "react-icons/md";
 
+// ── Single Source of Truth for all platform statistics ──
+export const STATS = {
+  totalBrand: 23,
+  totalMitra: 9247,
+  totalProvinsi: 27,
+  rataRataBEP: 5.9,
+  akurasiAI: 94,
+  poinVerifikasi: 47,
+};
+
 export const INITIAL_REVIEWS: Review[] = [
   {
     id: 1,
     name: "Andi Saputra",
     rating: 5,
     comment: "Platform yang sangat membantu untuk cari franchise. Akhirnya saya buka outlet kopi pertama saya!",
-    date: "2 hari yang lalu"
+    date: "2 hari yang lalu",
+    avatar: "https://i.pravatar.cc/80?u=Andi",
+    city: "Jakarta",
+    franchise: "Kopi Janji Jiwa",
+    category: "minuman"
   },
   {
     id: 2,
     name: "Siti Aminah",
     rating: 4,
     comment: "UI nya bagus banget, gampang nyarinya. Saran saya tambahin lebih banyak kategori snack.",
-    date: "1 minggu yang lalu"
+    date: "1 minggu yang lalu",
+    avatar: "https://i.pravatar.cc/80?u=Siti",
+    city: "Bandung",
+    franchise: "Mixue",
+    category: "minuman"
   },
   {
     id: 3,
     name: "Budi Hermawan",
     rating: 5,
     comment: "Fitur AI Advisor nya jenius! Rekomendasinya pas banget sama budget saya.",
-    date: "3 hari yang lalu"
+    date: "3 hari yang lalu",
+    avatar: "https://i.pravatar.cc/80?u=Budi",
+    city: "Surabaya",
+    franchise: "Burger Bangor",
+    category: "kuliner"
   }
 ];
 
 export const HERO_STATS: Stat[] = [
-  { value: "20", suffix: "+", label: "Brand F&B Dikurasi" },
-  { value: "34", suffix: "", label: "Provinsi Terjangkau" },
+  { value: String(STATS.totalBrand), suffix: "+", label: "Brand F&B Terkurasi" },
+  { value: String(STATS.totalProvinsi), suffix: "", label: "Provinsi Terjangkau" },
   { value: "4", suffix: "", label: "Kategori F&B" },
 ];
 
 export const HERO_IMAGES = [
   {
-    src: "https://i.gojekapi.com/darkroom/gofood-indonesia/v2/images/uploads/b5c9d124-ac38-4461-ad28-6b847b0dc223_Combo-Jiwa-Toast.jpg",
+    src: "https://richcreme.com/wp-content/uploads/2022/11/18.RCWC-Nastar-Crumble-Dessert-Box.jpg",
     alt: "Jiwa Toast",
     name: "Janji Jiwa",
     meta: "Modal Rp 5 Juta • Kuliner",

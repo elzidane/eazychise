@@ -163,7 +163,7 @@ export const FRANCHISE_DATA: Franchise[] = [
     badge: "Hits", badgeColor: "#FF5C1A",
   },
   {
-    img: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&q=80",
+    img: "https://richcreme.com/wp-content/uploads/2022/11/18.RCWC-Nastar-Crumble-Dessert-Box.jpg",
     alt: "Brownies", cat: "Dessert", catKey: "dessert",
     name: "Brownies Amanda Bandung", rating: 4.9, city: "Jawa & Bali",
     invest: "Rp 12 Juta", investNum: 12_000_000, roi: "7–10 bln",
@@ -171,7 +171,7 @@ export const FRANCHISE_DATA: Franchise[] = [
     badge: "Terkenal", badgeColor: "#7C3AED",
   },
   {
-    img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&q=80",
+    img: "https://pacificplace.b-cdn.net/directory_image/l00iC/xiboba.jpg",
     alt: "Es Krim", cat: "Dessert", catKey: "dessert",
     name: "Aice Ice Cream", rating: 4.6, city: "Seluruh Indonesia",
     invest: "Rp 3 Juta", investNum: 3_000_000, roi: "3–5 bln",
@@ -181,7 +181,7 @@ export const FRANCHISE_DATA: Franchise[] = [
 
   // ─── Snack ─────────────────────────────────────────────────────
   {
-    img: "https://images.unsplash.com/photo-1528825871115-3581a5387919?w=600&q=80",
+    img: "https://i.gojekapi.com/darkroom/gofood-indonesia/v2/images/uploads/61fc391c-f130-4f65-aae9-7c03452ec7ee_Go-Biz_20251002_142303.jpeg",
     alt: "Pisang Goreng", cat: "Snack", catKey: "snack",
     name: "Pisang Goreng Madu Bu Nanik", rating: 4.8, city: "15+ kota Indonesia",
     invest: "Rp 4 Juta", investNum: 4_000_000, roi: "3–5 bln",
@@ -189,7 +189,7 @@ export const FRANCHISE_DATA: Franchise[] = [
     badge: "Modal Kecil", badgeColor: "#1B8C5A",
   },
   {
-    img: "https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=600&q=80",
+    img: "https://i.gojekapi.com/darkroom/gofood-indonesia/v2/images/uploads/e4f13c30-ae96-4e41-8d7c-654861057ae9_Oolong-Silken-Milk-Tea.jpg",
     alt: "Martabak", cat: "Snack", catKey: "snack",
     name: "Martabak San Francisco", rating: 4.7, city: "Jawa & Bali",
     invest: "Rp 6 Juta", investNum: 6_000_000, roi: "4–6 bln",
@@ -197,7 +197,7 @@ export const FRANCHISE_DATA: Franchise[] = [
     badge: "Klasik", badgeColor: "#FF5C1A",
   },
   {
-    img: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0ofiHTVkKGbYX_93a2vdXtWWbBJPnyeXlGw&s",
     alt: "Siomay", cat: "Snack", catKey: "snack",
     name: "Siomay & Batagor Bandung", rating: 4.6, city: "Jawa & Sumatera",
     invest: "Rp 3,5 Juta", investNum: 3_500_000, roi: "3–4 bln",
