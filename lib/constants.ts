@@ -83,3 +83,13 @@ export const AI_ADVISOR_STEPS: AIAdvisorStep[] = [
   { id: "pengalaman", q: "Pengalaman bisnismu sejauh ini?", icon: MdExtension, options: ["Belum pernah", "Pernah, tapi gagal", "Punya bisnis sampingan", "Sudah berpengalaman"] },
   { id: "kategori", q: "Kategori F&B yang paling menarik?", icon: MdRestaurant, options: ["Kopi & Minuman", "Makanan Berat", "Dessert & Snack", "Semua cocok"] },
 ];
+
+export const FRANCHISE_FILTERS = [
+  { label: "Semua", key: "all" },
+  { label: "< Rp 5 Juta", key: "under5" },
+  { label: "Rp 5–20 Juta", key: "5to20" },
+  { label: "Minuman", key: "minuman" },
+  { label: "Kuliner", key: "kuliner" },
+  { label: "Dessert", key: "dessert" },
+  { label: "Snack", key: "snack" },
+];

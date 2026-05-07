@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ArrowRight, X, User as UserIcon, LayoutDashboard, LogOut, ChevronDown } from "lucide-react";
 import { getUser, logout, User } from "@/lib/auth";
+import { STATS } from "@/lib/constants";
 
 const links = [
   { href: "/",             label: "Beranda" },
@@ -340,7 +341,7 @@ export default function Navbar() {
             </>
           )}
           <p className="text-center text-[0.68rem] text-[#bbb] flex items-center justify-center gap-1.5">
-            20+ franchise F&amp;B terpercaya
+            {STATS.totalBrand}+ franchise F&amp;B terpercaya
             <span className="w-4 h-3 bg-red-500 relative flex flex-col rounded-[1px] overflow-hidden">
               <span className="h-1/2 bg-[#FF0000] w-full" />
               <span className="h-1/2 bg-white w-full" />

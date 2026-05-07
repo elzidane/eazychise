@@ -9,6 +9,7 @@ import {
   ArrowRight, 
   Star 
 } from "lucide-react";
+import { STATS } from "@/lib/constants";
 
 const features = [
   {
@@ -124,9 +125,9 @@ export default function WhyUs() {
           {/* Bottom trust strip */}
           <div className="reveal mt-8 flex items-center gap-4 pt-6 border-t border-white/[0.06]">
             {[
-              { num: "20+", label: "Brand dikurasi" },
+              { num: `${STATS.totalBrand}+`, label: "Brand dikurasi" },
               { num: "100%", label: "Terverifikasi" },
-              { num: "34", label: "Provinsi" },
+              { num: String(STATS.totalProvinsi), label: "Provinsi" },
             ].map((s) => (
               <div key={s.label} className="flex-1 text-center">
                 <p className="font-syne font-extrabold text-white text-[1.2rem] leading-none">

@@ -6,25 +6,17 @@ import { useRouter } from "next/navigation";
 import { GitCompareArrows, X } from "lucide-react";
 import { MdRestaurant } from "react-icons/md";
 
-import { FRANCHISE_DATA, Franchise } from "@/lib/franchise-data";
+import { Franchise } from "@/types";
+import { FRANCHISE_DATA } from "@/lib/franchise-data";
+import { FRANCHISE_FILTERS } from "@/lib/constants";
 import { TiltCard } from "./Reactbitseffects";
 
 const data = FRANCHISE_DATA;
 
-const FILTERS = [
-  { label: "Semua", key: "all" },
-  { label: "< Rp 5 Juta", key: "under5" },
-  { label: "Rp 5–20 Juta", key: "5to20" },
-  { label: "Minuman", key: "minuman" },
-  { label: "Kuliner", key: "kuliner" },
-  { label: "Dessert", key: "dessert" },
-  { label: "Snack", key: "snack" },
-];
-
 function applyFilter(list: Franchise[], key: string) {
   if (key === "all") return list;
-  if (key === "under5") return list.filter((f) => f.investNum < 5_000_000);
-  if (key === "5to20") return list.filter((f) => f.investNum >= 5_000_000 && f.investNum <= 20_000_000);
+  if (key === "under5") return list.filter((f) => (f.investNum || 0) < 5_000_000);
+  if (key === "5to20") return list.filter((f) => (f.investNum || 0) >= 5_000_000 && (f.investNum || 0) <= 20_000_000);
   return list.filter((f) => f.catKey === key);
 }
 
@@ -90,16 +82,15 @@ export default function FranchiseListings() {
 
       {/* ── Filter bar ── */}
       <div className="flex flex-wrap gap-2 mb-9">
-        {FILTERS.map((f) => (
+        {FRANCHISE_FILTERS.map((f) => (
           <button
             key={f.key}
             onClick={() => setActive(f.key)}
-            className="px-4 py-2 rounded-full text-[0.82rem] font-semibold transition-all duration-200 cursor-pointer"
-            style={
+            className={`px-4 py-2 rounded-full text-[0.82rem] font-semibold transition-all duration-200 cursor-pointer ${
               active === f.key
-                ? { background: "#FF5C1A", color: "#fff", boxShadow: "0 4px 14px rgba(255,92,26,0.3)" }
-                : { background: "transparent", color: "#555", border: "1.5px solid rgba(0,0,0,0.12)" }
-            }
+                ? "bg-[#FF5C1A] text-white shadow-[0_4px_14px_rgba(255,92,26,0.3)]"
+                : "bg-transparent text-[#555] border-[1.5px] border-black/10 hover:border-[#FF5C1A]/30"
+            }`}
           >
             {f.label}
           </button>
@@ -126,8 +117,8 @@ export default function FranchiseListings() {
             {/* Image */}
             <div className="h-[190px] relative overflow-hidden flex-shrink-0">
               <Image
-                src={f.img}
-                alt={f.alt}
+                src={f.img || ""}
+                alt={f.alt || f.name}
                 fill
                 sizes="400px"
                 className="object-cover transition-transform duration-600 group-hover:scale-105"
@@ -239,12 +230,17 @@ export default function FranchiseListings() {
                 const f = FRANCHISE_DATA.find(d => d.name === name);
                 return (
                   <div key={name} className="relative group/chip">
-                    <div className="w-9 h-9 rounded-lg overflow-hidden border-2 border-[#FF5C1A]">
-                      <img src={f?.img} alt={name} className="w-full h-full object-cover" />
+                    <div className="w-9 h-9 rounded-lg overflow-hidden border-2 border-[#FF5C1A] relative">
+                      <Image 
+                        src={f?.img || ""} 
+                        alt={name} 
+                        fill
+                        className="object-cover" 
+                      />
                     </div>
                     <button
                       onClick={() => toggleCompare(name)}
-                      className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center text-[0.5rem] opacity-0 group-hover/chip:opacity-100 transition-opacity cursor-pointer"
+                      className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center text-[0.5rem] opacity-0 group-hover/chip:opacity-100 transition-opacity cursor-pointer z-10"
                     >
                       ✕
                     </button>

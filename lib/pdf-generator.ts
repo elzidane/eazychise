@@ -1,5 +1,5 @@
 import { jsPDF } from "jspdf";
-import { Franchise } from "./franchise-data";
+import { Franchise } from "@/types";
 
 export const generateProposalPDF = (franchise: Franchise) => {
   const doc = new jsPDF();
@@ -63,7 +63,7 @@ export const generateProposalPDF = (franchise: Franchise) => {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
   doc.setTextColor(60);
-  const introText = `Melalui platform EazyChise, kami menyampaikan profil kemitraan resmi untuk brand ${franchise.name}. Dokumen ini disusun untuk memberikan informasi komprehensif mengenai potensi investasi dan sistem operasional bisnis yang akan dijalankan oleh calon mitra di wilayah ${franchise.city} dan sekitarnya.`;
+  const introText = `Melalui platform EazyChise, kami menyampaikan profil kemitraan resmi untuk brand ${franchise.name}. Dokumen ini disusun untuk memberikan informasi komprehensif mengenai potensi investasi dan sistem operasional bisnis yang akan dijalankan oleh calon mitra di wilayah ${franchise.city || "Indonesia"} dan sekitarnya.`;
   const splitIntro = doc.splitTextToSize(introText, pageWidth - (margin * 2));
   doc.text(splitIntro, margin, y);
 
@@ -85,9 +85,9 @@ export const generateProposalPDF = (franchise: Franchise) => {
 
   // Table Rows
   const stats = [
-    { label: "Modal Investasi Awal", value: franchise.invest },
-    { label: "Estimasi Balik Modal (ROI)", value: franchise.roi },
-    { label: "Proyeksi Omzet Bulanan", value: franchise.omzet },
+    { label: "Modal Investasi Awal", value: franchise.invest || "-" },
+    { label: "Estimasi Balik Modal (ROI)", value: franchise.roi || "-" },
+    { label: "Proyeksi Omzet Bulanan", value: franchise.omzet || "-" },
     { label: "HPP (Harga Pokok Penjualan)", value: "± 45% - 50%" },
     { label: "Estimasi Profit Bersih", value: "25% - 35%" }
   ];

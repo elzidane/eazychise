@@ -6,24 +6,7 @@ import SpotlightCard from "./SpotlightCard";
 import Typewriter from "./Typewriter";
 import { MdLightbulb } from "react-icons/md";
 import { formatRupiah } from "@/lib/utils/formatRupiah";
-
-// ─── KOMPONEN ANIMASI ANGKA REAL-TIME ──────────────────────────────────────
-function AnimatedNumber({ value, formatRupiah: formatRupiahProp = false, prefix = "", suffix = "", isFloat = false }: { value: number, formatRupiah?: boolean, prefix?: string, suffix?: string, isFloat?: boolean }) {
-  const spring = useSpring(value, { mass: 0.8, stiffness: 75, damping: 15 });
-  
-  useEffect(() => {
-    spring.set(value);
-  }, [spring, value]);
-
-  const display = useTransform(spring, (current) => {
-    if (formatRupiahProp) {
-      return formatRupiah(current);
-    }
-    return prefix + (isFloat ? current.toFixed(1) : Math.round(current).toString()) + suffix;
-  });
-
-  return <motion.span className="tabular-nums inline-block tracking-tight" style={{ fontVariantNumeric: "tabular-nums" }}>{display}</motion.span>;
-}
+import AnimatedNumber from "./ui/AnimatedNumber";
 
 export default function BEPCalculator() {
   const [modalAwal, setModalAwal] = useState<number>(50000000);

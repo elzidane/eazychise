@@ -13,8 +13,8 @@ const items = [
   FRANCHISE_DATA.find(f => f.name === "XIBOBA")!,
   FRANCHISE_DATA.find(f => f.name === "Kopi Kenangan")!,
 ].map(f => ({
-  src: f.img,
-  alt: f.alt,
+  src: f.img || "",
+  alt: f.alt || f.name,
   cat: f.cat,
   title: f.name,
   price: f.invest,

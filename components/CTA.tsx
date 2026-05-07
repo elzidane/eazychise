@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { STATS } from "@/lib/constants";
 
 export default function CTASection() {
   return (
@@ -52,7 +53,7 @@ export default function CTASection() {
         </h2>
 
         <p className="text-white/40 text-[0.95rem] leading-[1.75] max-w-md mx-auto mb-10">
-          Daftar gratis, jelajahi 20+ franchise F&amp;B terkurasi, dan mulai perjalananmu jadi pengusaha kuliner sukses.
+          Daftar gratis, jelajahi {STATS.totalBrand}+ franchise F&amp;B terkurasi, dan mulai perjalananmu jadi pengusaha kuliner sukses.
         </p>
 
         {/* CTAs */}

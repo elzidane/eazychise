@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { BlurText, CountUp, ShinyText, TiltCard } from "./Reactbitseffects";
 import MagneticButton from "./MagneticButton";
-import { STATS } from "@/lib/constants";
+import { STATS, HERO_IMAGES } from "@/lib/constants";
 import { 
   Search, 
   ArrowRight, 
@@ -26,29 +26,6 @@ const stats = [
   { num: 4, suffix: "", label: "Kategori F&B" },
 ];
 
-const images = [
-  {
-    src: "https://richcreme.com/wp-content/uploads/2022/11/18.RCWC-Nastar-Crumble-Dessert-Box.jpg",
-    alt: "Jiwa Toast",
-    name: "Janji Jiwa",
-    meta: "Modal Rp 5 Juta • Kuliner",
-    tall: true,
-  },
-  {
-    src: "https://franchiseindo.co.id/wp-content/uploads/2025/12/image-7-1024x538.webp",
-    alt: "Nescafe",
-    name: "Nescafe",
-    meta: "Modal Rp 3,5 Juta • Minuman",
-    tall: false,
-  },
-  {
-    src: "https://cdn.sanity.io/images/kbqq3e0r/production/d19beba03d5c400bb058dfe803e8994e653a5516-2400x1334.png",
-    alt: "KFC",
-    name: "KFC",
-    meta: "Modal Rp 7 Juta • Kuliner",
-    tall: false,
-  },
-];
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -257,8 +234,8 @@ export default function Hero() {
               {/* Tall */}
               <div className="row-span-2 rounded-[24px] overflow-hidden relative group shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
                 <Image
-                  src={images[0].src}
-                  alt={images[0].alt}
+                  src={HERO_IMAGES[0].src}
+                  alt={HERO_IMAGES[0].alt}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   sizes="320px"
@@ -270,8 +247,8 @@ export default function Hero() {
                   <Utensils className="w-3 h-3" /> Kuliner
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <p className="text-white font-bold text-sm leading-tight">{images[0].name}</p>
-                  <p className="text-white/60 text-[0.68rem] mt-0.5">{images[0].meta}</p>
+                  <p className="text-white font-bold text-sm leading-tight">{HERO_IMAGES[0].name}</p>
+                  <p className="text-white/60 text-[0.68rem] mt-0.5">{HERO_IMAGES[0].meta}</p>
                   {/* Rating */}
                   <div className="flex items-center gap-1 mt-1.5">
                     <div className="flex gap-0.5">
@@ -287,8 +264,8 @@ export default function Hero() {
               {/* Small top */}
               <div className="rounded-[20px] overflow-hidden relative group shadow-[0_12px_40px_rgba(0,0,0,0.1)]">
                 <Image
-                  src={images[1].src}
-                  alt={images[1].alt}
+                  src={HERO_IMAGES[1].src}
+                  alt={HERO_IMAGES[1].alt}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   sizes="240px"
@@ -298,16 +275,16 @@ export default function Hero() {
                   <Coffee className="w-2.5 h-2.5" /> Minuman
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-3">
-                  <p className="text-white font-bold text-xs">{images[1].name}</p>
-                  <p className="text-white/55 text-[0.65rem]">{images[1].meta}</p>
+                  <p className="text-white font-bold text-xs">{HERO_IMAGES[1].name}</p>
+                  <p className="text-white/55 text-[0.65rem]">{HERO_IMAGES[1].meta}</p>
                 </div>
               </div>
 
               {/* Small bottom */}
               <div className="rounded-[20px] overflow-hidden relative group shadow-[0_12px_40px_rgba(0,0,0,0.1)]">
                 <Image
-                  src={images[2].src}
-                  alt={images[2].alt}
+                  src={HERO_IMAGES[2].src}
+                  alt={HERO_IMAGES[2].alt}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   sizes="240px"
@@ -317,8 +294,8 @@ export default function Hero() {
                   <Pizza className="w-2.5 h-2.5" /> Kuliner
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-3">
-                  <p className="text-white font-bold text-xs">{images[2].name}</p>
-                  <p className="text-white/55 text-[0.65rem]">{images[2].meta}</p>
+                  <p className="text-white font-bold text-xs">{HERO_IMAGES[2].name}</p>
+                  <p className="text-white/55 text-[0.65rem]">{HERO_IMAGES[2].meta}</p>
                 </div>
               </div>
             </div>

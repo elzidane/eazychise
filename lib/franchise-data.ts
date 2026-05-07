@@ -1,19 +1,4 @@
-export type Franchise = {
-  img: string;
-  alt: string;
-  cat: string;
-  catKey: string;
-  name: string;
-  rating: number;
-  city: string;
-  invest: string;
-  investNum: number;
-  roi: string;
-  omzet: string;
-  mitra: string;
-  badge?: string;
-  badgeColor?: string;
-};
+import { Franchise } from "@/types";
 
 export const FRANCHISE_DATA: Franchise[] = [
   // ─── Minuman ───────────────────────────────────────────────────

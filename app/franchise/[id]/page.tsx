@@ -199,8 +199,8 @@ Tugas Anda:
               {/* Image Container */}
               <div className="aspect-[4/3] relative rounded-2xl overflow-hidden mb-6 shadow-inner bg-gray-100">
                 <Image 
-                  src={franchise.img}
-                  alt={franchise.alt}
+                  src={franchise.img || ""}
+                  alt={franchise.alt || franchise.name}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   sizes="400px"
@@ -255,7 +255,7 @@ Tugas Anda:
         </div>
 
         {/* Location Recommender Integration */}
-        <LocationRecommender category={franchise.cat} />
+        <LocationRecommender category={franchise.cat || ""} />
 
         {/* AI Strategic Analysis Section */}
         <div className="mt-12">

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowLeft, Star, CheckCircle2, ArrowRight, X, TrendingUp, Sparkles, Brain } from "lucide-react";
 import { MdBalance } from "react-icons/md";
-import { FRANCHISE_DATA, Franchise } from "@/lib/franchise-data";
+import { Franchise } from "@/types";
+import { FRANCHISE_DATA } from "@/lib/franchise-data";
 import Typewriter from "@/components/Typewriter";
 import SpotlightCard from "@/components/SpotlightCard";
 
