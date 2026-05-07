@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { CountUp } from "./Reactbitseffects";
 import { Stat } from "../types";
+import { MdRestaurant, MdLocalCafe, MdWhatshot, MdCheckCircle } from "react-icons/md";
 
 export function HeroStats({ stats }: { stats: Stat[] }) {
   return (
@@ -38,8 +39,8 @@ export function HeroVisual({ images }: { images: any[] }) {
               priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-            <div className="absolute top-3 left-3 bg-[#FF5C1A] text-white text-[0.65rem] font-bold px-2.5 py-1 rounded-full">
-              🍜 Kuliner
+            <div className="absolute top-3 left-3 bg-[#FF5C1A] text-white text-[0.65rem] font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+              <MdRestaurant className="w-3 h-3" /> Kuliner
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-4">
               <p className="text-white font-bold text-sm leading-tight">{images[0].name}</p>
@@ -61,8 +62,8 @@ export function HeroVisual({ images }: { images: any[] }) {
               sizes="240px"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
-            <div className="absolute top-2.5 left-2.5 bg-black/50 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full">
-              ☕ Minuman
+            <div className="absolute top-2.5 left-2.5 bg-black/50 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+              <MdLocalCafe className="w-3 h-3" /> Minuman
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-3">
               <p className="text-white font-bold text-xs">{images[1].name}</p>
@@ -80,8 +81,8 @@ export function HeroVisual({ images }: { images: any[] }) {
               sizes="240px"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
-            <div className="absolute top-2.5 left-2.5 bg-black/50 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full">
-              🍗 Kuliner
+            <div className="absolute top-2.5 left-2.5 bg-black/50 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+              <MdRestaurant className="w-3 h-3" /> Kuliner
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-3">
               <p className="text-white font-bold text-xs">{images[2].name}</p>
@@ -92,7 +93,7 @@ export function HeroVisual({ images }: { images: any[] }) {
 
         {/* Floating badges */}
         <div className="absolute -top-6 -right-6 bg-[#FFCF40] rounded-2xl px-4 py-3 shadow-[0_12px_36px_rgba(0,0,0,0.14)] flex items-center gap-3 z-20 animate-float" style={{ minWidth: 170 }}>
-          <div className="w-10 h-10 rounded-xl bg-white/30 flex items-center justify-center text-xl flex-shrink-0">🔥</div>
+          <div className="w-10 h-10 rounded-xl bg-white/30 flex items-center justify-center text-xl flex-shrink-0"><MdWhatshot className="w-6 h-6 text-[#111]" /></div>
           <div>
             <p className="font-extrabold text-[0.88rem] text-[#111] leading-none">Terlaris Bulan Ini</p>
             <p className="text-[0.7rem] text-black/55 mt-0.5">Kopi Susu Kekinian</p>
@@ -100,7 +101,7 @@ export function HeroVisual({ images }: { images: any[] }) {
         </div>
 
         <div className="absolute -bottom-5 -left-7 bg-white rounded-2xl px-4 py-3 shadow-[0_12px_36px_rgba(0,0,0,0.1)] flex items-center gap-3 z-20 animate-float-delay" style={{ minWidth: 190 }}>
-          <div className="w-10 h-10 rounded-xl bg-[#1B8C5A]/10 flex items-center justify-center text-xl flex-shrink-0">✅</div>
+          <div className="w-10 h-10 rounded-xl bg-[#1B8C5A]/10 flex items-center justify-center text-xl flex-shrink-0"><MdCheckCircle className="w-6 h-6 text-[#1B8C5A]" /></div>
           <div>
             <p className="font-extrabold text-[0.88rem] text-[#1B8C5A] leading-none">Semua Terverifikasi</p>
             <p className="text-[0.7rem] text-[#888] mt-0.5">BPOM & Halal MUI</p>

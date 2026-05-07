@@ -12,6 +12,7 @@ import {
   Trash2,
   X
 } from "lucide-react";
+import { MdInsertChart, MdSearch, MdLocalCafe, MdRestaurant, MdLocationOn, MdAttachMoney, MdFlashOn } from "react-icons/md";
 
 // ─── Types ────────────────────────────────────────────────────
 type Message = {
@@ -352,7 +353,7 @@ export default function FranchiseAdvisor() {
       if (!open) setHasNew(true);
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Koneksi bermasalah";
-      const next: Message[] = [...newMessages, { role: "assistant" as const, content: `⚠️ ${msg}` }];
+      const next: Message[] = [...newMessages, { role: "assistant" as const, content: `[!] ${msg}` }];
       setMessages(next);
       setNewMsgIdx(next.length - 1);
     } finally {
@@ -373,30 +374,30 @@ export default function FranchiseAdvisor() {
     if (!lastAI) return [];
     const text = lastAI.content.toLowerCase();
     
-    const suggestions: { label: string; text: string }[] = [];
+    const suggestions: { label: React.ReactNode; text: string }[] = [];
     
     if (text.includes("bep") || text.includes("balik modal")) {
-      suggestions.push({ label: "📊 Hitung BEP detail", text: "Bantu hitung BEP lebih detail dong, dengan biaya operasional lengkap" });
+      suggestions.push({ label: <span className="flex items-center justify-center gap-1.5"><MdInsertChart className="w-4 h-4" /> Hitung BEP detail</span>, text: "Bantu hitung BEP lebih detail dong, dengan biaya operasional lengkap" });
     }
     if (text.includes("swot")) {
-      suggestions.push({ label: "🔍 Analisis risiko", text: "Apa saja risiko terburuk yang bisa terjadi dan cara mengatasinya?" });
+      suggestions.push({ label: <span className="flex items-center justify-center gap-1.5"><MdSearch className="w-4 h-4" /> Analisis risiko</span>, text: "Apa saja risiko terburuk yang bisa terjadi dan cara mengatasinya?" });
     }
     if (text.includes("kopi") || text.includes("minuman")) {
-      suggestions.push({ label: "☕ Bandingkan kopi", text: "Bandingkan semua franchise kopi yang ada di EazyChise" });
+      suggestions.push({ label: <span className="flex items-center justify-center gap-1.5"><MdLocalCafe className="w-4 h-4" /> Bandingkan kopi</span>, text: "Bandingkan semua franchise kopi yang ada di EazyChise" });
     }
     if (text.includes("kuliner") || text.includes("makanan")) {
-      suggestions.push({ label: "🍜 Bandingkan kuliner", text: "Bandingkan franchise kuliner yang cocok untuk pemula" });
+      suggestions.push({ label: <span className="flex items-center justify-center gap-1.5"><MdRestaurant className="w-4 h-4" /> Bandingkan kuliner</span>, text: "Bandingkan franchise kuliner yang cocok untuk pemula" });
     }
     if (text.includes("lokasi") || text.includes("kota")) {
-      suggestions.push({ label: "📍 Tips lokasi", text: "Bagaimana cara memilih lokasi yang strategis untuk franchise F&B?" });
+      suggestions.push({ label: <span className="flex items-center justify-center gap-1.5"><MdLocationOn className="w-4 h-4" /> Tips lokasi</span>, text: "Bagaimana cara memilih lokasi yang strategis untuk franchise F&B?" });
     }
     
     // Always add general follow-ups
     if (suggestions.length < 2) {
-      suggestions.push({ label: "💰 Modal terkecil", text: "Mana franchise dengan modal paling kecil yang bisa saya mulai?" });
+      suggestions.push({ label: <span className="flex items-center justify-center gap-1.5"><MdAttachMoney className="w-4 h-4" /> Modal terkecil</span>, text: "Mana franchise dengan modal paling kecil yang bisa saya mulai?" });
     }
     if (suggestions.length < 3) {
-      suggestions.push({ label: "⚡ ROI tercepat", text: "Franchise mana yang paling cepat balik modalnya?" });
+      suggestions.push({ label: <span className="flex items-center justify-center gap-1.5"><MdFlashOn className="w-4 h-4" /> ROI tercepat</span>, text: "Franchise mana yang paling cepat balik modalnya?" });
     }
     
     return suggestions.slice(0, 3);

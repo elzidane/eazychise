@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowLeft, Star, CheckCircle2, ArrowRight, X, TrendingUp } from "lucide-react";
+import { MdBalance } from "react-icons/md";
 import { FRANCHISE_DATA, Franchise } from "@/lib/franchise-data";
 
 export default function ComparePage() {
@@ -25,7 +26,7 @@ export default function ComparePage() {
     return (
       <main className="min-h-screen pt-28 pb-20 px-[5%] flex items-center justify-center">
         <div className="text-center">
-          <p className="text-5xl mb-4">⚖️</p>
+          <MdBalance className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <h1 className="font-syne font-extrabold text-2xl text-[#111] mb-3">Pilih Franchise untuk Dibandingkan</h1>
           <p className="text-[#888] text-sm mb-6">Pilih minimal 2 franchise dari halaman Franchise untuk memulai perbandingan.</p>
           <Link href="/franchise" className="inline-flex items-center gap-2 bg-[#FF5C1A] text-white px-6 py-3 rounded-xl font-bold text-sm shadow-[0_6px_20px_rgba(255,92,26,0.3)] hover:bg-[#e04710] transition-all">

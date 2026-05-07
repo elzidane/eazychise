@@ -68,7 +68,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <h1 className="font-syne font-extrabold text-2xl text-[#111] tracking-tight">
-                Halo, {user.name.split(" ")[0]}! 👋
+                Halo, {user.name.split(" ")[0]}!
               </h1>
               <p className="text-[#888] text-sm font-medium mt-0.5">
                 {user.role === "franchisee" ? "Calon Franchisee" : "Pemilik Brand"} • {user.email}
@@ -171,7 +171,9 @@ export default function DashboardPage() {
 
               {savedFranchises.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-4xl mb-3">📋</p>
+                  <div className="w-16 h-16 mx-auto bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                    <Bookmark className="w-8 h-8 text-gray-300" />
+                  </div>
                   <p className="text-[#999] font-medium text-sm">Belum ada franchise yang disimpan</p>
                   <Link
                     href="/franchise"
@@ -226,7 +228,9 @@ export default function DashboardPage() {
 
                 {user.searchHistory.length === 0 ? (
                   <div className="text-center py-8">
-                    <p className="text-3xl mb-3">🔍</p>
+                    <div className="w-14 h-14 mx-auto bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                      <Search className="w-6 h-6 text-gray-300" />
+                    </div>
                     <p className="text-[#999] font-medium text-sm">Belum ada riwayat pencarian</p>
                   </div>
                 ) : (

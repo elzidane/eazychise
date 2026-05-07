@@ -1,4 +1,5 @@
 import { Review, Stat, AIAdvisorStep } from "../types";
+import { MdAttachMoney, MdLocationOn, MdExtension, MdRestaurant } from "react-icons/md";
 
 export const INITIAL_REVIEWS: Review[] = [
   {
@@ -55,8 +56,8 @@ export const HERO_IMAGES = [
 ];
 
 export const AI_ADVISOR_STEPS: AIAdvisorStep[] = [
-  { id: "modal", q: "Berapa modal yang kamu siapkan?", icon: "💰", options: ["< Rp 3 Juta", "Rp 3–7 Juta", "Rp 7–15 Juta", "> Rp 15 Juta"] },
-  { id: "lokasi", q: "Di mana kamu akan buka usaha?", icon: "📍", options: ["Jabodetabek", "Jawa Tengah/DIY", "Jawa Timur", "Luar Jawa"] },
-  { id: "pengalaman", q: "Pengalaman bisnismu sejauh ini?", icon: "🧩", options: ["Belum pernah", "Pernah, tapi gagal", "Punya bisnis sampingan", "Sudah berpengalaman"] },
-  { id: "kategori", q: "Kategori F&B yang paling menarik?", icon: "🍽️", options: ["Kopi & Minuman", "Makanan Berat", "Dessert & Snack", "Semua cocok"] },
+  { id: "modal", q: "Berapa modal yang kamu siapkan?", icon: MdAttachMoney, options: ["< Rp 3 Juta", "Rp 3–7 Juta", "Rp 7–15 Juta", "> Rp 15 Juta"] },
+  { id: "lokasi", q: "Di mana kamu akan buka usaha?", icon: MdLocationOn, options: ["Jabodetabek", "Jawa Tengah/DIY", "Jawa Timur", "Luar Jawa"] },
+  { id: "pengalaman", q: "Pengalaman bisnismu sejauh ini?", icon: MdExtension, options: ["Belum pernah", "Pernah, tapi gagal", "Punya bisnis sampingan", "Sudah berpengalaman"] },
+  { id: "kategori", q: "Kategori F&B yang paling menarik?", icon: MdRestaurant, options: ["Kopi & Minuman", "Makanan Berat", "Dessert & Snack", "Semua cocok"] },
 ];

@@ -53,6 +53,6 @@ export interface Review {
 export interface AIAdvisorStep {
   id: string;
   q: string;
-  icon: string;
+  icon: any;
   options: string[];
 }

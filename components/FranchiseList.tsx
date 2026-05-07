@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GitCompareArrows, X } from "lucide-react";
+import { MdRestaurant } from "react-icons/md";
 
 import { FRANCHISE_DATA, Franchise } from "@/lib/franchise-data";
 import { TiltCard } from "./Reactbitseffects";
@@ -222,7 +223,9 @@ export default function FranchiseListings() {
       {/* Empty state */}
       {filtered.length === 0 && (
         <div className="text-center py-20">
-          <p className="text-[2.5rem] mb-3">🍽️</p>
+          <div className="w-16 h-16 mx-auto bg-gray-50 rounded-full flex items-center justify-center mb-4">
+            <MdRestaurant className="w-8 h-8 text-gray-300" />
+          </div>
           <p className="text-[#777] font-semibold">Tidak ada franchise untuk filter ini</p>
         </div>
       )}

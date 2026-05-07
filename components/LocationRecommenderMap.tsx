@@ -5,6 +5,9 @@ import { MapContainer, TileLayer, Marker, Popup, useMap, Circle } from "react-le
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
+import { renderToString } from "react-dom/server";
+import { MdLocationOn, MdHome, MdWarning } from "react-icons/md";
+
 // ── Leaflet Icon Fix ─────────────────────────────────────────────
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -25,9 +28,9 @@ const makeIcon = (color: string) =>
         background:${color}; border:3px solid #fff;
         box-shadow:0 2px 8px rgba(0,0,0,0.3);
         display:flex; align-items:center; justify-content:center;
-        font-size:13px;
+        color: white;
       ">
-        <span style="filter:drop-shadow(0 0 2px rgba(0,0,0,0.3))">📍</span>
+        ${renderToString(<MdLocationOn style={{ width: 14, height: 14 }} />)}
       </div>
     `,
   });
@@ -54,8 +57,10 @@ const userIcon = L.divIcon({
       background:#111; border:3px solid #FF5C1A;
       box-shadow:0 2px 12px rgba(255,92,26,0.5);
       display:flex; align-items:center; justify-content:center;
-      font-size:13px;
-    ">🏠</div>
+      color: white;
+    ">
+      ${renderToString(<MdHome style={{ width: 14, height: 14 }} />)}
+    </div>
   `,
 });
 
@@ -293,7 +298,7 @@ export default function LocationRecommenderMap({ category }: { category: string 
       {/* Error overlay */}
       {error && !loading && (
         <div className="absolute inset-0 bg-white/90 z-[1000] flex flex-col items-center justify-center gap-2 p-6 text-center">
-          <p className="text-2xl">⚠️</p>
+          <MdWarning className="w-10 h-10 text-yellow-500 mb-2" />
           <p className="text-sm font-semibold text-gray-700">{error}</p>
           <button
             onClick={() => { setLoading(true); setError(""); }}
@@ -359,8 +364,10 @@ export default function LocationRecommenderMap({ category }: { category: string 
         {/* User marker */}
         <Marker position={center} icon={userIcon}>
           <Popup>
-            <div className="text-sm font-bold text-gray-800">📍 Lokasi Anda</div>
-            <div className="text-xs text-gray-400 mt-0.5">Pusat radius pencarian 4 km</div>
+            <div className="text-sm font-bold text-gray-800 flex items-center gap-1">
+              <MdLocationOn className="w-4 h-4 text-[#FF5C1A]" /> Lokasi Anda
+            </div>
+            <div className="text-xs text-gray-400 mt-0.5 ml-5">Pusat radius pencarian 4 km</div>
           </Popup>
         </Marker>
 

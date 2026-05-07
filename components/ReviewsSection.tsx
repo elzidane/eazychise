@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, MessageSquare, Send, CheckCircle2, MapPin, Coffee } from "lucide-react";
+import { MdSearch } from "react-icons/md";
 import SpotlightCard from "./SpotlightCard";
 import { ReviewCard, ReviewForm } from "./ReviewsSectionComponents";
 
@@ -356,7 +357,7 @@ export default function ReviewsSection() {
             
             {filteredReviews.length === 0 && (
               <div className="text-center py-16">
-                <p className="text-3xl mb-3">🔍</p>
+                <MdSearch className="w-10 h-10 text-gray-300 mx-auto mb-3" />
                 <p className="text-[#999] font-medium">Belum ada ulasan untuk kategori ini</p>
               </div>
             )}

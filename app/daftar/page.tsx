@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { User, Mail, Lock, Phone, ArrowRight, CheckCircle2, ArrowLeft, ShieldCheck, Sparkles, Eye, EyeOff } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import { MdPerson, MdStore } from "react-icons/md";
 import { register, loginWithGoogle, UserRole } from "@/lib/auth";
 
 export default function RegisterPage() {
@@ -250,7 +251,9 @@ export default function RegisterPage() {
                         : "bg-[#F8F8F6] border-transparent text-[#777] hover:border-black/10"
                     }`}
                   >
-                    🧑‍💼 Calon Franchisee
+                    <span className="flex items-center justify-center gap-2">
+                      <MdPerson className="w-5 h-5" /> Calon Franchisee
+                    </span>
                   </button>
                   <button
                     type="button"
@@ -261,7 +264,9 @@ export default function RegisterPage() {
                         : "bg-[#F8F8F6] border-transparent text-[#777] hover:border-black/10"
                     }`}
                   >
-                    🏢 Pemilik Brand
+                    <span className="flex items-center justify-center gap-2">
+                      <MdStore className="w-5 h-5" /> Pemilik Brand
+                    </span>
                   </button>
                 </div>
               </div>

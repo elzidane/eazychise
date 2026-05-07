@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion, useSpring, useTransform } from "framer-motion";
 import { Calculator, TrendingUp, DollarSign, Clock, Pencil, Rocket, AlertCircle } from "lucide-react";
 import SpotlightCard from "./SpotlightCard";
+import { MdLightbulb } from "react-icons/md";
 
 // ─── KOMPONEN ANIMASI ANGKA REAL-TIME ──────────────────────────────────────
 function AnimatedNumber({ value, formatRupiah = false, prefix = "", suffix = "", isFloat = false }: { value: number, formatRupiah?: boolean, prefix?: string, suffix?: string, isFloat?: boolean }) {
@@ -349,7 +350,7 @@ export default function BEPCalculator() {
             {/* Disclaimer */}
             <div className="bg-[#FFCF40]/20 p-5 rounded-2xl border border-[#FFCF40]/30">
               <p className="text-sm text-[#8A6A1C] flex items-start gap-2">
-                <span className="text-lg mt-0.5">💡</span>
+                <MdLightbulb className="w-5 h-5 flex-shrink-0 mt-0.5" />
                 Angka di atas adalah estimasi kasar. Performa asli dapat bervariasi tergantung pada lokasi, marketing, dan manajemen operasional.
               </p>
             </div>

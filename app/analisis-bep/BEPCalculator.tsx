@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Calculator, TrendingUp, DollarSign, Clock, Pencil, Rocket, AlertCircle } from "lucide-react";
+import { MdLightbulb } from "react-icons/md";
 
 export default function BEPCalculator() {
   const [modalAwal, setModalAwal] = useState<number>(50000000);
@@ -316,7 +317,7 @@ export default function BEPCalculator() {
             {/* Disclaimer */}
             <div className="bg-[#FFCF40]/20 p-5 rounded-2xl border border-[#FFCF40]/30">
               <p className="text-sm text-[#8A6A1C] flex items-start gap-2">
-                <span className="text-lg mt-0.5">💡</span>
+                <MdLightbulb className="w-5 h-5 flex-shrink-0 mt-0.5" />
                 Angka di atas adalah estimasi kasar. Performa asli dapat bervariasi tergantung pada lokasi, marketing, dan manajemen operasional.
               </p>
             </div>
