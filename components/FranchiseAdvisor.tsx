@@ -150,6 +150,7 @@ function TypewriterText({ text, speed = 12, onDone }: { text: string; speed?: nu
             color: "#FFAB68", fontFamily: "inherit", verticalAlign: "middle",
             transition: "all 0.18s",
           }}
+          suppressHydrationWarning={true}
         >
           skip
         </button>
@@ -237,6 +238,7 @@ function QuickBtn({ q, onSend }: { q: QuickPrompt; onSend: (t: string) => void }
         boxShadow: hover ? "0 6px 20px rgba(255,92,26,0.15)" : "none",
         fontFamily: "inherit",
       }}
+      suppressHydrationWarning={true}
     >
       <q.icon className="w-4 h-4 flex-shrink-0" />
       <span>{q.label}</span>
@@ -261,6 +263,7 @@ function IconBtn({ onClick, title, children }: { onClick: () => void; title: str
         transition: "all 0.18s",
         transform: hover ? "scale(1.08)" : "scale(1)",
       }}
+      suppressHydrationWarning={true}
     >
       {children}
     </button>
@@ -288,6 +291,7 @@ function SendBtn({ onClick, active, loading }: { onClick: () => void; active: bo
         transition: "all 0.22s cubic-bezier(0.34,1.56,0.64,1)",
         transform: active && hover && !loading ? "scale(1.1) translateY(-1px)" : "scale(1)",
       }}
+      suppressHydrationWarning={true}
     >
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/>
@@ -554,6 +558,7 @@ export default function FranchiseAdvisor() {
             transform: fabHover ? "scale(1.08) translateY(-2px)" : "scale(1)",
             position: "relative",
           }}
+          suppressHydrationWarning={true}
         >
           <div style={{ transition: "transform 0.32s cubic-bezier(0.34,1.56,0.64,1)", transform: open ? "rotate(90deg) scale(0.9)" : "rotate(0) scale(1)" }}>
             {open
@@ -718,6 +723,7 @@ export default function FranchiseAdvisor() {
                     e.currentTarget.style.borderColor = "rgba(255,120,30,0.2)";
                     e.currentTarget.style.transform = "translateY(0)";
                   }}
+                  suppressHydrationWarning={true}
                 >
                   {r.label}
                 </button>
@@ -822,6 +828,7 @@ function InputField({ inputRef, value, onChange, onKeyDown, onSend, loading }: {
           el.style.height = "auto";
           el.style.height = Math.min(el.scrollHeight, 100) + "px";
         }}
+        suppressHydrationWarning={true}
       />
       <SendBtn onClick={onSend} active={!!value.trim()} loading={loading} />
     </div>

@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import FranchiseAdvisor from "@/components/FranchiseAdvisor";
 import SplashScreen from "@/components/SplashScreen";
+import AuthProvider from "@/components/AuthProvider";
 
 import { ToastProvider } from "@/components/ui/Toast";
 
@@ -57,15 +58,17 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${syne.variable} ${fraunces.variable} ${jakarta.variable}`}>
       <body className="font-jakarta bg-[#FFF9F0] text-[#111111] overflow-x-hidden">
-        <ToastProvider>
-          <SplashScreen />
-          <ScrollReveal />
-          <GlobalEffects />
-          <Navbar />
-          {children}
-          <Footer />
-          <FranchiseAdvisor />
-        </ToastProvider>
+        <AuthProvider>
+          <ToastProvider>
+            <SplashScreen />
+            <ScrollReveal />
+            <GlobalEffects />
+            <Navbar />
+            {children}
+            <Footer />
+            <FranchiseAdvisor />
+          </ToastProvider>
+        </AuthProvider>
       </body>
     </html>
   );

@@ -111,6 +111,32 @@ export function logout() {
   }
 }
 
+export function syncSessionWithLocal(sessionUser: { name?: string | null; email?: string | null; image?: string | null }, role: UserRole = "franchisee"): User {
+  const users = getUsers();
+  const emailKey = (sessionUser.email || "google_user@demo.com").toLowerCase().trim();
+  
+  if (!users[emailKey]) {
+    // Create local entry for the Google user if it doesn't exist
+    users[emailKey] = {
+      name: sessionUser.name || "Google User",
+      email: emailKey,
+      phone: "-",
+      password: "google_oauth_active",
+      role: role,
+      createdAt: new Date().toISOString(),
+      savedFranchises: [],
+      searchHistory: [],
+    };
+    saveUsers(users);
+  }
+
+  const { password: _, ...userWithoutPassword } = users[emailKey];
+  // Always update current user in localStorage to match session
+  localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userWithoutPassword));
+  
+  return userWithoutPassword;
+}
+
 export function getUser(): User | null {
   if (typeof window === "undefined") return null;
   try {

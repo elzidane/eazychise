@@ -4,39 +4,39 @@ import { STATS } from "@/lib/constants";
 
 export default function CTASection() {
   return (
-    <section id="daftar" className="px-[5%] py-28 bg-[#111111] relative overflow-hidden">
+    <section id="daftar" className="section-padding bg-[#111111] relative overflow-hidden">
 
       {/* ── Background layers ── */}
       {/* Warm glow center */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse 80% 60% at 50% 100%, rgba(255,92,26,0.15) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse 80% 60% at 50% 100%, rgba(255,92,26,0.1) 0%, transparent 70%)",
         }}
       />
       {/* Dot grid */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none opacity-20"
         style={{
           backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
-          backgroundSize: "28px 28px",
+          backgroundSize: "24px 24px",
         }}
       />
       {/* Top fade line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
       {/* ── Content ── */}
-      <div className="relative z-10 max-w-2xl mx-auto text-center">
+      <div className="relative z-10 max-w-3xl mx-auto text-center">
 
         {/* Label */}
-        <div className="inline-flex items-center gap-2 text-[#FFCF40] text-[0.72rem] font-bold uppercase tracking-[3px] mb-7">
-          <span className="w-6 h-px bg-[#FFCF40]/60" />
-          Mulai Hari Ini
-          <span className="w-6 h-px bg-[#FFCF40]/60" />
+        <div className="label-caps mb-8 text-[#FFCF40] flex justify-center items-center gap-4">
+          <span className="w-8 h-px bg-[#FFCF40]/40" />
+          Mulai Perjalananmu
+          <span className="w-8 h-px bg-[#FFCF40]/40" />
         </div>
 
         {/* Headline */}
-        <h2 className="font-fraunces font-black text-[clamp(2.2rem,5vw,4rem)] text-white leading-[1.05] mb-5">
+        <h2 className="h2-responsive text-white mb-6">
           Wujudkan Bisnis F&amp;B{" "}
           <em
             className="not-italic relative inline-block"
@@ -49,40 +49,40 @@ export default function CTASection() {
           >
             Impianmu
           </em>{" "}
-          Sekarang
+          Menjadi Nyata
         </h2>
 
-        <p className="text-white/40 text-[0.95rem] leading-[1.75] max-w-md mx-auto mb-10">
-          Daftar gratis, jelajahi {STATS.totalBrand}+ franchise F&amp;B terkurasi, dan mulai perjalananmu jadi pengusaha kuliner sukses.
+        <p className="text-white/50 text-[1.05rem] leading-[1.8] max-w-lg mx-auto mb-12 font-medium">
+          Daftar gratis sekarang, jelajahi ratusan brand franchise F&amp;B terpercaya, dan mulai perjalananmu menjadi pengusaha kuliner sukses.
         </p>
 
         {/* CTAs */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+        <div className="flex flex-wrap justify-center gap-4 mb-14">
           <Link
             href="/daftar"
-            className="group relative flex items-center gap-2 bg-[#FF5C1A] text-white pl-7 pr-6 py-4 rounded-full font-bold text-[0.95rem] shadow-[0_8px_32px_rgba(255,92,26,0.4)] hover:shadow-[0_14px_40px_rgba(255,92,26,0.55)] hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+            className="group relative flex items-center gap-2 bg-[#FF5C1A] text-white pl-8 pr-7 py-4.5 rounded-full font-black text-[1rem] shadow-[0_12px_36px_rgba(255,92,26,0.4)] hover:shadow-[0_18px_45px_rgba(255,92,26,0.55)] hover:-translate-y-1 transition-all duration-300 overflow-hidden"
           >
-            <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-500 bg-gradient-to-r from-transparent via-white/15 to-transparent" />
-            <span className="relative">Daftar Gratis Sekarang</span>
-            <ArrowRight className="w-4 h-4 text-[#FFCF40]" />
+            <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+            <span className="relative">Daftar Akun Gratis</span>
+            <ArrowRight className="w-5 h-5 text-[#FFCF40]" />
           </Link>
           <a
             href="https://wa.me/6287792735999?text=Halo%20EazyChise%2C%20saya%20mau%20konsultasi%20franchise%20F%26B"
-            className="flex items-center gap-2 border border-white/15 text-white/70 hover:text-white hover:border-white/30 px-7 py-4 rounded-full font-semibold text-[0.95rem] transition-all duration-200 hover:-translate-y-0.5"
+            className="flex items-center gap-2 border-2 border-white/10 text-white/70 hover:text-white hover:border-white/30 px-8 py-4.5 rounded-full font-bold text-[1rem] transition-all duration-300 hover:-translate-y-1 bg-white/5 backdrop-blur-sm"
           >
-            Konsultasi Gratis
+            Konsultasi Bisnis
           </a>
         </div>
 
         {/* Trust signals */}
-        <div className="flex items-center justify-center gap-6 flex-wrap">
+        <div className="flex items-center justify-center gap-10 flex-wrap">
           {[
-            { text: "Gratis daftar" },
-            { text: "Tanpa biaya tersembunyi" },
-            { text: "Dukungan 24/7" },
+            { text: "Pendaftaran Gratis" },
+            { text: "Tanpa Biaya Admin" },
+            { text: "Bantuan Konsultasi" },
           ].map((s) => (
-            <div key={s.text} className="flex items-center gap-1.5 text-white/30 text-[0.78rem]">
-              <CheckCircle2 className="w-3.5 h-3.5 text-[#1B8C5A]" />
+            <div key={s.text} className="flex items-center gap-2 text-white/35 text-[0.82rem] font-bold uppercase tracking-widest">
+              <CheckCircle2 className="w-4 h-4 text-[#1B8C5A]" />
               {s.text}
             </div>
           ))}
@@ -90,7 +90,7 @@ export default function CTASection() {
       </div>
 
       {/* ── Decorative bottom strip ── */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FF5C1A]/20 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FF5C1A]/30 to-transparent" />
     </section>
   );
 }

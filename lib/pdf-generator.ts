@@ -76,14 +76,14 @@ export const generateProposalPDF = (franchise: Franchise) => {
   doc.text("II. ANALISIS INVESTASI & PROYEKSI KEUNTUNGAN", margin, y);
   
   y += 8;
-  // Table Header
+
   doc.setFillColor(248, 248, 246);
   doc.rect(margin, y, pageWidth - (margin * 2), 10, 'F');
   doc.setFontSize(10);
   doc.text("Keterangan", margin + 5, y + 7);
   doc.text("Nilai Estimasi", margin + 100, y + 7);
 
-  // Table Rows
+
   const stats = [
     { label: "Modal Investasi Awal", value: franchise.invest || "-" },
     { label: "Estimasi Balik Modal (ROI)", value: franchise.roi || "-" },

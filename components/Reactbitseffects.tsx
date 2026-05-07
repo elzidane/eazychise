@@ -287,21 +287,33 @@ interface TiltCardProps {
 export function TiltCard({ children, className = "", style, maxTilt = 12, scale = 1.03, glare = true }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const glareRef = useRef<HTMLDivElement>(null);
+  const [disabled, setDisabled] = useState(false);
+
+  useEffect(() => {
+    // Disable on mobile/touch or if reduced motion is preferred
+    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isTouch || prefersReduced) setDisabled(true);
+  }, []);
 
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = ref.current!.getBoundingClientRect();
+    if (disabled || !ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    ref.current!.style.transform = `perspective(600px) rotateY(${x * maxTilt}deg) rotateX(${-y * maxTilt}deg) scale(${scale})`;
-    if (glareRef.current) {
-      const angle = Math.atan2(y, x) * (180 / Math.PI);
-      glareRef.current.style.background = `linear-gradient(${angle}deg, rgba(255,255,255,0.18) 0%, transparent 60%)`;
+    ref.current.style.transform = `perspective(800px) rotateY(${x * maxTilt}deg) rotateX(${-y * maxTilt}deg) scale(${scale})`;
+    
+    if (glare && glareRef.current) {
+      const glareX = (e.clientX - rect.left) / rect.width * 100;
+      const glareY = (e.clientY - rect.top) / rect.height * 100;
+      glareRef.current.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.15) 0%, transparent 60%)`;
       glareRef.current.style.opacity = "1";
     }
   };
 
   const onLeave = () => {
-    ref.current!.style.transform = "perspective(600px) rotateY(0deg) rotateX(0deg) scale(1)";
+    if (disabled || !ref.current) return;
+    ref.current.style.transform = "perspective(800px) rotateY(0deg) rotateX(0deg) scale(1)";
     if (glareRef.current) glareRef.current.style.opacity = "0";
   };
 
@@ -309,13 +321,19 @@ export function TiltCard({ children, className = "", style, maxTilt = 12, scale 
     <div
       ref={ref}
       className={className}
-      style={{ ...style, transition: "transform .4s cubic-bezier(.23,1,.32,1)", transformStyle: "preserve-3d", position: "relative", overflow: "hidden" }}
+      style={{ 
+        ...style, 
+        transition: "transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)", 
+        transformStyle: "preserve-3d", 
+        position: "relative", 
+        overflow: "hidden" 
+      }}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
     >
       {children}
-      {glare && (
-        <div ref={glareRef} style={{ position: "absolute", inset: 0, opacity: 0, pointerEvents: "none", transition: "opacity .3s", zIndex: 10 }} />
+      {glare && !disabled && (
+        <div ref={glareRef} style={{ position: "absolute", inset: 0, opacity: 0, pointerEvents: "none", transition: "opacity 0.4s", zIndex: 10 }} />
       )}
     </div>
   );

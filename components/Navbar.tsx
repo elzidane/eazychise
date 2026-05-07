@@ -3,8 +3,10 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ArrowRight, X, User as UserIcon, LayoutDashboard, LogOut, ChevronDown } from "lucide-react";
-import { getUser, logout, User } from "@/lib/auth";
+import { useSession, signOut } from "next-auth/react";
+import { getUser, logout, User, syncSessionWithLocal } from "@/lib/auth";
 import { STATS } from "@/lib/constants";
+import Image from "next/image";
 
 const links = [
   { href: "/",             label: "Beranda" },
@@ -17,6 +19,7 @@ const links = [
 ];
 
 export default function Navbar() {
+  const { data: session, status } = useSession();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -33,10 +36,15 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Check auth state
+  // Check auth state from both sources
   useEffect(() => {
-    setUser(getUser());
-  }, [pathname]);
+    if (status === "authenticated" && session?.user) {
+      const syncedUser = syncSessionWithLocal(session.user);
+      setUser(syncedUser);
+    } else {
+      setUser(getUser());
+    }
+  }, [pathname, status, session]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -138,8 +146,17 @@ export default function Navbar() {
                       : "hover:bg-black/5"
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-sm font-bold shadow-[0_4px_12px_rgba(255,92,26,0.3)]">
-                    {user.name.charAt(0).toUpperCase()}
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-sm font-bold shadow-[0_4px_12px_rgba(255,92,26,0.3)] overflow-hidden relative">
+                    {session?.user?.image ? (
+                      <Image 
+                        src={session.user.image} 
+                        alt={user.name} 
+                        fill 
+                        className="object-cover"
+                      />
+                    ) : (
+                      user.name.charAt(0).toUpperCase()
+                    )}
                   </div>
                   <span className={`text-[0.83rem] font-semibold ${scrolled ? "text-white/80" : "text-[#333]"}`}>
                     {user.name.split(" ")[0]}
@@ -264,8 +281,17 @@ export default function Navbar() {
         {/* User Info (if logged in) */}
         {user && (
           <div className="px-5 py-4 border-b border-black/6 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-sm font-bold">
-              {user.name.charAt(0).toUpperCase()}
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-sm font-bold overflow-hidden relative">
+              {session?.user?.image ? (
+                <Image 
+                  src={session.user.image} 
+                  alt={user.name} 
+                  fill 
+                  className="object-cover"
+                />
+              ) : (
+                user.name.charAt(0).toUpperCase()
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold text-[#111] truncate">{user.name}</p>

@@ -33,7 +33,12 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "cdn-jpr.jawapos.com"},
       { protocol: "https", hostname: "nahwatravel.co.id"},
       { protocol: "https", hostname: "sitespirit.co"},
+      { protocol: "https", hostname: "lh3.googleusercontent.com"},
+      { protocol: "https", hostname: "api.dicebear.com"},
     ],
+  },
+  env: {
+    NEXT_PUBLIC_HAS_GOOGLE_AUTH: process.env.GOOGLE_CLIENT_ID ? "true" : "false",
   },
 }
 
