@@ -5,7 +5,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   User as UserIcon, Search, Heart, Clock, LogOut, ArrowRight, 
-  Bookmark, TrendingUp, Coffee, ChevronRight, Star, Settings, Eye, X, Download, Edit, Plus, Image as ImageIcon
+  Bookmark, TrendingUp, Coffee, ChevronRight, Star, Settings, Eye, X, Download, Edit, Plus, Image as ImageIcon,
+  Zap, BarChart3, MessageCircle
 } from "lucide-react";
 import { getUser, logout, User, removeSavedFranchise } from "@/lib/auth";
 import { FRANCHISE_DATA } from "@/lib/franchise-data";
@@ -117,53 +118,36 @@ export default function DashboardPage() {
           </div>
         </motion.div>
 
-        {/* ── Stats Cards ── */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10"
-        >
-          {user.role === "franchisee" ? [
-            { icon: Bookmark, label: "Franchise Disimpan", value: user.savedFranchises.length.toString(), color: "#FF5C1A" },
-            { icon: Clock, label: "Riwayat Pencarian", value: user.searchHistory.length.toString(), color: "#7C3AED" },
-            { icon: TrendingUp, label: "Franchise Dilihat", value: "12", color: "#1B8C5A" },
-            { icon: Coffee, label: "Franchise Tersedia", value: FRANCHISE_DATA.length.toString(), color: "#FFCF40" },
-          ].map((stat, i) => (
-            <div
-              key={stat.label}
-              className="bg-white rounded-2xl p-5 border border-black/5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all"
-            >
-              <div 
-                className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
-                style={{ background: `${stat.color}15` }}
+        {/* ── Stats Cards (Franchisee Only) ── */}
+        {user.role === "franchisee" && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10"
+          >
+            {[
+              { icon: Bookmark, label: "Franchise Disimpan", value: user.savedFranchises.length.toString(), color: "#FF5C1A" },
+              { icon: Clock, label: "Riwayat Pencarian", value: user.searchHistory.length.toString(), color: "#7C3AED" },
+              { icon: TrendingUp, label: "Franchise Dilihat", value: "12", color: "#1B8C5A" },
+              { icon: Coffee, label: "Franchise Tersedia", value: FRANCHISE_DATA.length.toString(), color: "#FFCF40" },
+            ].map((stat, i) => (
+              <div
+                key={stat.label}
+                className="bg-white rounded-2xl p-5 border border-black/5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all"
               >
-                <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
+                <div 
+                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
+                  style={{ background: `${stat.color}15` }}
+                >
+                  <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
+                </div>
+                <p className="font-syne font-extrabold text-2xl text-[#111]">{stat.value}</p>
+                <p className="text-[0.72rem] text-[#999] font-semibold uppercase tracking-wider mt-1">{stat.label}</p>
               </div>
-              <p className="font-syne font-extrabold text-2xl text-[#111]">{stat.value}</p>
-              <p className="text-[0.72rem] text-[#999] font-semibold uppercase tracking-wider mt-1">{stat.label}</p>
-            </div>
-          )) : [
-            { icon: Eye, label: "Brand Dilihat", value: "1,240", color: "#7C3AED" },
-            { icon: UserIcon, label: "Total Leads", value: "48", color: "#FF5C1A" },
-            { icon: TrendingUp, label: "Tingkat Konversi", value: "3.8%", color: "#1B8C5A" },
-            { icon: Star, label: "Rating Rata-rata", value: "4.8", color: "#FFCF40" },
-          ].map((stat, i) => (
-            <div
-              key={stat.label}
-              className="bg-white rounded-2xl p-5 border border-black/5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all"
-            >
-              <div 
-                className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
-                style={{ background: `${stat.color}15` }}
-              >
-                <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
-              </div>
-              <p className="font-syne font-extrabold text-2xl text-[#111]">{stat.value}</p>
-              <p className="text-[0.72rem] text-[#999] font-semibold uppercase tracking-wider mt-1">{stat.label}</p>
-            </div>
-          ))}
-        </motion.div>
+            ))}
+          </motion.div>
+        )}
 
         {user.role === "franchisee" ? (
           <div className="grid lg:grid-cols-[1fr_0.8fr] gap-8">
@@ -293,80 +277,208 @@ export default function DashboardPage() {
             </div>
           </div>
         ) : (
-          <div className="grid lg:grid-cols-[1fr_0.8fr] gap-8">
-            {/* ── Brand Management ── */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-white rounded-3xl p-7 border border-black/5"
-            >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="font-syne font-extrabold text-lg text-[#111] flex items-center gap-2">
-                  <Coffee className="w-5 h-5 text-[#FF5C1A]" />
-                  Manajemen Brand Saya
-                </h2>
-                <button 
-                  onClick={() => { setFormMode('add'); setShowBrandForm(true); }}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#FF5C1A]/10 text-[#FF5C1A] font-bold text-xs hover:bg-[#FF5C1A] hover:text-white transition-all"
-                >
-                  <Plus className="w-3.5 h-3.5" /> Tambah Brand
-                </button>
-              </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-8 space-y-8">
+              {/* ── Brand Summary & Quick Stats ── */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-white rounded-3xl p-8 border border-black/5 shadow-sm"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                  <div>
+                    <h2 className="font-syne font-extrabold text-xl text-[#111] flex items-center gap-2">
+                      <Coffee className="w-6 h-6 text-[#FF5C1A]" />
+                      Performa Brand Saya
+                    </h2>
+                    <p className="text-[#999] text-xs font-medium mt-1">Pantau perkembangan bisnis Anda secara real-time.</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={() => { setFormMode('add'); setShowBrandForm(true); }}
+                      className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#FF5C1A] text-white font-bold text-xs hover:bg-[#e04710] transition-all shadow-md shadow-orange-200"
+                    >
+                      <Plus className="w-4 h-4" /> Tambah Brand
+                    </button>
+                    <button 
+                      onClick={handleDownloadReport}
+                      className="p-2.5 rounded-xl bg-gray-100 text-[#555] hover:bg-[#111] hover:text-white transition-all"
+                      title="Unduh Laporan PDF"
+                    >
+                      <Download className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
 
-              <div className="space-y-3">
-                {/* Dummy owned franchise */}
-                <div className="flex items-center gap-4 p-4 rounded-2xl border border-black/5 hover:border-[#FF5C1A]/30 transition-colors">
-                  <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 relative">
-                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80" alt="Brand Ku" className="w-full h-full object-cover" />
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                  {[
+                    { label: "Dilihat", value: "1.2k", icon: Eye, color: "#7C3AED" },
+                    { label: "Leads", value: "45", icon: UserIcon, color: "#FF5C1A" },
+                    { label: "Konversi", value: "3.6%", icon: TrendingUp, color: "#1B8C5A" },
+                    { label: "Rating", value: "4.8", icon: Star, color: "#FFCF40" },
+                  ].map((stat) => (
+                    <div key={stat.label} className="bg-[#F8F8F6] p-4 rounded-2xl border border-black/5">
+                      <div className="flex items-center gap-2 mb-2">
+                        <stat.icon className="w-3.5 h-3.5" style={{ color: stat.color }} />
+                        <span className="text-[0.6rem] text-[#777] font-bold uppercase tracking-wider">{stat.label}</span>
+                      </div>
+                      <p className="text-xl font-bold text-[#111]">{stat.value}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="p-4 rounded-2xl border border-black/5 flex items-center gap-4 bg-white hover:border-[#FF5C1A]/20 transition-all group">
+                  <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80" alt="Kopi Nusantara" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-sm text-[#111] truncate">Kopi Nusantara (Mockup)</p>
-                    <p className="text-xs text-[#999]">Aktif • Dilihat 1,240 kali</p>
+                    <h3 className="font-bold text-[#111]">Kopi Nusantara</h3>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full uppercase tracking-wider">Aktif</span>
+                      <p className="text-xs text-[#999] truncate">Kategori: Minuman / Coffee Shop</p>
+                    </div>
                   </div>
                   <button 
                     onClick={() => setShowBrandDetails(true)}
-                    className="flex items-center justify-center p-2 rounded-xl bg-[#F8F8F6] text-[#555] hover:bg-[#111] hover:text-white transition-colors"
+                    className="p-2.5 rounded-xl bg-gray-50 text-[#999] group-hover:bg-[#111] group-hover:text-white transition-all"
                   >
-                    <Settings className="w-4 h-4" />
+                    <ChevronRight className="w-5 h-5" />
                   </button>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
 
-            {/* ── Leads Analytics ── */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-white rounded-3xl p-7 border border-black/5"
-            >
-              <h2 className="font-syne font-extrabold text-lg text-[#111] flex items-center gap-2 mb-6">
-                <UserIcon className="w-5 h-5 text-[#1B8C5A]" />
-                Leads Terbaru
-              </h2>
-
-              <div className="space-y-3">
-                {[
-                  { name: "Budi Santoso", date: "Hari ini, 10:45", status: "Dihubungi" },
-                  { name: "Rina Kartika", date: "Kemarin, 14:20", status: "Baru" },
-                  { name: "Andi Wijaya", date: "4 Mei 2026", status: "Follow Up" },
-                ].map((lead, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-[#F8F8F6] text-sm">
-                    <div>
-                      <p className="font-bold text-[#333]">{lead.name}</p>
-                      <p className="text-xs text-[#999]">{lead.date}</p>
-                    </div>
-                    <span className={`text-[0.65rem] font-bold uppercase tracking-wider px-2 py-1 rounded-md ${
-                      lead.status === "Baru" ? "bg-green-100 text-green-700" : 
-                      lead.status === "Dihubungi" ? "bg-blue-100 text-blue-700" : "bg-orange-100 text-orange-700"
-                    }`}>
-                      {lead.status}
-                    </span>
+              {/* ── Leads & Traffic ── */}
+              <div className="grid md:grid-cols-2 gap-8">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="bg-white rounded-3xl p-7 border border-black/5"
+                >
+                  <h2 className="font-syne font-extrabold text-lg text-[#111] flex items-center gap-2 mb-6">
+                    <UserIcon className="w-5 h-5 text-[#1B8C5A]" />
+                    Leads Terbaru
+                  </h2>
+                  <div className="space-y-3">
+                    {[
+                      { name: "Budi Santoso", date: "Hari ini", status: "Dihubungi" },
+                      { name: "Rina Kartika", date: "Kemarin", status: "Baru" },
+                      { name: "Andi Wijaya", date: "4 Mei", status: "Follow Up" },
+                    ].map((lead, i) => (
+                      <div key={i} className="flex items-center justify-between p-3.5 rounded-xl bg-[#F8F8F6] hover:bg-white border border-transparent hover:border-black/5 transition-all">
+                        <div>
+                          <p className="font-bold text-sm text-[#333]">{lead.name}</p>
+                          <p className="text-[0.65rem] text-[#999] mt-0.5">{lead.date}</p>
+                        </div>
+                        <span className={`text-[0.55rem] font-extrabold uppercase tracking-widest px-2 py-1 rounded-md ${
+                          lead.status === "Baru" ? "bg-green-100 text-green-700" : 
+                          lead.status === "Dihubungi" ? "bg-blue-100 text-blue-700" : "bg-orange-100 text-orange-700"
+                        }`}>
+                          {lead.status}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="bg-white rounded-3xl p-7 border border-black/5"
+                >
+                  <h2 className="font-syne font-extrabold text-lg text-[#111] flex items-center gap-2 mb-6">
+                    <TrendingUp className="w-5 h-5 text-[#7C3AED]" />
+                    Sumber Traffic
+                  </h2>
+                  <div className="space-y-5">
+                    <div>
+                      <div className="flex justify-between text-xs font-bold mb-2 text-[#555]">
+                        <span>Organik</span>
+                        <span>65%</span>
+                      </div>
+                      <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-[#FF5C1A]" style={{ width: '65%' }}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-xs font-bold mb-2 text-[#555]">
+                        <span>Rekomendasi AI</span>
+                        <span>35%</span>
+                      </div>
+                      <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-[#7C3AED]" style={{ width: '35%' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
               </div>
-            </motion.div>
+            </div>
+
+            {/* ── AI Insights Sidebar ── */}
+            <div className="lg:col-span-4">
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 }}
+                className="bg-[#111] rounded-3xl p-8 text-white relative overflow-hidden h-full sticky top-24"
+              >
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF5C1A] opacity-10 blur-[100px] -mr-32 -mt-32"></div>
+                
+                <h2 className="font-syne font-extrabold text-xl mb-8 flex items-center gap-3">
+                  <Zap className="w-6 h-6 text-[#FF5C1A]" />
+                  Analisa AI
+                </h2>
+
+                <div className="space-y-6">
+                  <div className="p-5 rounded-2xl bg-white/5 border border-white/10">
+                    <div className="flex items-center gap-3 mb-4 text-white/50">
+                      <MessageCircle className="w-4 h-4" />
+                      <span className="text-[0.65rem] font-bold uppercase tracking-widest">Sentimen</span>
+                    </div>
+                    <p className="text-2xl font-bold mb-1">Positif (88%)</p>
+                    <p className="text-[0.65rem] text-white/40 leading-relaxed">Analisa 120 ulasan pelanggan terakhir menunjukkan tingkat kepuasan tinggi.</p>
+                  </div>
+
+                  <div className="p-5 rounded-2xl bg-white/5 border border-white/10">
+                    <div className="flex items-center gap-3 mb-4 text-white/50">
+                      <BarChart3 className="w-4 h-4" />
+                      <span className="text-[0.65rem] font-bold uppercase tracking-widest">Prediksi</span>
+                    </div>
+                    <p className="text-2xl font-bold mb-1">+15.4%</p>
+                    <p className="text-[0.65rem] text-white/40 leading-relaxed">Estimasi kenaikan leads pada periode bulan berikutnya.</p>
+                  </div>
+
+                  <div className="pt-4">
+                    <h3 className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[#FF5C1A] mb-5">Rekomendasi</h3>
+                    <ul className="space-y-4">
+                      {[
+                        "Optimasi galeri foto profil brand.",
+                        "Targetkan wilayah Jawa Barat.",
+                        "Luncurkan paket 'Light Edition'."
+                      ].map((rec, i) => (
+                        <li key={i} className="flex gap-3 group">
+                          <div className="w-5 h-5 rounded-lg bg-[#FF5C1A]/20 flex-shrink-0 flex items-center justify-center text-[#FF5C1A] text-[9px] font-bold">
+                            {i+1}
+                          </div>
+                          <p className="text-[0.7rem] text-white/60 group-hover:text-white transition-colors">
+                            {rec}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <button 
+                    onClick={() => setShowBrandDetails(true)}
+                    className="w-full mt-6 py-4 rounded-2xl bg-white text-black font-bold text-sm hover:bg-gray-100 transition-all shadow-xl"
+                  >
+                    Detail Analitik
+                  </button>
+                </div>
+              </motion.div>
+            </div>
           </div>
         )}
       </div>
@@ -439,7 +551,7 @@ export default function DashboardPage() {
                 </div>
 
                 <h4 className="font-syne font-bold text-lg mb-4">Sumber Traffic</h4>
-                <div className="mb-6">
+                <div className="mb-8">
                   <div className="flex items-center justify-between text-sm mb-2">
                     <span className="font-semibold text-[#555]">Pencarian Organik</span>
                     <span className="font-bold">65%</span>
@@ -455,6 +567,65 @@ export default function DashboardPage() {
                   <div className="w-full bg-gray-100 rounded-full h-2">
                     <div className="bg-[#7C3AED] h-2 rounded-full" style={{ width: '35%' }}></div>
                   </div>
+                </div>
+
+                <h4 className="font-syne font-bold text-lg mb-4">Analisis AI Lanjutan</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-white to-[#F8F8F6] border border-black/5 shadow-sm">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center">
+                        <MessageCircle className="w-4 h-4 text-[#FF5C1A]" />
+                      </div>
+                      <span className="text-xs font-bold text-[#111] uppercase tracking-wider">Sentimen Pasar</span>
+                    </div>
+                    <div className="flex items-end justify-between">
+                      <div>
+                        <p className="text-xl font-bold text-[#111]">Positif (88%)</p>
+                        <p className="text-[10px] text-[#999] mt-1">Berdasarkan 120 ulasan terakhir</p>
+                      </div>
+                      <div className="flex -space-x-2">
+                        {[1,2,3].map(i => (
+                          <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-gray-200"></div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-white to-[#F8F8F6] border border-black/5 shadow-sm">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
+                        <BarChart3 className="w-4 h-4 text-[#7C3AED]" />
+                      </div>
+                      <span className="text-xs font-bold text-[#111] uppercase tracking-wider">Prediksi Pertumbuhan</span>
+                    </div>
+                    <div className="flex items-end justify-between">
+                      <div>
+                        <p className="text-xl font-bold text-[#111]">+15%</p>
+                        <p className="text-[10px] text-[#999] mt-1">Estimasi bulan depan (AI Model)</p>
+                      </div>
+                      <Zap className="w-5 h-5 text-yellow-500 animate-pulse" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-[#111] rounded-2xl p-6 text-white overflow-hidden relative">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF5C1A] opacity-10 blur-3xl -mr-10 -mt-10"></div>
+                  <h5 className="font-syne font-bold mb-4 flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-[#FF5C1A]" />
+                    Rekomendasi Strategis AI
+                  </h5>
+                  <ul className="space-y-3">
+                    {[
+                      "Optimasi galeri foto untuk meningkatkan konversi hingga 2.5x.",
+                      "Fokus ekspansi ke wilayah Jawa Barat berdasarkan tren pencarian.",
+                      "Gunakan promo 'Bundling Hemat' untuk meningkatkan average order value."
+                    ].map((tip, i) => (
+                      <li key={i} className="flex gap-3 text-xs text-white/70 leading-relaxed">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#FF5C1A] mt-1.5 flex-shrink-0"></span>
+                        {tip}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mt-8">
