@@ -52,7 +52,7 @@ export default function CTASection() {
         </h2>
 
         <p className="text-white/40 text-[0.95rem] leading-[1.75] max-w-md mx-auto mb-10">
-          Daftar gratis, jelajahi 320+ franchise F&amp;B, dan mulai perjalananmu jadi pengusaha kuliner sukses.
+          Daftar gratis, jelajahi 20+ franchise F&amp;B terkurasi, dan mulai perjalananmu jadi pengusaha kuliner sukses.
         </p>
 
         {/* CTAs */}
@@ -66,7 +66,7 @@ export default function CTASection() {
             <ArrowRight className="w-4 h-4 text-[#FFCF40]" />
           </Link>
           <a
-            href="https://wa.me/6281234567890?text=Halo%20GoChise%2C%20saya%20mau%20konsultasi%20franchise%20F%26B"
+            href="https://wa.me/6287792735999?text=Halo%20EazyChise%2C%20saya%20mau%20konsultasi%20franchise%20F%26B"
             className="flex items-center gap-2 border border-white/15 text-white/70 hover:text-white hover:border-white/30 px-7 py-4 rounded-full font-semibold text-[0.95rem] transition-all duration-200 hover:-translate-y-0.5"
           >
             Konsultasi Gratis

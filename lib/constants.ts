@@ -25,9 +25,9 @@ export const INITIAL_REVIEWS: Review[] = [
 ];
 
 export const HERO_STATS: Stat[] = [
-  { value: "320", suffix: "+", label: "Brand F&B Aktif" },
-  { value: "34", suffix: "", label: "Provinsi" },
-  { value: "9000", suffix: "+", label: "Mitra Bergabung" },
+  { value: "20", suffix: "+", label: "Brand F&B Dikurasi" },
+  { value: "34", suffix: "", label: "Provinsi Terjangkau" },
+  { value: "4", suffix: "", label: "Kategori F&B" },
 ];
 
 export const HERO_IMAGES = [

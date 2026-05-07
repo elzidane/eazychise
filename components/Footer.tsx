@@ -145,7 +145,7 @@ export default function Footer() {
           </span>
         </p>
         <div className="flex items-center gap-3 flex-wrap justify-center">
-          {["Kemenkominfo", "Kemenkop UKM", "BPOM Partner"].map((badge) => (
+          {["Mendukung UMKM 🇮🇩", "Halal Friendly", "100% Lokal"].map((badge) => (
             <span
               key={badge}
               className="text-[0.65rem] text-white/15 border border-white/8 px-2.5 py-1 rounded-full"

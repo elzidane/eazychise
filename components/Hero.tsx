@@ -17,9 +17,9 @@ import {
 } from "lucide-react";
 
 const stats = [
-  { num: 320, suffix: "+", label: "Brand F&B Aktif" },
-  { num: 34, suffix: "", label: "Provinsi" },
-  { num: 9000, suffix: "+", label: "Mitra Bergabung" },
+  { num: 20, suffix: "+", label: "Brand F&B Dikurasi" },
+  { num: 34, suffix: "", label: "Provinsi Terjangkau" },
+  { num: 4, suffix: "", label: "Kategori F&B" },
 ];
 
 const images = [
@@ -217,13 +217,13 @@ export default function Hero() {
             </div>
             <div>
               <p className="text-[0.78rem] font-semibold text-[#333]">
-                <span className="text-[#FF5C1A] font-bold">9.000+</span> mitra aktif
+                Bergabung dan mulai usaha <span className="text-[#FF5C1A] font-bold">F&B-mu</span>
               </p>
               <div className="flex gap-0.5 mt-0.5">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-2.5 h-2.5 fill-[#FFCF40] text-[#FFCF40]" />
                 ))}
-                <span className="text-[0.68rem] text-[#888] ml-1">4.9/5</span>
+                <span className="text-[0.68rem] text-[#888] ml-1">Terpercaya</span>
               </div>
             </div>
           </div>

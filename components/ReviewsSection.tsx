@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, MessageSquare, Send, CheckCircle2 } from "lucide-react";
+import { Star, MessageSquare, Send, CheckCircle2, MapPin, Coffee } from "lucide-react";
 import SpotlightCard from "./SpotlightCard";
 import { ReviewCard, ReviewForm } from "./ReviewsSectionComponents";
 
@@ -12,50 +12,97 @@ type Review = {
   rating: number;
   comment: string;
   date: string;
+  city?: string;
+  franchise?: string;
+  category?: string;
 };
 
 const INITIAL_REVIEWS: Review[] = [
   {
     id: 1,
-    name: "Andi Saputra",
+    name: "Budi Santoso",
     rating: 5,
-    comment: "Platform yang sangat membantu untuk cari franchise. Akhirnya saya buka outlet kopi pertama saya!",
-    date: "2 hari yang lalu"
+    comment: "Saya buka gerai Kopi Studio 24 di Malang modal Rp 2,8 juta. Dalam 4 bulan sudah balik modal. EazyChise bantu dari awal sampai grand opening, termasuk SOP dan pelatihan barista.",
+    date: "2 minggu yang lalu",
+    city: "Malang",
+    franchise: "Kopi Studio 24",
+    category: "minuman",
   },
   {
     id: 2,
-    name: "Siti Aminah",
-    rating: 4,
-    comment: "UI nya bagus banget, gampang nyarinya. Saran saya tambahin lebih banyak kategori snack.",
-    date: "1 minggu yang lalu"
+    name: "Rina Kartika",
+    rating: 5,
+    comment: "Awalnya ragu investasi franchise minuman. Tapi setelah pakai AI Advisor di EazyChise, saya jadi yakin pilih XIBOBA. Sekarang omzet stabil Rp 15 juta/bulan di Surabaya.",
+    date: "1 minggu yang lalu",
+    city: "Surabaya",
+    franchise: "XIBOBA",
+    category: "minuman",
   },
   {
     id: 3,
-    name: "Budi Hermawan",
-    rating: 5,
-    comment: "Fitur AI Advisor nya jenius! Rekomendasinya pas banget sama budget saya.",
-    date: "3 hari yang lalu"
+    name: "Dedi Kurniawan",
+    rating: 4,
+    comment: "BEP Calculator di EazyChise sangat akurat. Saya bisa hitung balik modal sebelum mulai. Sekarang punya 2 outlet Burger Bangor di Bandung. Fiturnya sangat direkomendasikan untuk pemula.",
+    date: "3 hari yang lalu",
+    city: "Bandung",
+    franchise: "Burger Bangor",
+    category: "kuliner",
   },
   {
     id: 4,
-    name: "Rina Kartika",
+    name: "Siti Aminah",
     rating: 5,
-    comment: "Proses pengajuan kemitraannya sangat transparan. Senang bisa dibimbing sampai grand opening.",
-    date: "4 hari yang lalu"
+    comment: "Saya ibu rumah tangga yang cari penghasilan tambahan. Modal Rp 4 juta buka Pisang Goreng Madu Bu Nanik di depan rumah. Alhamdulillah, 3 bulan sudah balik modal!",
+    date: "5 hari yang lalu",
+    city: "Semarang",
+    franchise: "Pisang Goreng Madu Bu Nanik",
+    category: "snack",
   },
   {
     id: 5,
-    name: "Dedi Kurniawan",
+    name: "Andi Prasetyo",
+    rating: 5,
+    comment: "Platform paling lengkap untuk compare franchise. Saya bandingkan 3 brand dessert, akhirnya pilih Sweet Street di Yogyakarta. Proses daftarnya mudah banget lewat EazyChise.",
+    date: "1 minggu yang lalu",
+    city: "Yogyakarta",
+    franchise: "Sweet Street Dessert Co.",
+    category: "dessert",
+  },
+  {
+    id: 6,
+    name: "Fitri Handayani",
     rating: 4,
-    comment: "Sangat direkomendasikan untuk pemula yang ingin mulai bisnis kuliner tapi bingung mau mulai dari mana.",
-    date: "2 minggu yang lalu"
-  }
+    comment: "Baru mulai bisnis Es Teh Indonesia di Bekasi. EazyChise bantu cari lokasi strategis dan estimasi omzet yang cukup akurat. Sejauh ini hasilnya sesuai ekspektasi.",
+    date: "4 hari yang lalu",
+    city: "Bekasi",
+    franchise: "Es Teh Indonesia",
+    category: "minuman",
+  },
+  {
+    id: 7,
+    name: "Wahyu Hidayat",
+    rating: 5,
+    comment: "Sebagai fresh graduate, saya bingung mau mulai bisnis apa. AI Advisor EazyChise rekomendasiin Wizzmie sesuai budget Rp 8,5 juta. Sekarang sudah punya karyawan 3 orang!",
+    date: "2 minggu yang lalu",
+    city: "Jakarta Selatan",
+    franchise: "Wizzmie",
+    category: "kuliner",
+  },
+];
+
+const CATEGORIES = [
+  { key: "all", label: "Semua" },
+  { key: "minuman", label: "Minuman" },
+  { key: "kuliner", label: "Kuliner" },
+  { key: "dessert", label: "Dessert" },
+  { key: "snack", label: "Snack" },
 ];
 
 export default function ReviewsSection() {
   const [reviews, setReviews] = useState<Review[]>(INITIAL_REVIEWS);
   const [showForm, setShowForm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("all");
   const [newReview, setNewReview] = useState({
     name: "",
     rating: 5,
@@ -63,11 +110,14 @@ export default function ReviewsSection() {
   });
   const formRef = useRef<HTMLDivElement>(null);
 
+  const filteredReviews = activeCategory === "all" 
+    ? reviews 
+    : reviews.filter(r => r.category === activeCategory);
+
   const toggleForm = () => {
     const nextState = !showForm;
     setShowForm(nextState);
     if (nextState) {
-      // Small delay to allow AnimatePresence to start rendering
       setTimeout(() => {
         formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       }, 100);
@@ -77,7 +127,6 @@ export default function ReviewsSection() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Get current date in a nice format
     const now = new Date();
     const formattedDate = now.toLocaleDateString('id-ID', { 
       day: 'numeric', 
@@ -116,7 +165,7 @@ export default function ReviewsSection() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex flex-col md:flex-row md:items-end justify-between gap-10 mb-20"
+          className="flex flex-col md:flex-row md:items-end justify-between gap-10 mb-12"
         >
           <div className="max-w-2xl">
             <motion.p 
@@ -142,6 +191,24 @@ export default function ReviewsSection() {
           </motion.button>
         </motion.div>
 
+        {/* Category Filters */}
+        <div className="flex flex-wrap gap-2 mb-10">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat.key}
+              onClick={() => setActiveCategory(cat.key)}
+              className="px-4 py-2 rounded-full text-[0.82rem] font-semibold transition-all duration-200 cursor-pointer"
+              style={
+                activeCategory === cat.key
+                  ? { background: "#FF5C1A", color: "#fff", boxShadow: "0 4px 14px rgba(255,92,26,0.3)" }
+                  : { background: "white", color: "#555", border: "1.5px solid rgba(0,0,0,0.08)" }
+              }
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
         <div className="grid lg:grid-cols-[1fr_1.6fr] gap-10 lg:gap-20">
           
           {/* Summary & Form Side */}
@@ -152,12 +219,12 @@ export default function ReviewsSection() {
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF5C1A]/5 rounded-bl-[100px] transition-transform group-hover:scale-110" />
               
               <div className="flex items-center gap-6 mb-10">
-                <div className="text-6xl font-black text-[#111] tracking-tighter">4.9</div>
+                <div className="text-6xl font-black text-[#111] tracking-tighter">4.8</div>
                 <div>
                   <div className="flex text-[#FFCF40] mb-1.5 gap-0.5">
                     {[...Array(5)].map((_, i) => <Star key={i} className="w-6 h-6 fill-current" />)}
                   </div>
-                  <p className="text-gray-400 font-bold text-sm tracking-wide">TOTAL 2.5K+ ULASAN</p>
+                  <p className="text-gray-400 font-bold text-sm tracking-wide">DARI {filteredReviews.length} ULASAN</p>
                 </div>
               </div>
               
@@ -169,7 +236,7 @@ export default function ReviewsSection() {
                     <div className="flex-1 h-2.5 bg-gray-50 rounded-full overflow-hidden border border-black/[0.03]">
                       <motion.div 
                         initial={{ width: 0 }}
-                        whileInView={{ width: star === 5 ? "88%" : star === 4 ? "10%" : "2%" }}
+                        whileInView={{ width: star === 5 ? "75%" : star === 4 ? "20%" : "5%" }}
                         transition={{ duration: 1, delay: 0.5 + (idx * 0.1) }}
                         className="h-full bg-gradient-to-r from-[#FF5C1A] to-[#FF8C1A]"
                       />
@@ -196,21 +263,61 @@ export default function ReviewsSection() {
           {/* Review List Side */}
           <div className="space-y-6">
             <AnimatePresence mode="popLayout">
-              {reviews.map((review, i) => (
-                <ReviewCard key={review.id} review={review} index={i} />
+              {filteredReviews.map((review, i) => (
+                <motion.div
+                  key={review.id}
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <div className="bg-white p-6 rounded-2xl border border-black/[0.04] shadow-sm hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all group">
+                    <div className="flex items-start gap-4 mb-3">
+                      <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-sm font-bold shadow-sm flex-shrink-0">
+                        {review.name.charAt(0)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <h4 className="font-bold text-[#111] text-[0.92rem]">{review.name}</h4>
+                          <span className="text-[0.68rem] text-[#bbb] font-medium flex-shrink-0">{review.date}</span>
+                        </div>
+                        {(review.city || review.franchise) && (
+                          <div className="flex items-center gap-3 mt-1 flex-wrap">
+                            {review.city && (
+                              <span className="text-xs text-[#999] flex items-center gap-1">
+                                <MapPin className="w-3 h-3" /> {review.city}
+                              </span>
+                            )}
+                            {review.franchise && (
+                              <span className="text-xs text-[#FF5C1A] font-semibold flex items-center gap-1">
+                                <Coffee className="w-3 h-3" /> {review.franchise}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        <div className="flex gap-0.5 mt-2">
+                          {[...Array(5)].map((_, i) => (
+                            <Star 
+                              key={i} 
+                              className={`w-3.5 h-3.5 ${i < review.rating ? "fill-[#FFCF40] text-[#FFCF40]" : "text-gray-200"}`} 
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-[#555] text-[0.85rem] leading-[1.75] ml-15 pl-15">{review.comment}</p>
+                  </div>
+                </motion.div>
               ))}
             </AnimatePresence>
             
-            <motion.div 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              className="pt-6 text-center"
-            >
-              <button className="bg-white border border-black/[0.04] px-7 py-3.5 rounded-xl text-gray-500 font-bold hover:text-[#FF5C1A] hover:border-[#FF5C1A]/20 transition-all flex items-center gap-2 mx-auto shadow-sm hover:shadow-md text-sm">
-                <MessageSquare className="w-4 h-4" />
-                Lihat 2,497 Ulasan Lainnya
-              </button>
-            </motion.div>
+            {filteredReviews.length === 0 && (
+              <div className="text-center py-16">
+                <p className="text-3xl mb-3">🔍</p>
+                <p className="text-[#999] font-medium">Belum ada ulasan untuk kategori ini</p>
+              </div>
+            )}
           </div>
 
         </div>

@@ -359,6 +359,42 @@ export default function FranchiseAdvisor() {
 
   const isGreeting = messages.length === 1 && !loading;
 
+  // Generate contextual quick replies based on conversation
+  const contextualReplies = (() => {
+    if (loading || messages.length < 2) return [];
+    const lastAI = messages.filter(m => m.role === "assistant").pop();
+    if (!lastAI) return [];
+    const text = lastAI.content.toLowerCase();
+    
+    const suggestions: { label: string; text: string }[] = [];
+    
+    if (text.includes("bep") || text.includes("balik modal")) {
+      suggestions.push({ label: "📊 Hitung BEP detail", text: "Bantu hitung BEP lebih detail dong, dengan biaya operasional lengkap" });
+    }
+    if (text.includes("swot")) {
+      suggestions.push({ label: "🔍 Analisis risiko", text: "Apa saja risiko terburuk yang bisa terjadi dan cara mengatasinya?" });
+    }
+    if (text.includes("kopi") || text.includes("minuman")) {
+      suggestions.push({ label: "☕ Bandingkan kopi", text: "Bandingkan semua franchise kopi yang ada di EazyChise" });
+    }
+    if (text.includes("kuliner") || text.includes("makanan")) {
+      suggestions.push({ label: "🍜 Bandingkan kuliner", text: "Bandingkan franchise kuliner yang cocok untuk pemula" });
+    }
+    if (text.includes("lokasi") || text.includes("kota")) {
+      suggestions.push({ label: "📍 Tips lokasi", text: "Bagaimana cara memilih lokasi yang strategis untuk franchise F&B?" });
+    }
+    
+    // Always add general follow-ups
+    if (suggestions.length < 2) {
+      suggestions.push({ label: "💰 Modal terkecil", text: "Mana franchise dengan modal paling kecil yang bisa saya mulai?" });
+    }
+    if (suggestions.length < 3) {
+      suggestions.push({ label: "⚡ ROI tercepat", text: "Franchise mana yang paling cepat balik modalnya?" });
+    }
+    
+    return suggestions.slice(0, 3);
+  })();
+
   return (
     <>
       {/* ════ Global styles ════ */}
@@ -591,6 +627,43 @@ export default function FranchiseAdvisor() {
             <MessageBubble key={i} msg={m} isNew={i === newMsgIdx} animate={i === animIdx} />
           ))}
           {loading && <TypingIndicator />}
+          
+          {/* Contextual quick replies */}
+          {contextualReplies.length > 0 && !loading && (
+            <div style={{ 
+              display: "flex", flexWrap: "wrap", gap: 6, 
+              paddingLeft: 44, marginTop: 4,
+              animation: "eazySlideIn 0.3s ease both",
+            }}>
+              {contextualReplies.map((r, i) => (
+                <button
+                  key={i}
+                  onClick={() => send(r.text)}
+                  style={{
+                    padding: "7px 12px", borderRadius: 12, cursor: "pointer",
+                    background: "rgba(255,120,30,0.08)",
+                    border: "1px solid rgba(255,120,30,0.2)",
+                    color: "#FFAB68", fontSize: "0.7rem", fontWeight: 600,
+                    transition: "all 0.2s", fontFamily: "inherit",
+                    lineHeight: 1.3,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(255,120,30,0.18)";
+                    e.currentTarget.style.borderColor = "rgba(255,120,30,0.4)";
+                    e.currentTarget.style.transform = "translateY(-1px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(255,120,30,0.08)";
+                    e.currentTarget.style.borderColor = "rgba(255,120,30,0.2)";
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }}
+                >
+                  {r.label}
+                </button>
+              ))}
+            </div>
+          )}
+          
           <div ref={bottomRef} />
         </div>
 

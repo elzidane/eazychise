@@ -124,9 +124,9 @@ export default function WhyUs() {
           {/* Bottom trust strip */}
           <div className="reveal mt-8 flex items-center gap-4 pt-6 border-t border-white/[0.06]">
             {[
-              { num: "320+", label: "Brand aktif" },
+              { num: "20+", label: "Brand dikurasi" },
               { num: "100%", label: "Terverifikasi" },
-              { num: "9K+", label: "Mitra puas" },
+              { num: "34", label: "Provinsi" },
             ].map((s) => (
               <div key={s.label} className="flex-1 text-center">
                 <p className="font-syne font-extrabold text-white text-[1.2rem] leading-none">

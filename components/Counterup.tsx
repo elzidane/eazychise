@@ -15,7 +15,7 @@ export default function CounterUp({
   to, duration = 1800, prefix = "", suffix = "",
   className = "", style, decimals = 0,
 }: Props) {
-  const [val, setVal] = useState(0);
+  const [val, setVal] = useState(to); // Start at target to prevent FOUC
   const ref = useRef<HTMLSpanElement>(null);
   const started = useRef(false);
 

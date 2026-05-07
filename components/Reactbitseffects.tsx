@@ -83,7 +83,7 @@ interface CountUpProps {
 
 export function CountUp({ end, duration = 2000, prefix = "", suffix = "", className = "", decimals = 0 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(end); // Start at target value to prevent FOUC
   const [started, setStarted] = useState(false);
 
   useEffect(() => {
@@ -96,6 +96,7 @@ export function CountUp({ end, duration = 2000, prefix = "", suffix = "", classN
 
   useEffect(() => {
     if (!started) return;
+    setCount(0); // Reset to 0 then animate up
     let start: number | null = null;
     const step = (ts: number) => {
       if (!start) start = ts;

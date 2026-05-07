@@ -1,12 +1,33 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Mail, Lock, ArrowRight, Github, ArrowLeft, ShieldCheck } from "lucide-react";
+import { Mail, Lock, ArrowRight, ArrowLeft, ShieldCheck, Eye, EyeOff } from "lucide-react";
+import { login } from "@/lib/auth";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPass, setShowPass] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Selamat datang kembali!");
+    setError("");
+    setLoading(true);
+
+    setTimeout(() => {
+      const result = login(email, password);
+      if (result.success) {
+        router.push("/dashboard");
+      } else {
+        setError(result.error || "Terjadi kesalahan.");
+        setLoading(false);
+      }
+    }, 600); // slight delay for UX
   };
 
   return (
@@ -48,6 +69,17 @@ export default function LoginPage() {
         {/* Card */}
         <div className="bg-white p-8 sm:p-10 rounded-[40px] shadow-[0_32px_64px_rgba(0,0,0,0.06)] border border-black/5">
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Error message */}
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-red-50 border border-red-200 text-red-600 text-sm font-medium px-4 py-3 rounded-2xl"
+              >
+                {error}
+              </motion.div>
+            )}
+
             <div>
               <label className="block text-[0.8rem] font-black text-[#111] uppercase tracking-wider mb-2 ml-1">Alamat Email</label>
               <div className="relative">
@@ -55,6 +87,8 @@ export default function LoginPage() {
                 <input 
                   type="email" 
                   placeholder="nama@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-[#F8F8F6] border border-black/5 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-4 focus:ring-[#FF5C1A]/10 focus:border-[#FF5C1A] transition-all font-medium"
                   required
                 />
@@ -64,25 +98,44 @@ export default function LoginPage() {
             <div>
               <div className="flex justify-between items-center mb-2 ml-1">
                 <label className="block text-[0.8rem] font-black text-[#111] uppercase tracking-wider">Password</label>
-                <Link href="#" className="text-xs font-bold text-[#FF5C1A] hover:underline">Lupa?</Link>
+                <span className="text-xs font-bold text-[#FF5C1A] cursor-pointer hover:underline">Lupa?</span>
               </div>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input 
-                  type="password" 
+                  type={showPass ? "text" : "password"}
                   placeholder="••••••••"
-                  className="w-full bg-[#F8F8F6] border border-black/5 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-4 focus:ring-[#FF5C1A]/10 focus:border-[#FF5C1A] transition-all font-medium"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-[#F8F8F6] border border-black/5 rounded-2xl py-4 pl-12 pr-12 focus:outline-none focus:ring-4 focus:ring-[#FF5C1A]/10 focus:border-[#FF5C1A] transition-all font-medium"
                   required
                 />
+                <button 
+                  type="button"
+                  onClick={() => setShowPass(!showPass)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showPass ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
               </div>
             </div>
 
             <button 
               type="submit"
-              className="w-full bg-[#111111] text-white py-4.5 rounded-2xl font-bold text-[0.95rem] shadow-[0_12px_24px_rgba(0,0,0,0.12)] hover:bg-[#FF5C1A] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 mt-2 group"
+              disabled={loading}
+              className="w-full bg-[#111111] text-white py-4.5 rounded-2xl font-bold text-[0.95rem] shadow-[0_12px_24px_rgba(0,0,0,0.12)] hover:bg-[#FF5C1A] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 mt-2 group disabled:opacity-60 disabled:hover:bg-[#111111] disabled:hover:translate-y-0"
             >
-              Masuk Sekarang
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Memproses...
+                </span>
+              ) : (
+                <>
+                  Masuk Sekarang
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
             </button>
           </form>
 
@@ -98,9 +151,9 @@ export default function LoginPage() {
               <img src="https://www.google.com/favicon.ico" className="w-4 h-4" alt="Google" />
               <span className="text-sm font-bold text-[#333]">Google</span>
             </button>
-            <button className="flex items-center justify-center gap-2.5 bg-[#111] text-white py-3.5 rounded-2xl hover:bg-gray-800 transition-all hover:shadow-sm">
-              <Github className="w-4 h-4" />
-              <span className="text-sm font-bold">Github</span>
+            <button className="flex items-center justify-center gap-2.5 bg-white border border-black/5 py-3.5 rounded-2xl hover:bg-gray-50 transition-all hover:shadow-sm">
+              <img src="https://www.facebook.com/favicon.ico" className="w-4 h-4" alt="Facebook" />
+              <span className="text-sm font-bold text-[#333]">Facebook</span>
             </button>
           </div>
         </div>
