@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, MessageSquare, Send, CheckCircle2, MapPin, Coffee } from "lucide-react";
 import SpotlightCard from "./SpotlightCard";
@@ -102,6 +102,7 @@ export default function ReviewsSection() {
   const [reviews, setReviews] = useState<Review[]>(INITIAL_REVIEWS);
   const [showForm, setShowForm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [activeCategory, setActiveCategory] = useState("all");
   const [newReview, setNewReview] = useState({
     name: "",
@@ -109,6 +110,12 @@ export default function ReviewsSection() {
     comment: ""
   });
   const formRef = useRef<HTMLDivElement>(null);
+
+  // Mark as mounted after first render to trigger animations
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 50);
+    return () => clearTimeout(t);
+  }, []);
 
   const filteredReviews = activeCategory === "all" 
     ? reviews 
@@ -159,7 +166,42 @@ export default function ReviewsSection() {
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#FF5C1A]/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/3 pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        
+        {/* Skeleton shown before mount */}
+        {!mounted ? (
+          <div className="animate-pulse space-y-8">
+            {/* Header skeleton */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-10 mb-20">
+              <div className="max-w-2xl space-y-4">
+                <div className="h-3 w-32 bg-gray-200 rounded-full" />
+                <div className="h-12 w-80 bg-gray-200 rounded-xl" />
+                <div className="h-8 w-60 bg-gray-100 rounded-xl" />
+              </div>
+              <div className="h-14 w-48 bg-gray-200 rounded-2xl" />
+            </div>
+            {/* Cards skeleton */}
+            <div className="grid lg:grid-cols-[1fr_1.6fr] gap-10 lg:gap-20">
+              <div className="space-y-5">
+                <div className="h-52 bg-gray-200 rounded-[32px]" />
+              </div>
+              <div className="space-y-6">
+                {[1,2,3].map(i => (
+                  <div key={i} className="bg-white rounded-[24px] p-6 border border-black/[0.04] space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-xl bg-gray-200" />
+                      <div className="space-y-2">
+                        <div className="h-3 w-28 bg-gray-200 rounded-full" />
+                        <div className="h-2 w-20 bg-gray-100 rounded-full" />
+                      </div>
+                    </div>
+                    <div className="h-3 w-full bg-gray-100 rounded-full" />
+                    <div className="h-3 w-4/5 bg-gray-100 rounded-full" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+        <>
         {/* Header */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
@@ -321,6 +363,8 @@ export default function ReviewsSection() {
           </div>
 
         </div>
+        </>
+        )}
       </div>
     </section>
   );

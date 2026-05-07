@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
+import { usePathname } from "next/navigation";
 import { 
   Wallet, 
   Coffee, 
@@ -307,6 +308,12 @@ export default function FranchiseAdvisor() {
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef  = useRef<HTMLTextAreaElement>(null);
+  const pathname  = usePathname();
+
+  // Auto-close when navigating to different page
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -452,11 +459,28 @@ export default function FranchiseAdvisor() {
           body.nav-menu-open .eazy-fab-container {
             right: calc(100% - 80px);
           }
+          .eazy-chat-panel {
+            bottom: 90px !important;
+            right: 12px !important;
+            left: 12px !important;
+            width: auto !important;
+            max-width: 100% !important;
+            max-height: 70vh !important;
+            height: 70vh !important;
+            border-radius: 20px !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .eazy-chat-panel {
+            bottom: 86px !important;
+            height: 65vh !important;
+            max-height: 65vh !important;
+          }
         }
       `}</style>
 
       {/* ════ FAB ════ */}
-      <div className="eazy-fab-container" style={{ position: "fixed", bottom: 24, zIndex: 9999 }}>
+      <div className="eazy-fab-container" style={{ position: "fixed", bottom: 24, zIndex: 9999 }} suppressHydrationWarning>
         {/* Pulse rings (only when closed) */}
         {!open && (
           <>
@@ -518,27 +542,29 @@ export default function FranchiseAdvisor() {
       </div>
 
       {/* ════ Chat Panel ════ */}
-      <div style={{
-        position: "fixed", bottom: 92, right: 24, zIndex: 9998,
-        width: 388, maxWidth: "calc(100vw - 28px)", height: 580,
-        borderRadius: 26,
-        background: "rgba(10,9,8,0.92)",
-        backdropFilter: "blur(48px) saturate(180%)",
-        WebkitBackdropFilter: "blur(48px) saturate(180%)",
-        border: "1px solid rgba(255,160,60,0.14)",
-        boxShadow: [
-          "0 40px 100px rgba(0,0,0,0.7)",
-          "0 0 0 0.5px rgba(255,255,255,0.04) inset",
-          "0 1px 0 rgba(255,160,60,0.12) inset",
-        ].join(", "),
-        display: "flex", flexDirection: "column", overflow: "hidden",
-        animation: open ? "eazyPanelIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both" : "none",
-        opacity: open ? 1 : 0,
-        transform: open ? "scale(1) translateY(0)" : "scale(0.86) translateY(20px)",
-        transition: open ? "none" : "opacity 0.22s ease, transform 0.22s ease",
-        pointerEvents: open ? "all" : "none",
-        fontFamily: "'DM Sans', sans-serif",
-      }}>
+      <div
+        className="eazy-chat-panel"
+        style={{
+          position: "fixed", bottom: 92, right: 24, zIndex: 9998,
+          width: 388, maxWidth: "calc(100vw - 48px)", height: 580,
+          borderRadius: 26,
+          background: "rgba(10,9,8,0.92)",
+          backdropFilter: "blur(48px) saturate(180%)",
+          WebkitBackdropFilter: "blur(48px) saturate(180%)",
+          border: "1px solid rgba(255,160,60,0.14)",
+          boxShadow: [
+            "0 40px 100px rgba(0,0,0,0.7)",
+            "0 0 0 0.5px rgba(255,255,255,0.04) inset",
+            "0 1px 0 rgba(255,160,60,0.12) inset",
+          ].join(", "),
+          display: "flex", flexDirection: "column", overflow: "hidden",
+          animation: open ? "eazyPanelIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both" : "none",
+          opacity: open ? 1 : 0,
+          transform: open ? "scale(1) translateY(0)" : "scale(0.86) translateY(20px)",
+          transition: open ? "none" : "opacity 0.22s ease, transform 0.22s ease",
+          pointerEvents: open ? "all" : "none",
+          fontFamily: "'DM Sans', sans-serif",
+        }}>
 
         {/* ── Ambient top glow ── */}
         <div style={{

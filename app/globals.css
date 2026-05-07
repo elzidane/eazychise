@@ -108,3 +108,32 @@ body {
 
 /* Extra float delay */
 .animate-float-slow { animation: floatY 4s ease-in-out infinite 1.2s; }
+
+/* ── BEP Slider mobile touch-friendly ── */
+@media (max-width: 768px) {
+  input[type="range"] {
+    height: 6px !important;
+    padding: 8px 0;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    width: 22px;
+    height: 22px;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* ── Skeleton shimmer animation ── */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 1000px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
