@@ -1,8 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, useSpring, useTransform } from "framer-motion";
-import { Calculator, TrendingUp, DollarSign, Clock, Pencil, Rocket, AlertCircle } from "lucide-react";
+import { Calculator, TrendingUp, DollarSign, Clock, Pencil, Rocket, AlertCircle, Brain, Sparkles, Zap } from "lucide-react";
 import SpotlightCard from "./SpotlightCard";
+import Typewriter from "./Typewriter";
 import { MdLightbulb } from "react-icons/md";
 
 // ─── KOMPONEN ANIMASI ANGKA REAL-TIME ──────────────────────────────────────
@@ -33,6 +34,8 @@ export default function BEPCalculator() {
   const [hppPercent, setHppPercent] = useState<number>(45);
   const [biayaOperasional, setBiayaOperasional] = useState<number>(8000000);
   const [editingField, setEditingField] = useState<string | null>(null);
+  const [analysis, setAnalysis] = useState("");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   // Calculations
   const hppValue = (omsetBulan * hppPercent) / 100;
@@ -49,6 +52,45 @@ export default function BEPCalculator() {
       currency: "IDR",
       minimumFractionDigits: 0,
     }).format(number);
+  };
+
+  const generateAIAnalysis = async () => {
+    if (isAnalyzing) return;
+    setIsAnalyzing(true);
+    setAnalysis("");
+
+    const prompt = `Berikan analisis bisnis profesional berdasarkan simulasi BEP berikut:
+- Modal Awal: ${formatRupiah(modalAwal)}
+- Estimasi Omzet: ${formatRupiah(omsetBulan)}/bln
+- HPP: ${hppPercent}%
+- Biaya Operasional: ${formatRupiah(biayaOperasional)}/bln
+- Laba Bersih: ${formatRupiah(labaBersih)}/bln
+- BEP: ${bepBulanNum.toFixed(1)} bulan
+- ROI Tahunan: ${roiTahunanNum.toFixed(1)}%
+
+Tolong berikan:
+1. Evaluasi kesehatan finansial (apakah ROI ini menarik?).
+2. 2-3 strategi konkret untuk mempercepat BEP atau meningkatkan laba bersih.
+3. Analisis risiko jika omzet turun 20%.
+Gaya bahasa: Tajam, analitis, dan suportif (Senior Business Consultant).`;
+
+    try {
+      const res = await fetch("/api/advisor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: [{ role: "user", content: prompt }] }),
+      });
+      const data = await res.json();
+      if (data.reply) {
+        setAnalysis(data.reply);
+      } else {
+        setAnalysis("Gagal memuat analisis. Coba lagi.");
+      }
+    } catch (err) {
+      setAnalysis("Masalah koneksi. Periksa internet Anda.");
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   return (
@@ -354,6 +396,65 @@ export default function BEPCalculator() {
                 Angka di atas adalah estimasi kasar. Performa asli dapat bervariasi tergantung pada lokasi, marketing, dan manajemen operasional.
               </p>
             </div>
+            
+            {/* AI Analysis Section */}
+            {!analysis && !isAnalyzing ? (
+              <button
+                onClick={generateAIAnalysis}
+                className="w-full bg-[#111] text-white py-4 rounded-2xl font-bold hover:bg-[#FF5C1A] transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95 group"
+              >
+                <Brain className="w-5 h-5 text-[#FFCF40] group-hover:scale-110 transition-transform" />
+                Dapatkan Analisis Strategis AI
+              </button>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+              >
+                <SpotlightCard className="bg-white rounded-3xl p-7 border border-[#FF5C1A]/10 shadow-xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF5C1A]/5 rounded-full blur-2xl -mr-16 -mt-16" />
+                  
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FF5C1A] to-[#FF8C1A] flex items-center justify-center shadow-md">
+                      <Brain className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="font-syne font-bold text-lg text-[#111] leading-none mb-1.5">AI Business Insight</h4>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                        <span className="text-[0.65rem] font-bold text-[#999] uppercase tracking-widest">Analysis Engine Active</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="prose prose-orange max-w-none">
+                    {isAnalyzing ? (
+                      <div className="space-y-3">
+                        <div className="h-3 w-full bg-gray-100 rounded-full animate-pulse" />
+                        <div className="h-3 w-4/5 bg-gray-100 rounded-full animate-pulse" />
+                        <div className="h-3 w-3/4 bg-gray-100 rounded-full animate-pulse" />
+                        <p className="text-[0.7rem] text-gray-400 font-bold italic mt-3">AI sedang membedah angka finansial Anda...</p>
+                      </div>
+                    ) : (
+                      <div className="text-[#444] text-[0.88rem] leading-[1.7] whitespace-pre-wrap">
+                        <Typewriter text={analysis} speed={8} />
+                      </div>
+                    )}
+                  </div>
+
+                  {!isAnalyzing && (
+                    <div className="mt-6 pt-6 border-t border-black/5 flex justify-end">
+                      <button
+                        onClick={generateAIAnalysis}
+                        className="text-xs font-bold text-[#FF5C1A] hover:underline flex items-center gap-1.5"
+                      >
+                        <Zap className="w-3 h-3" /> Refresh Analisis
+                      </button>
+                    </div>
+                  )}
+                </SpotlightCard>
+              </motion.div>
+            )}
           </motion.div>
         </div>
       </div>

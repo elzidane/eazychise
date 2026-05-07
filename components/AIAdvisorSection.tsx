@@ -136,7 +136,7 @@ export default function AIAdvisorSection() {
 - Preferensi kategori: ${answers.kategori}
 - Informasi tambahan: ${freeInput || "Tidak ada"}
 
-Berikan rekomendasi franchise yang paling cocok dari daftar EazyChise (Kopiku Nusantara, BubbleBOOM Indonesia, Mie Ayam Bakso Mas Agus, Nasi Goreng Gila Express, Soto Betawi Pak Haji, Sweet Street Dessert Co.), beserta alasan konkret, estimasi ROI, dan 2-3 tips sukses untuk profil ini. Tulis dalam Bahasa Indonesia yang hangat dan profesional.`;
+Berikan rekomendasi franchise yang paling cocok dari daftar EazyChise (Kopi Studio 24, XIBOBA, Kopi Kenangan, Es Teh Indonesia, Janji Jiwa, Chatime, Mixue Ice Cream & Tea, Wizzmie, Burger Bangor, Kebab Turki Baba Rafi, Mie Gacoan, Sweet Street Dessert Co., Aice Ice Cream, Pisang Goreng Madu Bu Nanik, Martabak San Francisco), beserta alasan konkret, estimasi ROI, dan 2-3 tips sukses untuk profil ini. Tulis dalam Bahasa Indonesia yang hangat dan profesional.`;
 
     try {
       const res = await fetch("/api/advisor", {
