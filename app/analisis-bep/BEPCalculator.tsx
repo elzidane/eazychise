@@ -15,15 +15,6 @@ export default function BEPCalculator() {
   const [analysis, setAnalysis] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  // Calculations
-  const hppValue = (omsetBulan * hppPercent) / 100;
-  const labaKotor = omsetBulan - hppValue;
-  const labaBersih = labaKotor - biayaOperasional;
-  
-  // Prevent Infinity/NaN if losing money
-  const bepBulan = labaBersih > 0 ? (modalAwal / labaBersih).toFixed(1) : "Tidak BEP (Rugi)";
-  const roiTahunan = labaBersih > 0 ? (((labaBersih * 12) / modalAwal) * 100).toFixed(1) : "0";
-
   const generateAIAnalysis = async () => {
     if (isAnalyzing) return;
     setIsAnalyzing(true);
@@ -61,6 +52,18 @@ Tolong berikan:
       setIsAnalyzing(false);
     }
   };
+
+
+  // Calculations
+  const hppValue = (omsetBulan * hppPercent) / 100;
+  const labaKotor = omsetBulan - hppValue;
+  const labaBersih = labaKotor - biayaOperasional;
+  
+  // Prevent Infinity/NaN if losing money
+  const bepBulan = labaBersih > 0 ? (modalAwal / labaBersih).toFixed(1) : "Tidak BEP (Rugi)";
+  const roiTahunan = labaBersih > 0 ? (((labaBersih * 12) / modalAwal) * 100).toFixed(1) : "0";
+
+
 
 
   return (
@@ -478,6 +481,8 @@ Tolong berikan:
                 )}
               </motion.div>
             )}
+
+
 
             {/* Disclaimer */}
             <div className="bg-[#FFCF40]/20 p-5 rounded-2xl border border-[#FFCF40]/30">

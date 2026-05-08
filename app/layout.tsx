@@ -56,8 +56,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className={`${syne.variable} ${fraunces.variable} ${jakarta.variable}`}>
-      <body className="font-jakarta bg-[#FFF9F0] text-[#111111] overflow-x-hidden">
+    <html lang="id" className={`${syne.variable} ${fraunces.variable} ${jakarta.variable}`} suppressHydrationWarning>
+      <body className="font-jakarta bg-[#FFF9F0] text-[#111111] overflow-x-hidden" suppressHydrationWarning>
         <AuthProvider>
           <ToastProvider>
             <SplashScreen />

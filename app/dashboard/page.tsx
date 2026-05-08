@@ -12,14 +12,81 @@ import { getUser, logout, User, removeSavedFranchise } from "@/lib/auth";
 import { FRANCHISE_DATA } from "@/lib/franchise-data";
 import { generateBrandReportPDF } from "@/lib/pdf-generator";
 import { formatRupiah, formatJuta, formatAngkaSingkat } from "@/lib/utils/formatRupiah";
+import { useSession } from "next-auth/react";
+import DashboardSkeleton from "@/components/DashboardSkeleton";
+import LocalBusinessTracker from "@/components/LocalBusinessTracker";
 
 export default function DashboardPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [showBrandDetails, setShowBrandDetails] = useState(false);
   const [showBrandForm, setShowBrandForm] = useState(false);
   const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
+  const [selectedBrandIndex, setSelectedBrandIndex] = useState<number | null>(null);
+  
+  const [franchisorBrands, setFranchisorBrands] = useState([
+    {
+      name: "Kopi Nusantara",
+      cat: "Minuman / Coffee Shop",
+      img: "https://blue.kumparan.com/image/upload/fl_progressive,fl_lossy,c_fill,f_auto,q_auto:best,w_640/v1642665363/h2jq4cvxrovsvl03r0os.png",
+      status: "Aktif",
+      invest: "50.000.000",
+      location: "Jakarta",
+      desc: "Kopi Nusantara adalah brand kopi lokal dengan cita rasa autentik yang sudah tersebar di seluruh Indonesia."
+    }
+  ]);
+
+  const [brandFormData, setBrandFormData] = useState({
+    name: "",
+    cat: "Minuman / Coffee Shop",
+    img: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=2047&auto=format&fit=crop",
+    invest: "",
+    location: "",
+    desc: ""
+  });
+
+  const handleBrandSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (formMode === 'add') {
+      setFranchisorBrands([...franchisorBrands, { ...brandFormData, status: "Aktif" }]);
+    } else if (selectedBrandIndex !== null) {
+      const updated = [...franchisorBrands];
+      updated[selectedBrandIndex] = { ...brandFormData, status: "Aktif" };
+      setFranchisorBrands(updated);
+    }
+    setShowBrandForm(false);
+    // Reset form
+    setBrandFormData({
+      name: "",
+      cat: "Minuman / Coffee Shop",
+      img: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=2047&auto=format&fit=crop",
+      invest: "",
+      location: "",
+      desc: ""
+    });
+  };
+
+  const openEditForm = (index: number) => {
+    setSelectedBrandIndex(index);
+    setBrandFormData(franchisorBrands[index]);
+    setFormMode('edit');
+    setShowBrandForm(true);
+  };
+
+  const openAddForm = () => {
+    setBrandFormData({
+      name: "",
+      cat: "Minuman / Coffee Shop",
+      img: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=2047&auto=format&fit=crop",
+      invest: "",
+      location: "",
+      desc: ""
+    });
+    setFormMode('add');
+    setShowBrandForm(true);
+  };
 
   const handleDownloadReport = () => {
     const stats = {
@@ -44,8 +111,13 @@ export default function DashboardPage() {
       router.replace("/masuk");
       return;
     }
-    setUser(currentUser);
-    setLoading(false);
+    
+    const timer = setTimeout(() => {
+      setUser(currentUser);
+      setLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
   }, [router]);
 
   const handleLogout = () => {
@@ -59,14 +131,7 @@ export default function DashboardPage() {
   };
 
   if (loading || !user) {
-    return (
-      <main className="min-h-screen bg-[#FFF9F0] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-3 border-[#FF5C1A]/20 border-t-[#FF5C1A] rounded-full animate-spin" />
-          <p className="text-sm text-[#888] font-medium">Memuat dashboard...</p>
-        </div>
-      </main>
-    );
+    return <DashboardSkeleton />;
   }
 
   const savedFranchises = FRANCHISE_DATA.filter(f => 
@@ -214,6 +279,8 @@ export default function DashboardPage() {
 
             {/* ── Right Column ── */}
             <div className="space-y-6">
+              <LocalBusinessTracker />
+              
               {/* Search History */}
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
@@ -297,7 +364,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <button 
-                      onClick={() => { setFormMode('add'); setShowBrandForm(true); }}
+                      onClick={openAddForm}
                       className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#FF5C1A] text-white font-bold text-xs hover:bg-[#e04710] transition-all shadow-md shadow-orange-200"
                     >
                       <Plus className="w-4 h-4" /> Tambah Brand
@@ -314,8 +381,8 @@ export default function DashboardPage() {
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                   {[
-                    { label: "Dilihat", value: formatAngkaSingkat(1240), icon: Eye, color: "#7C3AED" },
-                    { label: "Leads", value: "45", icon: UserIcon, color: "#FF5C1A" },
+                    { label: "Dilihat", value: formatAngkaSingkat(1240 * franchisorBrands.length), icon: Eye, color: "#7C3AED" },
+                    { label: "Leads", value: (45 * franchisorBrands.length).toString(), icon: UserIcon, color: "#FF5C1A" },
                     { label: "Konversi", value: "3.6%", icon: TrendingUp, color: "#1B8C5A" },
                     { label: "Rating", value: "4.8", icon: Star, color: "#FFCF40" },
                   ].map((stat) => (
@@ -329,23 +396,37 @@ export default function DashboardPage() {
                   ))}
                 </div>
 
-                <div className="p-4 rounded-2xl border border-black/5 flex items-center gap-4 bg-white hover:border-[#FF5C1A]/20 transition-all group">
-                  <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
-                    <img src="https://blue.kumparan.com/image/upload/fl_progressive,fl_lossy,c_fill,f_auto,q_auto:best,w_640/v1642665363/h2jq4cvxrovsvl03r0os.png" alt="Kopi Nusantara" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-[#111]">Kopi Nusantara</h3>
-                    <div className="flex items-center gap-3 mt-1">
-                      <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full uppercase tracking-wider">Aktif</span>
-                      <p className="text-xs text-[#999] truncate">Kategori: Minuman / Coffee Shop</p>
+                <div className="space-y-4">
+                  {franchisorBrands.map((brand, index) => (
+                    <div key={index} className="p-4 rounded-2xl border border-black/5 flex items-center gap-4 bg-white hover:border-[#FF5C1A]/20 transition-all group">
+                      <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 relative">
+                        <img src={brand.img} alt={brand.name} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-bold text-[#111]">{brand.name}</h3>
+                        <div className="flex items-center gap-3 mt-1">
+                          <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full uppercase tracking-wider">{brand.status}</span>
+                          <p className="text-xs text-[#999] truncate">Kategori: {brand.cat}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button 
+                          onClick={() => openEditForm(index)}
+                          className="p-2.5 rounded-xl bg-gray-50 text-[#999] hover:bg-[#111] hover:text-white transition-all"
+                          title="Edit Brand"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={() => { setSelectedBrandIndex(index); setShowBrandDetails(true); }}
+                          className="p-2.5 rounded-xl bg-gray-50 text-[#999] hover:bg-[#111] hover:text-white transition-all"
+                          title="Detail Analitik"
+                        >
+                          <ChevronRight className="w-5 h-5" />
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  <button 
-                    onClick={() => setShowBrandDetails(true)}
-                    className="p-2.5 rounded-xl bg-gray-50 text-[#999] group-hover:bg-[#111] group-hover:text-white transition-all"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
+                  ))}
                 </div>
               </motion.div>
 
@@ -504,11 +585,15 @@ export default function DashboardPage() {
               <div className="p-6 border-b border-black/5 flex items-center justify-between bg-white relative z-10">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">
-                    <img src="https://blue.kumparan.com/image/upload/fl_progressive,fl_lossy,c_fill,f_auto,q_auto:best,w_640/v1642665363/h2jq4cvxrovsvl03r0os.png" alt="Brand Ku" className="w-full h-full object-cover" />
+                    <img src={selectedBrandIndex !== null ? franchisorBrands[selectedBrandIndex].img : ""} alt="Brand Ku" className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <h3 className="font-syne font-bold text-xl text-[#111] leading-none mb-1">Kopi Nusantara</h3>
-                    <span className="inline-block px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-[0.65rem] font-bold uppercase tracking-wider">Aktif</span>
+                    <h3 className="font-syne font-bold text-xl text-[#111] leading-none mb-1">
+                      {selectedBrandIndex !== null ? franchisorBrands[selectedBrandIndex].name : ""}
+                    </h3>
+                    <span className="inline-block px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-[0.65rem] font-bold uppercase tracking-wider">
+                      {selectedBrandIndex !== null ? franchisorBrands[selectedBrandIndex].status : ""}
+                    </span>
                   </div>
                 </div>
                 <button 
@@ -551,6 +636,23 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
+                <div className="mb-8 p-4 rounded-2xl bg-gray-50 border border-black/5">
+                  <h5 className="text-xs font-bold text-[#111] uppercase mb-2">Tentang Brand</h5>
+                  <p className="text-sm text-[#666] leading-relaxed">
+                    {selectedBrandIndex !== null ? franchisorBrands[selectedBrandIndex].desc : ""}
+                  </p>
+                  <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-black/5">
+                    <div>
+                      <p className="text-[10px] text-[#999] font-bold uppercase">Investasi</p>
+                      <p className="text-sm font-bold text-[#111]">Rp {selectedBrandIndex !== null ? franchisorBrands[selectedBrandIndex].invest : ""}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-[#999] font-bold uppercase">Lokasi</p>
+                      <p className="text-sm font-bold text-[#111]">{selectedBrandIndex !== null ? franchisorBrands[selectedBrandIndex].location : ""}</p>
+                    </div>
+                  </div>
+                </div>
+
                 <h4 className="font-syne font-bold text-lg mb-4">Sumber Traffic</h4>
                 <div className="mb-8">
                   <div className="flex items-center justify-between text-sm mb-2">
@@ -569,6 +671,7 @@ export default function DashboardPage() {
                     <div className="bg-[#7C3AED] h-2 rounded-full" style={{ width: '35%' }}></div>
                   </div>
                 </div>
+
 
                 <h4 className="font-syne font-bold text-lg mb-4">Analisis AI Lanjutan</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
@@ -679,7 +782,7 @@ export default function DashboardPage() {
               </div>
               
               <div className="p-8 max-h-[80vh] overflow-y-auto">
-                <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); setShowBrandForm(false); }}>
+                <form className="space-y-6" onSubmit={handleBrandSubmit}>
                   {/* Image Upload Mockup */}
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-[#999] uppercase tracking-wider">Foto Brand</label>
@@ -697,14 +800,20 @@ export default function DashboardPage() {
                       <label className="text-xs font-bold text-[#999] uppercase tracking-wider">Nama Brand</label>
                       <input 
                         type="text" 
+                        required
                         placeholder="Contoh: Kopi Nusantara" 
-                        defaultValue={formMode === 'edit' ? 'Kopi Nusantara' : ''}
+                        value={brandFormData.name}
+                        onChange={(e) => setBrandFormData({...brandFormData, name: e.target.value})}
                         className="w-full px-4 py-3 rounded-xl bg-[#F8F8F6] border border-transparent focus:border-[#FF5C1A] focus:bg-white outline-none transition-all text-sm font-medium"
                       />
                     </div>
                     <div className="space-y-2">
                       <label className="text-xs font-bold text-[#999] uppercase tracking-wider">Kategori</label>
-                      <select className="w-full px-4 py-3 rounded-xl bg-[#F8F8F6] border border-transparent focus:border-[#FF5C1A] focus:bg-white outline-none transition-all text-sm font-medium appearance-none">
+                      <select 
+                        className="w-full px-4 py-3 rounded-xl bg-[#F8F8F6] border border-transparent focus:border-[#FF5C1A] focus:bg-white outline-none transition-all text-sm font-medium appearance-none"
+                        value={brandFormData.cat}
+                        onChange={(e) => setBrandFormData({...brandFormData, cat: e.target.value})}
+                      >
                         <option>Minuman / Coffee Shop</option>
                         <option>Makanan Berat</option>
                         <option>Camilan / Snack</option>
@@ -718,8 +827,10 @@ export default function DashboardPage() {
                       <label className="text-xs font-bold text-[#999] uppercase tracking-wider">Modal Investasi (Rp)</label>
                       <input 
                         type="text" 
+                        required
                         placeholder="Contoh: 50.000.000" 
-                        defaultValue={formMode === 'edit' ? '50000000' : ''}
+                        value={brandFormData.invest}
+                        onChange={(e) => setBrandFormData({...brandFormData, invest: e.target.value})}
                         className="w-full px-4 py-3 rounded-xl bg-[#F8F8F6] border border-transparent focus:border-[#FF5C1A] focus:bg-white outline-none transition-all text-sm font-medium"
                       />
                     </div>
@@ -727,8 +838,10 @@ export default function DashboardPage() {
                       <label className="text-xs font-bold text-[#999] uppercase tracking-wider">Lokasi Pusat</label>
                       <input 
                         type="text" 
+                        required
                         placeholder="Contoh: Jakarta" 
-                        defaultValue={formMode === 'edit' ? 'Jakarta' : ''}
+                        value={brandFormData.location}
+                        onChange={(e) => setBrandFormData({...brandFormData, location: e.target.value})}
                         className="w-full px-4 py-3 rounded-xl bg-[#F8F8F6] border border-transparent focus:border-[#FF5C1A] focus:bg-white outline-none transition-all text-sm font-medium"
                       />
                     </div>
@@ -738,7 +851,10 @@ export default function DashboardPage() {
                     <label className="text-xs font-bold text-[#999] uppercase tracking-wider">Deskripsi Brand</label>
                     <textarea 
                       rows={3}
+                      required
                       placeholder="Jelaskan keunggulan brand Anda..." 
+                      value={brandFormData.desc}
+                      onChange={(e) => setBrandFormData({...brandFormData, desc: e.target.value})}
                       className="w-full px-4 py-3 rounded-xl bg-[#F8F8F6] border border-transparent focus:border-[#FF5C1A] focus:bg-white outline-none transition-all text-sm font-medium resize-none"
                     ></textarea>
                   </div>

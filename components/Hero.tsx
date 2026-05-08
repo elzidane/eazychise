@@ -267,6 +267,7 @@ export default function Hero() {
                   fill
                   className="object-cover transition-transform duration-1000 group-hover:scale-110"
                   sizes="300px"
+                  priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                 <div className="absolute top-3.5 left-3.5 bg-black/40 backdrop-blur-md text-white text-[0.6rem] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5">
@@ -286,6 +287,7 @@ export default function Hero() {
                   fill
                   className="object-cover transition-transform duration-1000 group-hover:scale-110"
                   sizes="300px"
+                  priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                 <div className="absolute top-3.5 left-3.5 bg-black/40 backdrop-blur-md text-white text-[0.6rem] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5">

@@ -19,6 +19,7 @@ export default function PartnershipModal({ isOpen, onClose, franchiseName }: Par
     location: "",
     message: "",
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Body scroll lock
   useEffect(() => {
@@ -30,8 +31,32 @@ export default function PartnershipModal({ isOpen, onClose, franchiseName }: Par
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
 
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    
+    // Name: Minimal 3 characters, alphabets and spaces only
+    if (!/^[a-zA-Z\s]{3,}$/.test(formData.name)) {
+      newErrors.name = "Nama minimal 3 karakter & hanya huruf.";
+    }
+
+    // Email: Standard email regex
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Format email tidak valid.";
+    }
+
+    // Phone: 10-14 digits, starts with 08
+    if (!/^08[0-9]{8,12}$/.test(formData.phone)) {
+      newErrors.phone = "No. HP harus diawali 08 & minimal 10 digit.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return;
+    
     setStep("submitting");
     
     // Simulate API call
@@ -97,10 +122,11 @@ export default function PartnershipModal({ isOpen, onClose, franchiseName }: Par
                         required
                         type="text"
                         placeholder="Contoh: Budi Santoso"
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#FF5C1A] focus:ring-2 focus:ring-[#FF5C1A]/10 transition-all"
+                        className={`w-full bg-gray-50 border ${errors.name ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#FF5C1A] focus:ring-2 focus:ring-[#FF5C1A]/10 transition-all`}
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       />
+                      {errors.name && <p className="text-red-500 text-[0.7rem] font-bold mt-1.5 ml-1">{errors.name}</p>}
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -110,10 +136,11 @@ export default function PartnershipModal({ isOpen, onClose, franchiseName }: Par
                           required
                           type="email"
                           placeholder="budi@email.com"
-                          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#FF5C1A] focus:ring-2 focus:ring-[#FF5C1A]/10 transition-all"
+                          className={`w-full bg-gray-50 border ${errors.email ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#FF5C1A] focus:ring-2 focus:ring-[#FF5C1A]/10 transition-all`}
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         />
+                        {errors.email && <p className="text-red-500 text-[0.7rem] font-bold mt-1.5 ml-1">{errors.email}</p>}
                       </div>
                       <div>
                         <label className="block text-sm font-bold text-gray-700 mb-2">WhatsApp</label>
@@ -121,10 +148,11 @@ export default function PartnershipModal({ isOpen, onClose, franchiseName }: Par
                           required
                           type="tel"
                           placeholder="0812xxxx"
-                          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#FF5C1A] focus:ring-2 focus:ring-[#FF5C1A]/10 transition-all"
+                          className={`w-full bg-gray-50 border ${errors.phone ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#FF5C1A] focus:ring-2 focus:ring-[#FF5C1A]/10 transition-all`}
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         />
+                        {errors.phone && <p className="text-red-500 text-[0.7rem] font-bold mt-1.5 ml-1">{errors.phone}</p>}
                       </div>
                     </div>
 

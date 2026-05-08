@@ -90,16 +90,14 @@ export default function FranchiseListings() {
 
       {/* ── Grid ── */}
       <motion.div
-        layout
         className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
       >
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence>
           {visibleItems.map((f, i) => {
             const isCompared = compareList.includes(f.name);
             return (
               <motion.div
                 key={f.name}
-                layout
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}

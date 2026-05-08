@@ -41,6 +41,18 @@ export default function RegisterPage() {
     setError("");
 
     // Validation
+    if (!/^[a-zA-Z\s]{3,}$/.test(formData.name)) {
+      setError("Nama minimal 3 karakter dan hanya huruf.");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      setError("Format email tidak valid.");
+      return;
+    }
+    if (!/^08[0-9]{8,12}$/.test(formData.phone)) {
+      setError("Nomor HP harus diawali 08 dan minimal 10 digit.");
+      return;
+    }
     if (formData.password.length < 6) {
       setError("Password minimal 6 karakter.");
       return;

@@ -4,6 +4,7 @@ import { motion, useSpring, useTransform } from "framer-motion";
 import { Calculator, TrendingUp, DollarSign, Clock, Pencil, Rocket, AlertCircle, Brain, Sparkles, Zap } from "lucide-react";
 import SpotlightCard from "./SpotlightCard";
 import Typewriter from "./Typewriter";
+
 import { MdLightbulb } from "react-icons/md";
 import { formatRupiah } from "@/lib/utils/formatRupiah";
 import AnimatedNumber from "./ui/AnimatedNumber";
@@ -17,6 +18,7 @@ export default function BEPCalculator() {
   const [analysis, setAnalysis] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
+
   // Calculations
   const hppValue = (omsetBulan * hppPercent) / 100;
   const labaKotor = omsetBulan - hppValue;
@@ -25,8 +27,6 @@ export default function BEPCalculator() {
   // Prevent Infinity/NaN if losing money
   const bepBulanNum = labaBersih > 0 ? (modalAwal / labaBersih) : 0;
   const roiTahunanNum = labaBersih > 0 ? (((labaBersih * 12) / modalAwal) * 100) : 0;
-
-
 
   const generateAIAnalysis = async () => {
     if (isAnalyzing) return;
@@ -86,6 +86,10 @@ Gaya bahasa: Tajam, analitis, dan suportif (Senior Business Consultant).`;
       }, 1500);
     }
   };
+
+
+
+
 
   return (
     <section className="py-20 relative overflow-hidden">
@@ -383,14 +387,6 @@ Gaya bahasa: Tajam, analitis, dan suportif (Senior Business Consultant).`;
               </div>
             </SpotlightCard>
 
-            {/* Disclaimer */}
-            <div className="bg-[#FFCF40]/20 p-5 rounded-2xl border border-[#FFCF40]/30">
-              <p className="text-sm text-[#8A6A1C] flex items-start gap-2">
-                <MdLightbulb className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                Angka di atas adalah estimasi kasar. Performa asli dapat bervariasi tergantung pada lokasi, marketing, dan manajemen operasional.
-              </p>
-            </div>
-            
             {/* AI Analysis Section */}
             {!analysis && !isAnalyzing ? (
               <button
@@ -449,6 +445,16 @@ Gaya bahasa: Tajam, analitis, dan suportif (Senior Business Consultant).`;
                 </SpotlightCard>
               </motion.div>
             )}
+
+            {/* Disclaimer */}
+            <div className="bg-[#FFCF40]/20 p-5 rounded-2xl border border-[#FFCF40]/30">
+              <p className="text-sm text-[#8A6A1C] flex items-start gap-2">
+                <MdLightbulb className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                Angka di atas adalah estimasi kasar. Performa asli dapat bervariasi tergantung pada lokasi, marketing, dan manajemen operasional.
+              </p>
+            </div>
+            
+
           </motion.div>
         </div>
       </div>

@@ -29,6 +29,12 @@ export default function LoginPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Format email tidak valid.");
+      return;
+    }
+
     setLoading(true);
 
     setTimeout(() => {

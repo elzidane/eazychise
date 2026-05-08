@@ -3,14 +3,13 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2, TrendingUp, Users, MapPin, Star, Download } from "lucide-react";
+import { ArrowLeft, CheckCircle2, TrendingUp, Users, MapPin, Star, Download, Brain, Sparkles, Zap } from "lucide-react";
 import { generateProposalPDF } from "@/lib/pdf-generator";
 import { FRANCHISE_DATA } from "@/lib/franchise-data";
 import PartnershipModal from "@/components/PartnershipModal";
 import LocationRecommender from "@/components/LocationRecommender";
 import SpotlightCard from "@/components/SpotlightCard";
 import Typewriter from "@/components/Typewriter";
-import { Brain, Sparkles, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function FranchiseDetailPage({
@@ -22,29 +21,13 @@ export default function FranchiseDetailPage({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [analysis, setAnalysis] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  
-  // Find the franchise in our data
-  const franchise = FRANCHISE_DATA.find(f => 
-    f.name.toLowerCase().replace(/\s+/g, '-') === slug
-  );
 
   const generateAnalysis = async () => {
-    if (!franchise || isAnalyzing) return;
+    if (isAnalyzing || !franchise) return;
     setIsAnalyzing(true);
     setAnalysis("");
 
-    const prompt = `Berikan analisis strategis untuk franchise berikut:
-Nama: ${franchise.name}
-Modal: ${franchise.invest}
-ROI: ${franchise.roi}
-Omzet: ${franchise.omzet}
-Kategori: ${franchise.cat}
-
-Tugas Anda:
-1. Berikan analisis SWOT singkat (Strengths, Weaknesses, Opportunities, Threats).
-2. Siapa target pasar yang paling cocok untuk lokasi franchise ini?
-3. Berikan 1 saran strategis untuk meningkatkan penjualan jika saya baru memulai.
-4. Gaya bahasa: Profesional, tajam, dan edukatif (senior business consultant).`;
+    const prompt = `Berikan analisis strategis mendalam untuk franchise ${franchise.name} dengan data: Investasi ${franchise.invest}, ROI ${franchise.roi}, Omzet ${franchise.omzet}. Berikan analisis SWOT singkat dan rekomendasi keberhasilan. Gaya bahasa: Senior Business Analyst.`;
 
     try {
       const res = await fetch("/api/advisor", {
@@ -56,14 +39,22 @@ Tugas Anda:
       if (data.reply) {
         setAnalysis(data.reply);
       } else {
-        setAnalysis("Gagal memuat analisis. Coba lagi nanti.");
+        setAnalysis("Maaf, terjadi masalah saat memuat analisis.");
       }
     } catch (err) {
-      setAnalysis("Masalah koneksi. Periksa internet Anda.");
+      setAnalysis("Maaf, koneksi bermasalah.");
     } finally {
       setIsAnalyzing(false);
     }
   };
+
+  
+  // Find the franchise in our data
+  const franchise = FRANCHISE_DATA.find(f => 
+    f.name.toLowerCase().replace(/\s+/g, '-') === slug
+  );
+
+
 
   if (!franchise) {
     return (
@@ -255,79 +246,77 @@ Tugas Anda:
         </div>
 
         {/* Location Recommender Integration */}
+        {/* Location Recommender Integration */}
         <LocationRecommender category={franchise.cat || ""} />
 
         {/* AI Strategic Analysis Section */}
-        <div className="mt-12">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-12"
+        >
           {!analysis && !isAnalyzing ? (
-            <div className="bg-[#111] rounded-[32px] p-8 text-center border border-white/10 shadow-2xl relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#FF5C1A]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <div className="relative z-10">
-                <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-6 backdrop-blur-xl">
-                  <Brain className="w-8 h-8 text-[#FF5C1A]" />
-                </div>
-                <h3 className="font-syne font-bold text-2xl text-white mb-3">Dapatkan Analisis Strategis AI</h3>
-                <p className="text-white/60 text-sm mb-8 max-w-md mx-auto">
-                  Gunakan kecerdasan buatan untuk membedah potensi profit, risiko, dan strategi khusus untuk {franchise.name}.
-                </p>
-                <button
-                  onClick={generateAnalysis}
-                  className="bg-[#FF5C1A] text-white px-8 py-3.5 rounded-xl font-bold hover:bg-white hover:text-[#111] transition-all flex items-center gap-2 mx-auto shadow-lg shadow-[#FF5C1A]/20 active:scale-95"
-                >
-                  <Zap className="w-4 h-4" /> Mulai Analisis
-                </button>
-              </div>
-            </div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+            <button
+              onClick={generateAnalysis}
+              className="w-full bg-[#111] text-white py-5 rounded-[2rem] font-bold hover:bg-[#FF5C1A] transition-all flex items-center justify-center gap-3 shadow-lg active:scale-95 group border-4 border-white"
             >
-              <SpotlightCard className="bg-white rounded-[40px] border border-[#FF5C1A]/10 p-8 md:p-12 shadow-[0_30px_100px_rgba(0,0,0,0.05)] relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF5C1A]/5 rounded-full blur-[100px] -mr-32 -mt-32" />
-                
-                <div className="flex items-center gap-4 mb-10">
+              <Brain className="w-6 h-6 text-[#FFCF40] group-hover:scale-110 transition-transform" />
+              Dapatkan Analisis Strategis AI untuk {franchise.name}
+            </button>
+          ) : (
+            <SpotlightCard className="bg-white rounded-[2.5rem] p-8 md:p-12 border border-[#FF5C1A]/10 shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF5C1A]/5 rounded-full blur-[80px] -mr-32 -mt-32" />
+              
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+                <div className="flex items-center gap-4">
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FF5C1A] to-[#FF8C1A] flex items-center justify-center shadow-lg shadow-[#FF5C1A]/20">
-                    <Brain className="w-7 h-7 text-white" />
+                    <Sparkles className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <h2 className="font-syne font-extrabold text-2xl text-[#111] leading-none mb-2">EazyChise AI Analysis</h2>
-                    <div className="flex items-center gap-2 text-[#FF5C1A]">
-                      <Sparkles className="w-4 h-4 animate-pulse" />
-                      <span className="text-xs font-black uppercase tracking-widest">Business Intelligence Active</span>
+                    <h4 className="font-syne font-black text-2xl text-[#111] leading-none mb-2">Strategic Analysis</h4>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                      <span className="text-[0.75rem] font-black text-[#999] uppercase tracking-[0.2em]">EazyChise Advisor v2.0</span>
                     </div>
                   </div>
                 </div>
-
-                <div className="prose prose-orange max-w-none">
-                  {isAnalyzing ? (
-                    <div className="space-y-4">
-                      <div className="h-4 w-full bg-gray-100 rounded-full animate-pulse" />
-                      <div className="h-4 w-5/6 bg-gray-100 rounded-full animate-pulse" />
-                      <div className="h-4 w-4/6 bg-gray-100 rounded-full animate-pulse" />
-                      <p className="text-sm text-gray-400 font-bold italic pt-2">AI sedang memproses data historis dan tren pasar...</p>
-                    </div>
-                  ) : (
-                    <div className="text-[#333] leading-[1.8] text-[1.05rem] font-medium whitespace-pre-wrap">
-                      <Typewriter text={analysis} speed={10} />
-                    </div>
-                  )}
-                </div>
-
                 {!isAnalyzing && (
-                  <div className="mt-10 pt-8 border-t border-black/5 flex justify-end">
-                    <button
-                      onClick={generateAnalysis}
-                      className="text-sm font-bold text-[#FF5C1A] hover:underline flex items-center gap-2"
-                    >
-                      <TrendingUp className="w-4 h-4" /> Perbarui Analisis
-                    </button>
+                  <button
+                    onClick={generateAnalysis}
+                    className="flex items-center gap-2 text-xs font-bold text-[#FF5C1A] bg-[#FF5C1A]/5 px-4 py-2 rounded-full hover:bg-[#FF5C1A]/10 transition-all"
+                  >
+                    <Zap className="w-3 h-3" /> Regenerate Analysis
+                  </button>
+                )}
+              </div>
+
+              <div className="prose prose-orange max-w-none">
+                {isAnalyzing ? (
+                  <div className="space-y-4">
+                    <div className="h-4 w-full bg-gray-100 rounded-full animate-pulse" />
+                    <div className="h-4 w-5/6 bg-gray-100 rounded-full animate-pulse" />
+                    <div className="h-4 w-4/6 bg-gray-100 rounded-full animate-pulse" />
+                    <div className="h-4 w-full bg-gray-100 rounded-full animate-pulse" />
+                    <p className="text-xs text-gray-400 font-bold italic mt-4">AI sedang merumuskan strategi bisnis untuk Anda...</p>
+                  </div>
+                ) : (
+                  <div className="text-[#333] text-[1.05rem] leading-[1.8] whitespace-pre-wrap font-medium">
+                    <Typewriter text={analysis} speed={5} />
                   </div>
                 )}
-              </SpotlightCard>
-            </motion.div>
+              </div>
+              
+              <div className="mt-10 p-5 bg-gray-50 rounded-2xl border border-gray-100">
+                <p className="text-[0.7rem] text-gray-400 font-bold leading-relaxed">
+                  *Analisis ini dihasilkan secara otomatis oleh EazyChise AI Advisor berdasarkan data pasar dan performa brand. Gunakan sebagai referensi tambahan dalam pengambilan keputusan investasi Anda.
+                </p>
+              </div>
+            </SpotlightCard>
           )}
-        </div>
+        </motion.div>
+
+
 
         {/* Call to Action Bottom */}
         <div className="mt-12 bg-[#111] rounded-[32px] p-10 text-white flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden relative">
