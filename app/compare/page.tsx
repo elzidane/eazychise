@@ -9,12 +9,14 @@ import { Franchise } from "@/types";
 import { FRANCHISE_DATA } from "@/lib/franchise-data";
 import SpotlightCard from "@/components/SpotlightCard";
 import Typewriter from "@/components/Typewriter";
+import AIConsultantCard from "@/components/AIConsultantCard";
 
 export default function ComparePage() {
   const router = useRouter();
   const [items, setItems] = useState<Franchise[]>([]);
   const [analysis, setAnalysis] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [hoveredRow, setHoveredRow] = useState<string | null>(null);
 
   const generateAnalysis = async () => {
     if (isAnalyzing) return;
@@ -22,7 +24,15 @@ export default function ComparePage() {
     setAnalysis("");
 
     const brandSummary = items.map(f => `- ${f.name}: Investasi ${f.invest}, ROI ${f.roi}, Omzet ${f.omzet}`).join("\n");
-    const prompt = `Bandingkan brand franchise berikut secara profesional:\n${brandSummary}\n\nBerikan analisis singkat mengenai:\n1. Mana yang paling cocok untuk pemula modal minim.\n2. Mana yang memiliki potensi ekspansi tercepat.\n3. Rekomendasi utama berdasarkan efisiensi ROI.\nGaya bahasa: Expert Business Consultant.`;
+    const prompt = `Anda adalah Expert Business Consultant. Bandingkan brand franchise berikut secara profesional dan berikan output terstruktur:
+
+${brandSummary}
+
+Berikan analisis dalam format berikut (Gunakan Bahasa Indonesia yang elegan):
+1. RINGKASAN EKSEKUTIF: (Ringkasan singkat perbandingan)
+2. ANALISIS FINANSIAL: (Bandingkan ROI dan efisiensi modal)
+3. POTENSI PASAR & EKSPANSI: (Mana yang paling cepat berkembang)
+4. REKOMENDASI STRATEGIS: (Rekomendasi utama berdasarkan profil investor yang berbeda)`;
 
     try {
       const res = await fetch("/api/advisor", {
@@ -134,11 +144,17 @@ export default function ComparePage() {
           {criteria.map((c, i) => (
             <div 
               key={c.key}
-              className={`grid ${i % 2 === 0 ? "bg-white" : "bg-[#FAFAF8]"}`}
+              onMouseEnter={() => setHoveredRow(c.key)}
+              onMouseLeave={() => setHoveredRow(null)}
+              className={`grid transition-all duration-300 ${
+                hoveredRow === c.key 
+                  ? "bg-[#FF5C1A]/[0.03] scale-[1.01] z-10 shadow-sm" 
+                  : i % 2 === 0 ? "bg-white" : "bg-[#FAFAF8]"
+              }`}
               style={{ gridTemplateColumns: `200px repeat(${items.length}, 1fr)` }}
             >
-              <div className="p-5 flex items-center border-r border-black/5">
-                <span className="text-sm font-semibold text-[#888]">{c.label}</span>
+              <div className={`p-5 flex items-center border-r border-black/5 transition-colors ${hoveredRow === c.key ? "bg-[#FF5C1A]/5" : ""}`}>
+                <span className={`text-sm font-semibold transition-colors ${hoveredRow === c.key ? "text-[#FF5C1A]" : "text-[#888]"}`}>{c.label}</span>
               </div>
               {items.map((f) => {
                 const val = c.key === "rating" 
@@ -181,51 +197,22 @@ export default function ComparePage() {
 
         {/* AI Analysis Section */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mt-10"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-16"
         >
-          {!analysis && !isAnalyzing ? (
-            <button
-              onClick={generateAnalysis}
-              className="w-full bg-[#111] text-white py-4 rounded-2xl font-bold hover:bg-[#FF5C1A] transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95 group"
-            >
-              <Brain className="w-5 h-5 text-[#FFCF40] group-hover:scale-110 transition-transform" />
-              Dapatkan Analisis Strategis AI
-            </button>
-          ) : (
-            <SpotlightCard className="bg-white rounded-3xl p-8 border border-[#FF5C1A]/10 shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF5C1A]/5 rounded-full blur-2xl -mr-16 -mt-16" />
-              
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FF5C1A] to-[#FF8C1A] flex items-center justify-center shadow-md">
-                  <Sparkles className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h4 className="font-syne font-bold text-lg text-[#111] leading-none mb-1.5">AI Comparison Insight</h4>
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-[0.65rem] font-bold text-[#999] uppercase tracking-widest">Live Analysis</span>
-                  </div>
-                </div>
-              </div>
+          <div className="flex items-center gap-3 mb-8">
+             <div className="h-px flex-1 bg-gradient-to-r from-transparent to-black/5" />
+             <h2 className="font-syne font-extrabold text-xs uppercase tracking-[0.3em] text-[#999]">AI Diagnostic Tool</h2>
+             <div className="h-px flex-1 bg-gradient-to-l from-transparent to-black/5" />
+          </div>
 
-              <div className="prose prose-orange max-w-none">
-                {isAnalyzing ? (
-                  <div className="space-y-3">
-                    <div className="h-3 w-full bg-gray-100 rounded-full animate-pulse" />
-                    <div className="h-3 w-4/5 bg-gray-100 rounded-full animate-pulse" />
-                    <div className="h-3 w-3/4 bg-gray-100 rounded-full animate-pulse" />
-                  </div>
-                ) : (
-                  <div className="text-[#444] text-[0.95rem] leading-[1.8] whitespace-pre-wrap font-medium">
-                    <Typewriter text={analysis} speed={8} />
-                  </div>
-                )}
-              </div>
-            </SpotlightCard>
-          )}
+          <AIConsultantCard 
+            isAnalyzing={isAnalyzing}
+            analysis={analysis}
+            onGenerate={generateAnalysis}
+          />
         </motion.div>
 
 

@@ -220,7 +220,7 @@ export default function ReactBitsShowcase() {
               className="text-white font-bold text-[1.3rem] block mb-2"
             />
             <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.88rem" }}>
-              Sudah <CountUp end={9000} duration={3000} suffix="+" className="text-[#FF8C42] font-bold" /> mitra aktif bergabung — giliran kamu!
+              Sudah <CountUp end={320} duration={3000} suffix="+" className="text-[#FF8C42] font-bold" /> mitra aktif bergabung — giliran kamu!
             </p>
           </div>
           <a

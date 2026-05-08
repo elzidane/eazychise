@@ -5,6 +5,8 @@ import { Star, CheckCircle2, TrendingUp, Users, Award, ShieldCheck, ArrowRight }
 import ReviewsSection from "@/components/ReviewsSection";
 import Link from "next/link";
 import { STATS } from "@/lib/constants";
+import CounterUp from "@/components/CounterUp";
+import SpotlightCard from "@/components/SpotlightCard";
 
 export default function UlasanPage() {
   return (
@@ -57,30 +59,77 @@ export default function UlasanPage() {
         </div>
       </section>
 
-      {/* ── STATS SUMMARY (4 Cards) ── */}
-      <section className="px-[5%] mb-20 relative">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          {[
-            { label: "Total Ulasan", value: STATS.totalMitra.toLocaleString("id-ID"), icon: Users, color: "#FF5C1A", bg: "bg-[#FF5C1A]/5" },
-            { label: "Rating Rata-rata", value: "4.9/5", icon: Star, color: "#FFCF40", bg: "bg-[#FFCF40]/10" },
-            { label: "Merekomendasikan", value: "97%", icon: CheckCircle2, color: "#1B8C5A", bg: "bg-green-50" },
-            { label: "Rata-rata BEP", value: "6 Bulan", icon: TrendingUp, color: "#7C3AED", bg: "bg-purple-50" },
-          ].map((stat, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              viewport={{ once: true }}
-              className="bg-white p-6 md:p-8 rounded-[32px] border border-black/[0.03] shadow-sm flex flex-col items-center text-center group hover:shadow-md transition-all"
-            >
-              <div className={`w-12 h-12 rounded-2xl ${stat.bg} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
-                <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
-              </div>
-              <div className="font-syne font-black text-2xl md:text-3xl text-[#111] mb-1">{stat.value}</div>
-              <div className="text-[0.7rem] font-bold text-gray-400 uppercase tracking-widest">{stat.label}</div>
-            </motion.div>
-          ))}
+      {/* ── STATS SUMMARY (4 Premium Cards) ── */}
+      <section className="px-[5%] mb-24 relative">
+        <div className="max-w-6xl mx-auto">
+          <motion.div 
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: { staggerChildren: 0.15 }
+              }
+            }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
+            {[
+              { label: "Total Ulasan", value: STATS.totalMitra, icon: Users, color: "#FF5C1A", bg: "rgba(255, 92, 26, 0.05)", shadow: "rgba(255, 92, 26, 0.2)", suffix: "+" },
+              { label: "Rating Rata-rata", value: 4.9, icon: Star, color: "#FFCF40", bg: "rgba(255, 207, 64, 0.1)", shadow: "rgba(255, 207, 64, 0.2)", suffix: "/5", decimals: 1 },
+              { label: "Merekomendasikan", value: 97, icon: CheckCircle2, color: "#1B8C5A", bg: "rgba(27, 140, 90, 0.08)", shadow: "rgba(27, 140, 90, 0.2)", suffix: "%" },
+              { label: "Rata-rata BEP", value: 6, icon: TrendingUp, color: "#7C3AED", bg: "rgba(124, 58, 237, 0.08)", shadow: "rgba(124, 58, 237, 0.2)", suffix: " Bulan" },
+            ].map((stat, i) => (
+              <motion.div
+                key={i}
+                variants={{
+                  hidden: { opacity: 0, y: 30 },
+                  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
+                }}
+              >
+                <SpotlightCard className="h-full bg-white/60 backdrop-blur-xl border border-black/[0.03] rounded-[2.5rem] p-8 group relative overflow-hidden transition-all duration-500 hover:shadow-[0_40px_80px_rgba(0,0,0,0.08)] hover:-translate-y-2">
+                  {/* Decorative background circle */}
+                  <div 
+                    className="absolute -right-6 -top-6 w-24 h-24 rounded-full blur-3xl opacity-0 group-hover:opacity-40 transition-opacity duration-700" 
+                    style={{ backgroundColor: stat.color }}
+                  />
+                  
+                  <div className="relative z-10 flex flex-col items-center text-center">
+                    <div 
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 group-hover:rotate-6 transition-all duration-500"
+                      style={{ backgroundColor: stat.bg }}
+                    >
+                      <stat.icon className="w-7 h-7" style={{ color: stat.color }} />
+                    </div>
+                    
+                    <div className="font-syne font-black text-3xl md:text-4xl text-[#111] mb-2 flex items-baseline gap-1">
+                      <CounterUp 
+                        to={stat.value} 
+                        decimals={stat.decimals || 0}
+                        duration={1200}
+                        className="tracking-tight"
+                      />
+                      <span className="text-lg md:text-xl text-gray-400 font-bold">{stat.suffix}</span>
+                    </div>
+                    
+                    <div className="text-[0.65rem] font-bold text-gray-400 uppercase tracking-[0.2em]">{stat.label}</div>
+                    
+                    {/* Progress Bar / Indicator (Added for more 'React' feel) */}
+                    <div className="w-full h-1 bg-black/[0.03] rounded-full mt-6 overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: "100%" }}
+                        transition={{ delay: 0.5 + (i * 0.1), duration: 1.5, ease: "easeOut" }}
+                        className="h-full rounded-full"
+                        style={{ backgroundColor: stat.color, opacity: 0.4 }}
+                      />
+                    </div>
+                  </div>
+                </SpotlightCard>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 

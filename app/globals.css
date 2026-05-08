@@ -154,4 +154,14 @@ body {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 1000px 100%;
   animation: shimmer 1.5s infinite linear;
-}
+}
+
+/* AI Scanning Animation */
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(300%); }
+}
+.animate-scan {
+  animation: scan 3s ease-in-out infinite;
+}
+
