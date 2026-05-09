@@ -92,6 +92,8 @@ const MODELS = [
   "gemini-2.5-pro",          // Lebih pintar namun lebih lambat (Fallback)
   "gemini-2.5-flash-lite",   // Versi efisien
   "gemini-2.0-flash",        // Fallback lama
+  "gemini-1.5-flash",        // Stable fallback
+  "gemini-1.5-pro",          // Smartest stable fallback
 ];
 
 export async function POST(req: NextRequest) {
