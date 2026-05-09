@@ -10,11 +10,8 @@ import WhyUs from "@/components/WhyUs";
 import Image from "next/image";
 
 const team = [
-  { name: "Ahmad Rizky", role: "Project Lead", image: "/images/team/avatar_rizky.png", color: "#FF5C1A" },
-  { name: "Sari Indah", role: "UI/UX Designer", image: "/images/team/avatar_sari.png", color: "#7C3AED" },
-  { name: "Budi Prasetyo", role: "Frontend Developer", image: "/images/team/avatar_budi.png", color: "#1B8C5A" },
-  { name: "Dina Maharani", role: "Backend Developer", image: "/images/team/avatar_dina.png", color: "#FF8C42" },
-  { name: "Eko Saputra", role: "Business Analyst", image: "/images/team/avatar_eko.png", color: "#FFCF40" },
+  { name: "El Zidane Ardyansyah", role: "FullStack Developer", image: "/images/team/avatar_rizky.png", color: "#FF5C1A" },
+  { name: "Avis Zola Raditya Kurniawan", role: "Mobile App Developer", image: "/images/team/avatar_sari.png", color: "#7C3AED" },
 ];
 
 const values = [
@@ -157,7 +154,7 @@ export default function TentangPage() {
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+          <div className="flex flex-wrap justify-center gap-6">
             {team.map((member, i) => (
               <motion.div
                 key={member.name}
@@ -165,7 +162,7 @@ export default function TentangPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
-                className="group bg-white rounded-2xl p-6 border border-black/5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)] hover:border-transparent transition-all text-center"
+                className="group bg-white rounded-2xl p-6 border border-black/5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)] hover:border-transparent transition-all text-center w-full max-w-[200px]"
               >
                 <div 
                   className="w-16 h-16 rounded-2xl mx-auto mb-4 overflow-hidden relative shadow-sm"

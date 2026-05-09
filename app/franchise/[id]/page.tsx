@@ -301,11 +301,28 @@ export default function FranchiseDetailPage({
                     <p className="text-xs text-gray-400 font-bold italic mt-4">AI sedang merumuskan strategi bisnis untuk Anda...</p>
                   </div>
                 ) : (
-                  <div className="text-[#333] text-[1.05rem] leading-[1.8] whitespace-pre-wrap font-medium">
+                  <div className="text-[#333] text-[1.05rem] leading-[1.8] whitespace-pre-wrap font-medium max-h-[480px] overflow-y-auto pr-4 custom-scrollbar">
                     <Typewriter text={analysis} speed={5} />
                   </div>
                 )}
               </div>
+
+              <style jsx>{`
+                .custom-scrollbar::-webkit-scrollbar {
+                  width: 4px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                  background: rgba(0,0,0,0.03);
+                  border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                  background: rgba(255, 92, 26, 0.2);
+                  border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                  background: rgba(255, 92, 26, 0.4);
+                }
+              `}</style>
               
               <div className="mt-10 p-5 bg-gray-50 rounded-2xl border border-gray-100">
                 <p className="text-[0.7rem] text-gray-400 font-bold leading-relaxed">

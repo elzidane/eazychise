@@ -97,7 +97,7 @@ function AIAvatar({ size = 34 }: { size?: number }) {
 }
 
 // ─── Typewriter text ──────────────────────────────────────────
-function TypewriterText({ text, speed = 12, onDone }: { text: string; speed?: number; onDone?: () => void }) {
+function TypewriterText({ text, speed = 5, onDone }: { text: string; speed?: number; onDone?: () => void }) {
   const [displayed, setDisplayed] = useState("");
   const [done, setDone] = useState(false);
   const idxRef = useRef(0);
@@ -175,9 +175,9 @@ function MessageBubble({ msg, isNew, animate }: { msg: Message; isNew?: boolean;
 
       <div style={{
         maxWidth: "76%",
-        padding: isUser ? "11px 16px" : "13px 16px",
+        padding: isUser ? "10px 14px" : "12px 15px",
         borderRadius: isUser ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
-        fontSize: "0.82rem", lineHeight: 1.75, letterSpacing: "0.008em",
+        fontSize: "0.8rem", lineHeight: 1.65, letterSpacing: "0.006em",
         position: "relative", overflow: "hidden",
         ...(isUser ? {
           background: "linear-gradient(145deg,#FF5C1A,#FF8C42)",
@@ -356,6 +356,7 @@ export default function FranchiseAdvisor() {
         setNewMsgIdx(next.length - 1);
         setAnimIdx(next.length - 1);
         if (!open) setHasNew(true);
+        setLoading(false);
         return;
       }
 
@@ -382,7 +383,7 @@ export default function FranchiseAdvisor() {
         setAnimIdx(next.length - 1);
         if (!open) setHasNew(true);
         setLoading(false);
-      }, 2000);
+      }, 800);
 
     } catch (e) {
       // Catch network errors and use fallback
@@ -393,7 +394,7 @@ export default function FranchiseAdvisor() {
         setNewMsgIdx(next.length - 1);
         setAnimIdx(next.length - 1);
         setLoading(false);
-      }, 1500);
+      }, 600);
     } finally {
       // Loading is handled inside the setTimeouts for fallback or before return in success
     }
