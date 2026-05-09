@@ -122,7 +122,15 @@ const AIConsultantCard: React.FC<AIConsultantCardProps> = ({ isAnalyzing, analys
                   {/* Right Column: Analysis Text */}
                   <div className="md:col-span-11 prose prose-orange max-w-none">
                     <div className="text-[#333] text-[1.05rem] leading-[1.8] whitespace-pre-wrap font-medium font-syne">
-                      {analysis}
+                      {analysis.split(/(\*\*.*?\*\*|### .*?\n|### .*?$)/g).map((part, i) => {
+                        if (part.startsWith("**") && part.endsWith("**")) {
+                          return <strong key={i} className="text-[#FF5C1A] font-bold">{part.slice(2, -2)}</strong>;
+                        }
+                        if (part.startsWith("### ")) {
+                          return <h4 key={i} className="font-syne font-bold text-xl mt-6 mb-3 text-[#111]">{part.replace("### ", "")}</h4>;
+                        }
+                        return <span key={i}>{part}</span>;
+                      })}
                     </div>
                     
                     {/* Visual Badges / Summary Points (Optional - can be auto-generated later) */}

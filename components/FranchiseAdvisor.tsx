@@ -127,9 +127,22 @@ function TypewriterText({ text, speed = 5, onDone }: { text: string; speed?: num
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text]);
 
+  const renderContent = (content: string) => {
+    const parts = content.split(/(\*\*.*?\*\*|### .*?\n|### .*?$)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        return <strong key={i} style={{ color: "#FF8C42", fontWeight: 700 }}>{part.slice(2, -2)}</strong>;
+      }
+      if (part.startsWith("### ")) {
+        return <h4 key={i} style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "0.9rem", margin: "14px 0 8px", color: "white" }}>{part.replace("### ", "")}</h4>;
+      }
+      return <span key={i}>{part}</span>;
+    });
+  };
+
   return (
     <span style={{ whiteSpace: "pre-wrap", position: "relative", zIndex: 1 }}>
-      {displayed}
+      {renderContent(displayed)}
       {!done && (
         <span style={{
           display: "inline-block", width: 2, height: "1em",
@@ -199,8 +212,18 @@ function MessageBubble({ msg, isNew, animate }: { msg: Message; isNew?: boolean;
           }} />
         )}
         {showTypewriter
-          ? <TypewriterText text={msg.content} speed={12} />
-          : <span style={{ whiteSpace: "pre-wrap", position: "relative", zIndex: 1 }}>{msg.content}</span>
+          ? <TypewriterText text={msg.content} speed={5} />
+          : <span style={{ whiteSpace: "pre-wrap", position: "relative", zIndex: 1 }}>
+              {msg.content.split(/(\*\*.*?\*\*|### .*?\n|### .*?$)/g).map((part, i) => {
+                if (part.startsWith("**") && part.endsWith("**")) {
+                  return <strong key={i} style={{ color: "#FF8C42", fontWeight: 700 }}>{part.slice(2, -2)}</strong>;
+                }
+                if (part.startsWith("### ")) {
+                  return <h4 key={i} style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "0.9rem", margin: "14px 0 8px", color: "white" }}>{part.replace("### ", "")}</h4>;
+                }
+                return <span key={i}>{part}</span>;
+              })}
+            </span>
         }
       </div>
 

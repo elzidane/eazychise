@@ -44,5 +44,19 @@ export default function Typewriter({
     }
   }, [index, text, speed, delay, onComplete]);
 
-  return <span className={className}>{displayedText}</span>;
+  const renderContent = (content: string) => {
+    // Simple markdown parsing for **bold** and ### headers
+    const parts = content.split(/(\*\*.*?\*\*|### .*?\n|### .*?$)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        return <strong key={i} className="text-[#FF5C1A]">{part.slice(2, -2)}</strong>;
+      }
+      if (part.startsWith("### ")) {
+        return <h4 key={i} className="font-syne font-bold text-lg mt-4 mb-2 text-[#111]">{part.replace("### ", "")}</h4>;
+      }
+      return <span key={i}>{part}</span>;
+    });
+  };
+
+  return <span className={className}>{renderContent(displayedText)}</span>;
 }
