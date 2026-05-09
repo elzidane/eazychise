@@ -11,6 +11,7 @@ import LocationRecommender from "@/components/LocationRecommender";
 import SpotlightCard from "@/components/SpotlightCard";
 import Typewriter from "@/components/Typewriter";
 import { motion } from "framer-motion";
+import { ScrollReveal, StaggerReveal, fadeRight, fadeLeft, fadeUp, slideUp } from "@/components/ScrollMotion";
 
 export default function FranchiseDetailPage({
   params,
@@ -89,6 +90,7 @@ export default function FranchiseDetailPage({
           {/* Left Column: Details */}
           <div className="space-y-10 order-2 lg:order-1">
             {/* Header Info (Visible on Desktop) */}
+            <ScrollReveal variants={fadeRight}>
             <div className="hidden lg:block">
               <div className="flex flex-wrap gap-2 mb-4">
                 <div className="bg-[#FF5C1A]/10 text-[#FF5C1A] font-bold text-xs px-3 py-1.5 rounded-full">
@@ -121,73 +123,91 @@ export default function FranchiseDetailPage({
                 Bergabunglah dengan jaringan kemitraan {franchise.name} sukses.
               </p>
             </div>
+            </ScrollReveal>
 
             {/* Quick Stats Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-sm">
-                <p className="text-gray-400 text-[0.65rem] font-bold uppercase tracking-wider mb-1">Modal Investasi</p>
-                <p className="text-lg font-black text-[#111]">{franchise.invest}</p>
-              </div>
-              <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-sm">
-                <p className="text-gray-400 text-[0.65rem] font-bold uppercase tracking-wider mb-1">Estimasi ROI</p>
-                <p className="text-lg font-black text-[#1B8C5A]">{franchise.roi}</p>
-              </div>
-              <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-sm">
-                <p className="text-gray-400 text-[0.65rem] font-bold uppercase tracking-wider mb-1">Jumlah Mitra</p>
-                <p className="text-lg font-black text-[#111]">{franchise.mitra}</p>
-              </div>
-            </div>
+            <StaggerReveal className="grid grid-cols-2 sm:grid-cols-3 gap-4" fast>
+              {[
+                { label: "Modal Investasi", value: franchise.invest, color: "text-[#111]" },
+                { label: "Estimasi ROI", value: franchise.roi, color: "text-[#1B8C5A]" },
+                { label: "Jumlah Mitra", value: franchise.mitra, color: "text-[#111]" },
+              ].map((s) => (
+                <motion.div key={s.label} variants={slideUp} className="bg-white p-5 rounded-2xl border border-black/5 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                  <p className="text-gray-400 text-[0.65rem] font-bold uppercase tracking-wider mb-1">{s.label}</p>
+                  <p className={`text-lg font-black ${s.color}`}>{s.value}</p>
+                </motion.div>
+              ))}
+            </StaggerReveal>
 
             {/* Info Tabs / Sections */}
             <div className="space-y-8">
-              <div className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm">
-                <h3 className="font-syne font-bold text-2xl mb-6 flex items-center gap-3">
-                  <TrendingUp className="w-6 h-6 text-[#FF5C1A]" />
-                  Potensi Bisnis
-                </h3>
-                <ul className="space-y-4">
-                  {[
-                    { label: "Estimasi Omzet / Bulan", value: franchise.omzet },
-                    { label: "HPP (Harga Pokok Penjualan)", value: "± 40-50%" },
-                    { label: "Estimasi Laba Bersih", value: "25% - 35%" },
-                    { label: "Bimbingan Operasional", value: "Tersedia" }
-                  ].map((item, i) => (
-                    <li key={i} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
-                      <span className="text-gray-600 font-medium">{item.label}</span>
-                      <span className="font-bold text-[#111]">{item.value}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm">
-                <h3 className="font-syne font-bold text-2xl mb-6 flex items-center gap-3">
-                  <Users className="w-6 h-6 text-[#FF5C1A]" />
-                  Paket Kemitraan
-                </h3>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  {[
-                    "Lisensi Brand Selamanya",
-                    "Booth / Gerobak Design Premium",
-                    "Starter Kit & Peralatan Lengkap",
-                    "Bahan Baku Awal 100 Porsi",
-                    "Pelatihan Karyawan (Offline/Online)",
-                    "Support Promosi Digital & Materi Ads"
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-gray-50/50">
-                      <div className="bg-green-100 rounded-full p-0.5 mt-0.5 flex-shrink-0">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[#1B8C5A]" />
-                      </div>
-                      <span className="text-gray-700 font-bold text-xs">{item}</span>
-                    </div>
-                  ))}
+              <ScrollReveal variants={fadeRight} delay={0.1}>
+                <div className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm hover:shadow-lg transition-shadow duration-300">
+                  <h3 className="font-syne font-bold text-2xl mb-6 flex items-center gap-3">
+                    <TrendingUp className="w-6 h-6 text-[#FF5C1A]" />
+                    Potensi Bisnis
+                  </h3>
+                  <ul className="space-y-4">
+                    {[
+                      { label: "Estimasi Omzet / Bulan", value: franchise.omzet },
+                      { label: "HPP (Harga Pokok Penjualan)", value: "± 40-50%" },
+                      { label: "Estimasi Laba Bersih", value: "25% - 35%" },
+                      { label: "Bimbingan Operasional", value: "Tersedia" }
+                    ].map((item, i) => (
+                      <motion.li
+                        key={i}
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.08 }}
+                        className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0"
+                      >
+                        <span className="text-gray-600 font-medium">{item.label}</span>
+                        <span className="font-bold text-[#111]">{item.value}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
                 </div>
-              </div>
+              </ScrollReveal>
+
+              <ScrollReveal variants={fadeRight} delay={0.2}>
+                <div className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm hover:shadow-lg transition-shadow duration-300">
+                  <h3 className="font-syne font-bold text-2xl mb-6 flex items-center gap-3">
+                    <Users className="w-6 h-6 text-[#FF5C1A]" />
+                    Paket Kemitraan
+                  </h3>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {[
+                      "Lisensi Brand Selamanya",
+                      "Booth / Gerobak Design Premium",
+                      "Starter Kit & Peralatan Lengkap",
+                      "Bahan Baku Awal 100 Porsi",
+                      "Pelatihan Karyawan (Offline/Online)",
+                      "Support Promosi Digital & Materi Ads"
+                    ].map((item, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.06 }}
+                        className="flex items-start gap-3 p-3 rounded-xl bg-gray-50/50 hover:bg-[#FFF3E5] transition-colors"
+                      >
+                        <div className="bg-green-100 rounded-full p-0.5 mt-0.5 flex-shrink-0">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#1B8C5A]" />
+                        </div>
+                        <span className="text-gray-700 font-bold text-xs">{item}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </ScrollReveal>
             </div>
           </div>
 
           {/* Right Column: Sticky Sidebar */}
-          <aside className="lg:sticky lg:top-28 order-1 lg:order-2 space-y-6">
+          <ScrollReveal variants={fadeLeft} className="lg:sticky lg:top-28 order-1 lg:order-2 space-y-6">
+          <aside className="space-y-6">
             <div className="bg-white rounded-[32px] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.08)] border border-black/5 relative overflow-hidden group">
               {/* Image Container */}
               <div className="aspect-[4/3] relative rounded-2xl overflow-hidden mb-6 shadow-inner bg-gray-100">
@@ -244,6 +264,7 @@ export default function FranchiseDetailPage({
               </Link>
             </div>
           </aside>
+          </ScrollReveal>
 
         </div>
 
@@ -337,20 +358,23 @@ export default function FranchiseDetailPage({
 
 
 
-        {/* Call to Action Bottom */}
-        <div className="mt-12 bg-[#111] rounded-[32px] p-10 text-white flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden relative">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-          <div className="relative z-10 text-center md:text-left">
-            <h2 className="font-syne font-extrabold text-3xl mb-2 text-white">Siap Mulai Bisnis {franchise.name}?</h2>
-            <p className="text-white/60 font-medium">Jadilah bagian dari jaringan sukses kami sekarang.</p>
-          </div>
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="relative z-10 bg-[#FF5C1A] text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-white hover:text-[#111] transition-all shadow-xl active:scale-95"
-          >
-            Daftar Sekarang
-          </button>
-        </div>
+          <ScrollReveal variants={fadeUp} delay={0.1} className="mt-12">
+            <div className="bg-[#111] rounded-[32px] p-10 text-white flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden relative">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+              <div className="relative z-10 text-center md:text-left">
+                <h2 className="font-syne font-extrabold text-3xl mb-2 text-white">Siap Mulai Bisnis {franchise.name}?</h2>
+                <p className="text-white/60 font-medium">Jadilah bagian dari jaringan sukses kami sekarang.</p>
+              </div>
+              <motion.button 
+                whileHover={{ scale: 1.05, backgroundColor: "#fff", color: "#111" }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => setIsModalOpen(true)}
+                className="relative z-10 bg-[#FF5C1A] text-white px-10 py-4 rounded-2xl font-bold text-lg transition-all shadow-xl"
+              >
+                Daftar Sekarang
+              </motion.button>
+            </div>
+          </ScrollReveal>
       </div>
 
       <PartnershipModal 
