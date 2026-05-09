@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { MapPin, TrendingUp, Users, Activity, Zap } from "lucide-react";
+import { useToast } from "./ui/Toast";
 
 const TRACKER_DATA = [
   { area: "Jakarta Selatan", growth: "+12.5%", demand: "Sangat Tinggi", category: "Coffee Shop", traffic: "15k/day" },
@@ -12,6 +13,13 @@ const TRACKER_DATA = [
 
 export default function LocalBusinessTracker() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const { showToast } = useToast();
+
+  const handleSelectArea = (index: number, area: string) => {
+    if (activeIndex === index) return;
+    setActiveIndex(index);
+    showToast(`Berhasil memantau area ${area}`, 'success');
+  };
 
   return (
     <div className="bg-white rounded-3xl p-7 border border-black/5 shadow-sm relative overflow-hidden">
@@ -30,16 +38,16 @@ export default function LocalBusinessTracker() {
         {TRACKER_DATA.map((item, index) => (
           <motion.div
             key={item.area}
-            onMouseEnter={() => setActiveIndex(index)}
+            onClick={() => handleSelectArea(index, item.area)}
             animate={{ 
               opacity: activeIndex === index ? 1 : 0.4,
               scale: activeIndex === index ? 1.02 : 1,
               x: activeIndex === index ? 4 : 0
             }}
-            className={`p-4 rounded-2xl border transition-all cursor-default ${
+            className={`p-4 rounded-2xl border transition-all cursor-pointer ${
               activeIndex === index 
                 ? "bg-gradient-to-r from-[#FFF3E5] to-white border-[#FF5C1A]/20 shadow-md" 
-                : "bg-gray-50 border-transparent"
+                : "bg-gray-50 border-transparent hover:border-gray-200"
             }`}
           >
             <div className="flex justify-between items-start mb-2">

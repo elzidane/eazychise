@@ -153,13 +153,15 @@ function buildQuery(catLower: string, lat: number, lon: number, r = 4000) {
 }
 
 // ── Map Events & Sync ──────────────────────────────────────────
+import { useToast } from "./ui/Toast";
+
 function MapControl({ center, onMoveEnd }: { center: [number, number], onMoveEnd: (center: [number, number]) => void }) {
   const map = useMap();
+  const { showToast } = useToast();
   
-  // Update view when center prop changes (e.g. GPS button clicked)
+  // Update view when center prop changes
   useEffect(() => {
     const current = map.getCenter();
-    // Only setView if the difference is significant to prevent infinite loops
     const deltaLat = Math.abs(current.lat - center[0]);
     const deltaLng = Math.abs(current.lng - center[1]);
     
@@ -168,16 +170,16 @@ function MapControl({ center, onMoveEnd }: { center: [number, number], onMoveEnd
     }
   }, [center, map]);
 
-  // Listen for user interaction
+  // Click to change location
   useEffect(() => {
-    const handleMoveEnd = () => {
-      const newCenter = map.getCenter();
-      // Only notify parent if the movement is significant
-      onMoveEnd([newCenter.lat, newCenter.lng]);
+    const handleClick = (e: L.LeafletMouseEvent) => {
+      const { lat, lng } = e.latlng;
+      onMoveEnd([lat, lng]);
+      showToast("Menganalisis area terpilih...", "info");
     };
-    map.on("moveend", handleMoveEnd);
-    return () => { map.off("moveend", handleMoveEnd); };
-  }, [map, onMoveEnd]);
+    map.on("click", handleClick);
+    return () => { map.off("click", handleClick); };
+  }, [map, onMoveEnd, showToast]);
 
   return null;
 }
