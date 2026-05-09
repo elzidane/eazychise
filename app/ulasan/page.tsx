@@ -5,7 +5,7 @@ import { Star, CheckCircle2, TrendingUp, Users, Award, ShieldCheck, ArrowRight }
 import ReviewsSection from "@/components/ReviewsSection";
 import Link from "next/link";
 import { STATS } from "@/lib/constants";
-import CounterUp from "@/components/CounterUp";
+import Counterup from "@/components/Counterup";
 import SpotlightCard from "@/components/SpotlightCard";
 
 export default function UlasanPage() {
@@ -104,7 +104,7 @@ export default function UlasanPage() {
                     </div>
                     
                     <div className="font-syne font-black text-3xl md:text-4xl text-[#111] mb-2 flex items-baseline gap-1">
-                      <CounterUp 
+                      <Counterup 
                         to={stat.value} 
                         decimals={stat.decimals || 0}
                         duration={1200}

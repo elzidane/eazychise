@@ -11,7 +11,7 @@ interface Props {
   decimals?: number;
 }
 
-export default function CounterUp({
+export default function Counterup({
   to, duration = 800, prefix = "", suffix = "",
   className = "", style, decimals = 0,
 }: Props) {
