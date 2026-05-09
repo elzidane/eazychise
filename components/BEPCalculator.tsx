@@ -59,13 +59,18 @@ Gaya bahasa: Tajam, analitis, dan suportif (Senior Business Consultant).`;
         const data = await res.json();
         if (data.reply) {
           setAnalysis(data.reply);
+          setIsAnalyzing(false);
           return;
         }
       }
       
-      // Fallback Logic (Simulation)
+      // Fallback Logic if API fails or returns no reply
+      throw new Error("API failed");
+
+    } catch (err) {
+      // Use fallback logic
       setTimeout(() => {
-        let fallbackText = `### 📊 Analisis Bisnis EazyChise AI\n\n`;
+        let fallbackText = `### 📊 Analisis Bisnis EazyChise AI (Mode Cepat)\n\n`;
         
         if (labaBersih <= 0) {
           fallbackText += `⚠️ **Peringatan: Model Bisnis Tidak Sehat.**\nSaat ini pengeluaran Anda lebih besar dari pendapatan. Anda mengalami kerugian sebesar **${formatRupiah(Math.abs(labaBersih))}** setiap bulannya. \n\n**Rekomendasi Strategis:**\n1. **Evaluasi HPP:** Turunkan HPP Anda di bawah 40% dengan mencari supplier bahan baku yang lebih kompetitif.\n2. **Audit Biaya:** Tinjau kembali biaya operasional (sewa/gaji) yang mungkin terlalu membebani skala bisnis ini.\n3. **Scaling Omzet:** Targetkan omzet minimal **${formatRupiah(biayaOperasional / (1 - hppPercent/100))}** hanya untuk mencapai titik impas (Break Even).`;
@@ -76,14 +81,7 @@ Gaya bahasa: Tajam, analitis, dan suportif (Senior Business Consultant).`;
         
         setAnalysis(fallbackText);
         setIsAnalyzing(false);
-      }, 1500);
-
-    } catch (err) {
-      // Catch network errors and use fallback
-      setTimeout(() => {
-        setAnalysis("### 🤖 Analisis AI (Mode Offline)\n\nMaaf, koneksi ke server AI kami sedang sibuk. Namun, berdasarkan algoritma internal kami, bisnis Anda memiliki **ROI ${roiTahunanNum.toFixed(1)}%**. \n\n**Saran Utama:** Fokuslah pada lokasi dengan traffic tinggi untuk menjaga kestabilan omzet di angka ${formatRupiah(omsetBulan)} agar BEP tetap tercapai dalam ${bepBulanNum.toFixed(1)} bulan.");
-        setIsAnalyzing(false);
-      }, 1500);
+      }, 1000);
     }
   };
 
