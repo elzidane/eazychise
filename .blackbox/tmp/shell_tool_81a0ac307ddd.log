@@ -91,3 +91,39 @@ https://next-auth.js.org/warnings#no_secret
  GET / 200 in 122ms (compile: 11ms, render: 111ms)
  GET / 200 in 297ms (compile: 52ms, render: 245ms)
  GET / 200 in 95ms (compile: 29ms, render: 66ms)
+ GET /franchise/xiboba 200 in 510ms (compile: 61ms, render: 450ms)
+ GET /api/auth/session 200 in 107ms (compile: 83ms, render: 24ms)
+[EazyChise AI] Model gemini-2.5-flash gagal [429]: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20,
+[EazyChise AI] Model gemini-2.5-pro gagal [429]: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, l
+ POST /api/advisor 200 in 10.9s (compile: 20ms, render: 10.9s)
+ GET /analisis-bep 200 in 520ms (compile: 443ms, render: 77ms)
+[EazyChise AI] Model gemini-2.5-flash gagal [429]: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20,
+[EazyChise AI] Model gemini-2.5-pro gagal [429]: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, 
+ POST /api/advisor 200 in 7.7s (compile: 12ms, render: 7.7s)
+ GET /tentang 200 in 223ms (compile: 164ms, render: 59ms)
+✓ Compiled in 2.9s
+ GET / 200 in 2.5s (compile: 1065ms, render: 1438ms)
+ GET / 200 in 3.6s (compile: 87ms, render: 3.5s)
+ GET /tentang 200 in 4.2s (compile: 783ms, render: 3.4s)
+ GET / 200 in 4.3s (compile: 21ms, render: 4.3s)
+ GET /api/auth/session 200 in 174ms (compile: 74ms, render: 100ms)
+ GET / 200 in 555ms (compile: 20ms, render: 534ms)
+ GET /analisis-bep 200 in 1003ms (compile: 539ms, render: 464ms)
+✓ Finished filesystem cache database compaction in 16.6s
+✓ Finished writing to filesystem cache in 13.4s
+✓ Compiled in 3s
+ GET /analisis-bep 200 in 3.4s (compile: 862ms, render: 2.5s)
+ GET /api/auth/session 200 in 66ms (compile: 45ms, render: 21ms)
+ GET /api/auth/session 200 in 49ms (compile: 27ms, render: 22ms)

@@ -40,7 +40,48 @@ function OrbitRing({ size, duration, delay, opacity }: { size: number; duration:
 }
 
 function AnalysisCard({ content, onReset }: { content: string; onReset: () => void }) {
-  const lines = content.split("\n").filter(Boolean);
+  // Parse content dengan formatting
+  const parseContent = (text: string) => {
+    const lines = text.split("\n").filter(Boolean);
+    return lines.map((line, i) => {
+      const trimmed = line.trim();
+      
+      // Skip empty lines
+      if (!trimmed) return { type: "empty", content: "", key: i };
+      
+      // Bold headers (Rekomendasi, Alasan, Tips, Estimasi, dll)
+      if (/^(Rekomendasi|Alasan|Tips|Estimasi|ROI|Kesimpulan|Daftar|Persyaratan|Keuntungan|Risiko)[:\-]?/i.test(trimmed)) {
+        return { type: "header", content: trimmed.replace(/^(Rekomendasi|Alasan|Tips|Estimasi|ROI|Kesimpulan|Daftar|Persyaratan|Keuntungan|Risiko)[:\-]?\s*/i, ""), key: i };
+      }
+      
+      // Bullet points with • or -
+      if (trimmed.startsWith("•") || trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+        return { type: "bullet", content: trimmed.replace(/^[•\-\*]\s*/, ""), key: i };
+      }
+      
+      // Numbered list (1. 2. 3.)
+      if (/^\d+[.\)]\s/.test(trimmed)) {
+        return { type: "number", content: trimmed, key: i };
+      }
+      
+      // Bold text with **text**
+      const boldMatch = trimmed.match(/\*\*(.+?)\*\*/g);
+      if (boldMatch) {
+        return { type: "bold", content: trimmed, key: i };
+      }
+      
+      // Franchise names (dengan kurung/special formatting)
+      if (/^(Kopi Studio 24|XIBOBA|Kopi Kenangan|Jan Jiwa|Janji Jiwa|Chatime|Mixue|Wizzmie|Burger Bangor|Kebab Turki|Mie Gacoan|Sweet Street|Aice|Pisang Goreng|Martabak)/i.test(trimmed)) {
+        return { type: "franchise", content: trimmed, key: i };
+      }
+      
+      // Default paragraph
+      return { type: "paragraph", content: trimmed, key: i };
+    });
+  };
+  
+  const parsed = parseContent(content);
+  
   return (
     <div style={{ animation: "fadeUp .5s ease both" }}>
       {/* Result header */}
@@ -68,14 +109,89 @@ function AnalysisCard({ content, onReset }: { content: string; onReset: () => vo
           border: "1px solid rgba(255,255,255,.08)",
           borderRadius: 16,
           maxHeight: 280, overflowY: "auto",
-          whiteSpace: "pre-wrap",
         }}
       >
-        {lines.map((line, i) => (
-          <p key={i} style={{ marginBottom: line === "" ? 8 : 0, animation: `fadeUp .6s ease ${i * 0.15}s both` }}>
-            {line}
-          </p>
-        ))}
+        {parsed.map((item, i) => {
+          if (item.type === "empty") return <div key={item.key} style={{ height: 8 }} />;
+          
+          if (item.type === "header") {
+            return (
+              <p key={item.key} style={{ marginTop: 16, marginBottom: 8, animation: `fadeUp .6s ease ${i * 0.1}s both` }}>
+                <span style={{ 
+                  display: "inline-block", 
+                  fontFamily: "var(--font-syne,sans-serif)",
+                  fontWeight: 700, 
+                  fontSize: "0.95rem", 
+                  color: "#FF8C42",
+                  letterSpacing: "-0.01em",
+                }}>
+                  {item.content}
+                </span>
+              </p>
+            );
+          }
+          
+          if (item.type === "bullet") {
+            return (
+              <p key={item.key} style={{ marginBottom: 6, paddingLeft: 8, animation: `fadeUp .6s ease ${i * 0.08}s both` }}>
+                <span style={{ display: "inline-flex", alignItems: "flex-start", gap: 8 }}>
+                  <span style={{ color: "#FF5C1A", fontWeight: 700, flexShrink: 0 }}>•</span>
+                  <span>{item.content}</span>
+                </span>
+              </p>
+            );
+          }
+          
+          if (item.type === "number") {
+            const match = item.content.match(/^(\d+)[.\)]\s*(.*)$/);
+            return (
+              <p key={item.key} style={{ marginBottom: 6, paddingLeft: 8, animation: `fadeUp .6s ease ${i * 0.08}s both` }}>
+                <span style={{ display: "inline-flex", alignItems: "flex-start", gap: 8 }}>
+                  <span style={{ 
+                    minWidth: 18, height: 18, borderRadius: "50%", 
+                    background: "rgba(255,92,26,.2)", 
+                    color: "#FF8C42", 
+                    fontSize: "0.7rem", 
+                    fontWeight: 700,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    flexShrink: 0 
+                  }}>{match?.[1]}</span>
+                  <span>{match?.[2]}</span>
+                </span>
+              </p>
+            );
+          }
+          
+          if (item.type === "bold") {
+            // Parse **text** ke HTML
+            const parts = item.content.split(/(\*\*[^*]+\*\*)/g);
+            return (
+              <p key={item.key} style={{ marginBottom: 6, animation: `fadeUp .6s ease ${i * 0.08}s both` }}>
+                {parts.map((part, j) => {
+                  if (part.startsWith("**") && part.endsWith("**")) {
+                    return <strong key={j} style={{ color: "#FF8C42", fontWeight: 700 }}>{part.slice(2, -2)}</strong>;
+                  }
+                  return <span key={j}>{part}</span>;
+                })}
+              </p>
+            );
+          }
+          
+          if (item.type === "franchise") {
+            return (
+              <p key={item.key} style={{ marginBottom: 6, padding: "6px 10px", borderRadius: 8, background: "rgba(255,92,26,.1)", borderLeft: "3px solid #FF5C1A", animation: `fadeUp .6s ease ${i * 0.08}s both` }}>
+                <span style={{ fontWeight: 600, color: "#FFCF40" }}>{item.content}</span>
+              </p>
+            );
+          }
+          
+          // Default paragraph
+          return (
+            <p key={item.key} style={{ marginBottom: 8, animation: `fadeUp .6s ease ${i * 0.08}s both` }}>
+              {item.content}
+            </p>
+          );
+        })}
       </div>
 
       {/* CTA */}
