@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Calculator, TrendingUp, DollarSign, Clock, Pencil, Rocket, AlertCircle, Brain, Sparkles, Zap } from "lucide-react";
 import { MdLightbulb } from "react-icons/md";
 import { formatRupiah } from "@/lib/utils/formatRupiah";
+import SpotlightCard from "@/components/SpotlightCard";
 import Typewriter from "@/components/Typewriter";
 
 export default function BEPCalculator() {
@@ -67,8 +68,9 @@ Tolong berikan:
 
 
   return (
-    <section className="py-20 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto px-5 relative z-10">
+    <section className="py-12 md:py-20 relative overflow-hidden">
+      <style>{scrollbarStyles}</style>
+      <div className="max-w-7xl mx-auto px-5 relative z-10">
         <div className="text-center mb-16">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -93,13 +95,13 @@ Tolong berikan:
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="lg:col-span-7 bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-black/5"
+            className="lg:col-span-7"
           >
-            <h3 className="font-syne font-bold text-2xl mb-8 flex items-center gap-3">
-              Parameter Bisnis
-            </h3>
-            
-            <div className="space-y-6">
+            <SpotlightCard className="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-black/5">
+              <h3 className="font-syne font-bold text-2xl mb-8 flex items-center gap-3">
+                Parameter Bisnis
+              </h3>
+              <div className="space-y-6">
               {/* Modal Awal */}
               <div className="p-5 rounded-2xl bg-gray-50/50 border border-gray-100 hover:border-[#FF5C1A]/20 transition-colors">
                 <div className="flex justify-between mb-3 items-center">
@@ -267,7 +269,8 @@ Tolong berikan:
                 <p className="text-xs text-gray-500 mt-2">Sewa tempat, gaji karyawan, listrik, air, dll.</p>
               </div>
             </div>
-          </motion.div>
+          </SpotlightCard>
+        </motion.div>
 
           {/* Results Section */}
           <motion.div 
@@ -463,7 +466,7 @@ Tolong berikan:
                       <p className="text-[0.7rem] text-gray-400 font-bold italic mt-3">AI sedang membedah angka finansial Anda...</p>
                     </div>
                   ) : (
-                    <div className="text-[#444] text-[0.88rem] leading-[1.7] whitespace-pre-wrap">
+                    <div className="text-[#444] text-[0.88rem] leading-[1.7] whitespace-pre-wrap max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
                       <Typewriter text={analysis} speed={8} />
                     </div>
                   )}
@@ -497,3 +500,20 @@ Tolong berikan:
     </section>
   );
 }
+
+const scrollbarStyles = `
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.02);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 92, 26, 0.2);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 92, 26, 0.4);
+  }
+`;

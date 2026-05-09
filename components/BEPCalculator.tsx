@@ -90,8 +90,9 @@ Gaya bahasa: Tajam, analitis, dan suportif (Senior Business Consultant).`;
 
 
   return (
-    <section className="py-20 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto px-5 relative z-10">
+    <section className="py-12 md:py-20 relative overflow-hidden">
+      <style>{scrollbarStyles}</style>
+      <div className="max-w-7xl mx-auto px-5 relative z-10">
         <div className="text-center mb-16">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -118,7 +119,7 @@ Gaya bahasa: Tajam, analitis, dan suportif (Senior Business Consultant).`;
             viewport={{ once: true }}
             className="lg:col-span-7"
           >
-            <SpotlightCard className="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-black/5 h-full">
+            <SpotlightCard className="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-black/5">
               <h3 className="font-syne font-bold text-2xl mb-8 flex items-center gap-3">
                 Parameter Bisnis
               </h3>
@@ -424,7 +425,7 @@ Gaya bahasa: Tajam, analitis, dan suportif (Senior Business Consultant).`;
                         <p className="text-[0.7rem] text-gray-400 font-bold italic mt-3">AI sedang membedah angka finansial Anda...</p>
                       </div>
                     ) : (
-                      <div className="text-[#444] text-[0.88rem] leading-[1.7] whitespace-pre-wrap">
+                      <div className="text-[#444] text-[0.88rem] leading-[1.7] whitespace-pre-wrap max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
                         <Typewriter text={analysis} speed={8} />
                       </div>
                     )}
@@ -459,3 +460,20 @@ Gaya bahasa: Tajam, analitis, dan suportif (Senior Business Consultant).`;
     </section>
   );
 }
+
+const scrollbarStyles = `
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.02);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 92, 26, 0.2);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 92, 26, 0.4);
+  }
+`;
