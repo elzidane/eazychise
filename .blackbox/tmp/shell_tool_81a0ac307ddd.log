@@ -89,3 +89,5 @@ https://next-auth.js.org/warnings#no_secret
  GET /cara-kerja 200 in 1856ms (compile: 1758ms, render: 98ms)
  GET /daftar 200 in 1421ms (compile: 1344ms, render: 76ms)
  GET / 200 in 122ms (compile: 11ms, render: 111ms)
+ GET / 200 in 297ms (compile: 52ms, render: 245ms)
+ GET / 200 in 95ms (compile: 29ms, render: 66ms)
