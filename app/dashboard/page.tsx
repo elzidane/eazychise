@@ -216,66 +216,111 @@ export default function DashboardPage() {
         )}
 
         {user.role === "franchisee" ? (
-          <div className="grid lg:grid-cols-[1fr_0.8fr] gap-8">
-            {/* ── Saved Franchises ── */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-white rounded-3xl p-7 border border-black/5"
-            >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="font-syne font-extrabold text-lg text-[#111] flex items-center gap-2">
-                  <Heart className="w-5 h-5 text-[#FF5C1A]" />
-                  Franchise Disimpan
-                </h2>
-                <Link href="/franchise" className="text-sm text-[#FF5C1A] font-bold hover:underline flex items-center gap-1">
-                  Lihat semua <ChevronRight className="w-4 h-4" />
-                </Link>
-              </div>
-
-              {savedFranchises.length === 0 ? (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 mx-auto bg-gray-50 rounded-full flex items-center justify-center mb-4">
-                    <Bookmark className="w-8 h-8 text-gray-300" />
-                  </div>
-                  <p className="text-[#999] font-medium text-sm">Belum ada franchise yang disimpan</p>
-                  <Link
-                    href="/franchise"
-                    className="inline-flex items-center gap-2 mt-4 text-[#FF5C1A] text-sm font-bold hover:underline"
-                  >
-                    Mulai jelajahi franchise <ArrowRight className="w-4 h-4" />
+          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-8">
+            {/* ── Left Column ── */}
+            <div className="space-y-8">
+              {/* ── Saved Franchises ── */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-white rounded-3xl p-7 border border-black/5"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="font-syne font-extrabold text-lg text-[#111] flex items-center gap-2">
+                    <Heart className="w-5 h-5 text-[#FF5C1A]" />
+                    Franchise Disimpan
+                  </h2>
+                  <Link href="/franchise" className="text-sm text-[#FF5C1A] font-bold hover:underline flex items-center gap-1">
+                    Lihat semua <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
-              ) : (
-                <div className="space-y-3">
-                  {savedFranchises.map((f) => (
-                    <div key={f.name} className="flex items-center gap-4 p-3 rounded-2xl bg-[#F8F8F6] group hover:bg-[#FFF3E5] transition-colors">
-                      <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 relative">
-                        <img src={f.img} alt={f.name} className="w-full h-full object-cover" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-bold text-sm text-[#111] truncate">{f.name}</p>
-                        <p className="text-xs text-[#999]">{f.invest} • {f.cat}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-1 text-xs">
-                          <Star className="w-3 h-3 fill-[#FFCF40] text-[#FFCF40]" />
-                          <span className="font-bold text-[#111]">{f.rating}</span>
-                        </div>
-                        <button
-                          onClick={() => handleRemoveSaved(f.name)}
-                          className="text-[#ccc] hover:text-red-400 transition-colors p-1"
-                          title="Hapus"
-                        >
-                          ✕
-                        </button>
-                      </div>
+
+                {savedFranchises.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 mx-auto bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                      <Bookmark className="w-8 h-8 text-gray-300" />
                     </div>
+                    <p className="text-[#999] font-medium text-sm">Belum ada franchise yang disimpan</p>
+                    <Link
+                      href="/franchise"
+                      className="inline-flex items-center gap-2 mt-4 text-[#FF5C1A] text-sm font-bold hover:underline"
+                    >
+                      Mulai jelajahi franchise <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {savedFranchises.map((f) => (
+                      <div key={f.name} className="flex items-center gap-4 p-3 rounded-2xl bg-[#F8F8F6] group hover:bg-[#FFF3E5] transition-colors">
+                        <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 relative">
+                          <img src={f.img} alt={f.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-bold text-sm text-[#111] truncate">{f.name}</p>
+                          <p className="text-xs text-[#999]">{f.invest} • {f.cat}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1 text-xs">
+                            <Star className="w-3 h-3 fill-[#FFCF40] text-[#FFCF40]" />
+                            <span className="font-bold text-[#111]">{f.rating}</span>
+                          </div>
+                          <button
+                            onClick={() => handleRemoveSaved(f.name)}
+                            className="text-[#ccc] hover:text-red-400 transition-colors p-1"
+                            title="Hapus"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+
+              {/* ── Recommended For You ── */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="bg-white rounded-3xl p-7 border border-black/5"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="font-syne font-extrabold text-lg text-[#111] flex items-center gap-2">
+                    <Star className="w-5 h-5 text-[#FFCF40] fill-[#FFCF40]" />
+                    Rekomendasi Untukmu
+                  </h2>
+                  <Link href="/franchise" className="text-[0.7rem] font-black uppercase tracking-widest text-[#FF5C1A] hover:opacity-70 transition-all">
+                    Lihat Semua
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {recommendedFranchises.map((f) => (
+                    <Link
+                      key={f.name}
+                      href={`/franchise/${f.name.toLowerCase().replace(/\s+/g, '-')}`}
+                      className="flex flex-col gap-3 p-4 rounded-2xl bg-[#F8F8F6] hover:bg-[#FFF3E5] border border-transparent hover:border-[#FF5C1A]/10 transition-all group"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 relative shadow-sm">
+                          <img src={f.img} alt={f.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-bold text-sm text-[#111] truncate">{f.name}</p>
+                          <p className="text-[0.6rem] text-[#999] font-bold uppercase tracking-tight">{f.cat}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between pt-3 border-t border-black/[0.03]">
+                        <span className="text-[0.7rem] font-bold text-[#1B8C5A]">{f.roi} ROI</span>
+                        <span className="text-[0.7rem] font-black text-[#111]">{f.invest}</span>
+                      </div>
+                    </Link>
                   ))}
                 </div>
-              )}
-            </motion.div>
+              </motion.div>
+            </div>
 
             {/* ── Right Column ── */}
             <div className="space-y-6">
@@ -310,37 +355,6 @@ export default function DashboardPage() {
                     ))}
                   </div>
                 )}
-              </motion.div>
-
-              {/* Recommended */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="bg-gradient-to-br from-[#111] to-[#1a1a1a] rounded-3xl p-7 text-white"
-              >
-                <h2 className="font-syne font-extrabold text-lg flex items-center gap-2 mb-5">
-                  <Star className="w-5 h-5 text-[#FFCF40]" />
-                  Rekomendasi Untukmu
-                </h2>
-                <div className="space-y-3">
-                  {recommendedFranchises.map((f) => (
-                    <Link
-                      key={f.name}
-                      href={`/franchise/${f.name.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors group"
-                    >
-                      <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0">
-                        <img src={f.img} alt={f.name} className="w-full h-full object-cover" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-bold text-sm truncate">{f.name}</p>
-                        <p className="text-white/40 text-xs">{f.invest} • {f.roi}</p>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-white/60 transition-colors" />
-                    </Link>
-                  ))}
-                </div>
               </motion.div>
             </div>
           </div>

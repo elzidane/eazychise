@@ -49,10 +49,12 @@ export default function FranchiseDetailPage({
   };
 
   
-  // Find the franchise in our data
-  const franchise = FRANCHISE_DATA.find(f => 
-    f.name.toLowerCase().replace(/\s+/g, '-') === slug
-  );
+  // Find the franchise in our data with robust slug matching
+  const decodedSlug = decodeURIComponent(slug);
+  const franchise = FRANCHISE_DATA.find(f => {
+    const brandSlug = f.name.toLowerCase().replace(/\s+/g, '-');
+    return brandSlug === decodedSlug || brandSlug === slug;
+  });
 
 
 

@@ -13,13 +13,6 @@ const TRACKER_DATA = [
 export default function LocalBusinessTracker() {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % TRACKER_DATA.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <div className="bg-white rounded-3xl p-7 border border-black/5 shadow-sm relative overflow-hidden">
       <div className="absolute top-0 right-0 p-4">
@@ -37,12 +30,13 @@ export default function LocalBusinessTracker() {
         {TRACKER_DATA.map((item, index) => (
           <motion.div
             key={item.area}
+            onMouseEnter={() => setActiveIndex(index)}
             animate={{ 
               opacity: activeIndex === index ? 1 : 0.4,
               scale: activeIndex === index ? 1.02 : 1,
               x: activeIndex === index ? 4 : 0
             }}
-            className={`p-4 rounded-2xl border transition-all ${
+            className={`p-4 rounded-2xl border transition-all cursor-default ${
               activeIndex === index 
                 ? "bg-gradient-to-r from-[#FFF3E5] to-white border-[#FF5C1A]/20 shadow-md" 
                 : "bg-gray-50 border-transparent"
