@@ -118,8 +118,9 @@ Berikan analisis dalam format berikut (Gunakan Bahasa Indonesia yang elegan):
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-3xl border border-black/5 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.06)]"
+          className="bg-white rounded-[2rem] border border-black/5 overflow-x-auto shadow-[0_20px_60px_rgba(0,0,0,0.06)] custom-scrollbar"
         >
+          <div className="min-w-[800px] lg:min-w-full">
           {/* Header row with images */}
           <div className="grid border-b border-black/5" style={{ gridTemplateColumns: `200px repeat(${items.length}, 1fr)` }}>
             <div className="p-6 bg-[#F8F8F6] flex items-center">
@@ -193,6 +194,7 @@ Berikan analisis dalam format berikut (Gunakan Bahasa Indonesia yang elegan):
               </div>
             ))}
           </div>
+          </div>
         </motion.div>
 
         {/* AI Analysis Section */}
@@ -218,7 +220,18 @@ Berikan analisis dalam format berikut (Gunakan Bahasa Indonesia yang elegan):
 
 
         {/* Mobile scroll hint */}
-        <p className="text-center text-xs text-[#ccc] mt-10 lg:hidden">← Geser untuk melihat semua kolom →</p>
+        <div className="flex flex-col items-center gap-2 mt-8 lg:hidden">
+          <motion.div 
+            animate={{ x: [0, 10, 0] }}
+            transition={{ repeat: Infinity, duration: 1.5 }}
+            className="flex items-center gap-2 bg-[#FF5C1A]/10 text-[#FF5C1A] px-4 py-2 rounded-full border border-[#FF5C1A]/20 shadow-sm"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span className="text-[0.65rem] font-black uppercase tracking-widest">Geser untuk membandingkan</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </motion.div>
+          <p className="text-[0.6rem] text-gray-400 font-bold uppercase tracking-tighter">Tabel mendukung scroll horizontal</p>
+        </div>
       </div>
     </main>
   );
