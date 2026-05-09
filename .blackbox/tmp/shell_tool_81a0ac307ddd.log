@@ -17,3 +17,75 @@
 ✓ Starting...
 ✓ Ready in 2.3s
 ○ Compiling / ...
+ GET / 200 in 7.1s (compile: 5.4s, render: 1751ms)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+[next-auth][warn][NO_SECRET] 
+https://next-auth.js.org/warnings#no_secret
+ GET /api/auth/session 200 in 2.2s (compile: 2.1s, render: 130ms)
+ POST /api/advisor 200 in 19.1s (compile: 404ms, render: 18.7s)
+[EazyChise AI] Model gemini-2.5-flash gagal [429]: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20,
+[EazyChise AI] Model gemini-2.5-pro gagal [429]: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, l
+ GET /franchise 200 in 472ms (compile: 280ms, render: 192ms)
+ POST /api/advisor 200 in 27.5s (compile: 35ms, render: 27.4s)
+ GET /dashboard 200 in 570ms (compile: 489ms, render: 81ms)
+ GET /franchise 200 in 64ms (compile: 17ms, render: 48ms)
+ GET /franchise/xiboba 200 in 1201ms (compile: 1099ms, render: 102ms)
+[EazyChise AI] Model gemini-2.5-flash gagal [429]: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20,
+[EazyChise AI] Model gemini-2.5-pro gagal [429]: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, l
+ GET / 200 in 1526ms (compile: 130ms, render: 1396ms)
+ GET /franchise/xiboba 200 in 779ms (compile: 86ms, render: 693ms)
+ GET /api/auth/session 200 in 96ms (compile: 53ms, render: 42ms)
+ POST /api/advisor 200 in 29.1s (compile: 19ms, render: 29.1s)
+[EazyChise AI] Model gemini-2.5-flash gagal [429]: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20,
+[EazyChise AI] Model gemini-2.5-pro gagal [429]: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, 
+ GET /franchise/xiboba 200 in 1225ms (compile: 31ms, render: 1194ms)
+ GET /api/auth/session 200 in 82ms (compile: 42ms, render: 40ms)
+ GET /api/auth/session 200 in 30ms (compile: 7ms, render: 23ms)
+ POST /api/advisor 200 in 5.9s (compile: 40ms, render: 5.9s)
+[EazyChise AI] Model gemini-2.5-flash gagal [429]: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20,
+[EazyChise AI] Model gemini-2.5-pro gagal [429]: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, l
+ POST /api/advisor 200 in 6.6s (compile: 43ms, render: 6.5s)
+ GET /franchise/xiboba 200 in 517ms (compile: 70ms, render: 447ms)
+ GET /api/auth/session 200 in 52ms (compile: 29ms, render: 23ms)
+ GET /api/auth/session 200 in 95ms (compile: 12ms, render: 83ms)
+[EazyChise AI] Model gemini-2.5-flash gagal [429]: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20,
+[EazyChise AI] Model gemini-2.5-pro gagal [429]: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, l
+ POST /api/advisor 200 in 6.3s (compile: 17ms, render: 6.3s)
+ GET /franchise 200 in 92ms (compile: 20ms, render: 72ms)
+ GET /dashboard 200 in 84ms (compile: 15ms, render: 69ms)
+ GET /franchise/kopi-studio-24 200 in 216ms (compile: 66ms, render: 150ms)
+ GET /dashboard 200 in 377ms (compile: 13ms, render: 364ms)
+ GET /cara-kerja 200 in 1856ms (compile: 1758ms, render: 98ms)
+ GET /daftar 200 in 1421ms (compile: 1344ms, render: 76ms)
+ GET / 200 in 122ms (compile: 11ms, render: 111ms)
