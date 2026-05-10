@@ -65,10 +65,13 @@ export default function Navbar() {
     return () => subscription.unsubscribe();
   }, [pathname, supabase.auth]);
 
-  // Fetch Notifications
+  // Fetch Notifications & Setup Realtime
   useEffect(() => {
-    const fetchNotifications = async () => {
+    let channel: any = null;
+
+    const setupNotifications = async () => {
       if (session?.user) {
+        // Fetch awal
         const { data } = await supabase
           .from('notifications')
           .select('*')
@@ -76,9 +79,36 @@ export default function Navbar() {
           .eq('is_read', false)
           .order('created_at', { ascending: false });
         if (data) setNotifications(data);
+
+        // Realtime Subscription
+        // Gunakan nama channel unik per user agar tidak bentrok dengan Strict Mode atau koneksi sebelumnya
+        const channelName = `notifications-${session.user.id}-${Date.now()}`;
+        channel = supabase
+          .channel(channelName)
+          .on(
+            'postgres_changes',
+            {
+              event: 'INSERT',
+              schema: 'public',
+              table: 'notifications',
+              filter: `user_id=eq.${session.user.id}`
+            },
+            (payload) => {
+              const newNotification = payload.new;
+              setNotifications((prev) => [newNotification, ...prev]);
+            }
+          )
+          .subscribe();
       }
     };
-    fetchNotifications();
+
+    setupNotifications();
+
+    return () => {
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
+    };
   }, [session, supabase]);
 
   const markNotificationsAsRead = async () => {

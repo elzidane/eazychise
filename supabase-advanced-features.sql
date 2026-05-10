@@ -122,3 +122,9 @@ DROP TRIGGER IF EXISTS on_new_partnership_request ON public.partnership_requests
 CREATE TRIGGER on_new_partnership_request
 AFTER INSERT ON public.partnership_requests
 FOR EACH ROW EXECUTE FUNCTION notify_brand_owner_on_lead();
+
+-- =========================================================================
+-- ENABLE REALTIME FOR NOTIFICATIONS
+-- =========================================================================
+-- This allows the UI bell icon to instantly pop up without a page refresh
+ALTER PUBLICATION supabase_realtime ADD TABLE public.notifications;
