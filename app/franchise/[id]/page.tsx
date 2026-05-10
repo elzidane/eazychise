@@ -12,6 +12,7 @@ import SpotlightCard from "@/components/SpotlightCard";
 import Typewriter from "@/components/Typewriter";
 import { motion } from "framer-motion";
 import { ScrollReveal, StaggerReveal, fadeRight, fadeLeft, fadeUp, slideUp } from "@/components/ScrollMotion";
+import { DbFranchise, DbReview, Franchise } from "@/types";
 
 export default function FranchiseDetailPage({
   params,
@@ -22,12 +23,12 @@ export default function FranchiseDetailPage({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [analysis, setAnalysis] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [franchise, setFranchise] = useState<any>(null);
+  const [franchise, setFranchise] = useState<Franchise | null>(null);
   const [loadingData, setLoadingData] = useState(true);
   const [isSaved, setIsSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
-  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<DbReview[]>([]);
   const [reviewForm, setReviewForm] = useState({ rating: 5, comment: "" });
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
 
@@ -41,7 +42,7 @@ export default function FranchiseDetailPage({
       const { data } = await supabase.from('franchises').select('*');
       if (data) {
         const decodedSlug = decodeURIComponent(slug);
-        const f = data.find(item => {
+        const f = (data as DbFranchise[]).find(item => {
           const brandSlug = item.name.toLowerCase().replace(/\s+/g, '-');
           return brandSlug === decodedSlug || brandSlug === slug;
         });

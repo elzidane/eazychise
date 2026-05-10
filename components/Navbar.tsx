@@ -4,9 +4,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ArrowRight, X, User as UserIcon, LayoutDashboard, LogOut, ChevronDown, Bell } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
+import { Session } from "@supabase/supabase-js";
 import { getUser, logout, User, syncSessionWithLocal } from "@/lib/auth";
+import { Notification } from "@/types";
 import { STATS } from "@/lib/constants";
 import Image from "next/image";
+import { RealtimeChannel } from "@supabase/supabase-js";
 
 const links = [
   { href: "/",             label: "Beranda" },
@@ -20,13 +23,13 @@ const links = [
 
 export default function Navbar() {
   const supabase = createClient();
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
@@ -41,7 +44,7 @@ export default function Navbar() {
 
   // Check auth state from Supabase and local
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+    supabase.auth.getSession().then(({ data: { session: currentSession } }: { data: { session: Session | null } }) => {
       setSession(currentSession);
       if (currentSession?.user) {
         const syncedUser = syncSessionWithLocal({
@@ -67,7 +70,7 @@ export default function Navbar() {
 
   // Fetch Notifications & Setup Realtime
   useEffect(() => {
-    let channel: any = null;
+    let channel: RealtimeChannel | null = null;
 
     const setupNotifications = async () => {
       if (session?.user) {
@@ -93,7 +96,7 @@ export default function Navbar() {
               table: 'notifications',
               filter: `user_id=eq.${session.user.id}`
             },
-            (payload) => {
+            (payload: { new: Notification }) => {
               const newNotification = payload.new;
               setNotifications((prev) => [newNotification, ...prev]);
             }

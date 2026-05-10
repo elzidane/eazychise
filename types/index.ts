@@ -15,7 +15,7 @@ export interface Franchise {
   monthlyRevenue?: string;
   omzet?: string;
   partners?: number;
-  mitra?: string;
+  mitra?: string | number;
   imageUrl?: string;
   img?: string;
   alt?: string;
@@ -70,4 +70,39 @@ export interface AIAdvisorStep {
   q: string;
   icon: any;
   options: string[];
+}
+
+export interface Notification {
+  id: string;
+  user_id: string;
+  title: string;
+  message: string;
+  is_read: boolean;
+  created_at: string;
+}
+export interface DbFranchise {
+  id: string;
+  name: string;
+  cat: string;
+  cat_key: string;
+  city: string;
+  rating: number;
+  invest_text: string;
+  invest_num: number;
+  roi: string;
+  omzet: string;
+  mitra_count: number;
+  badge: string;
+  badge_color: string;
+  img: string;
+  created_at?: string;
+}
+
+export interface DbReview {
+  id: string;
+  franchise_id: string;
+  user_id: string;
+  rating: number;
+  comment: string;
+  created_at: string;
 }
