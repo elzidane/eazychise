@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ArrowRight, X, User as UserIcon, LayoutDashboard, LogOut, ChevronDown } from "lucide-react";
-import { useSession, signOut } from "next-auth/react";
+import { createClient } from "@/utils/supabase/client";
 import { getUser, logout, User, syncSessionWithLocal } from "@/lib/auth";
 import { STATS } from "@/lib/constants";
 import Image from "next/image";
@@ -19,7 +19,8 @@ const links = [
 ];
 
 export default function Navbar() {
-  const { data: session, status } = useSession();
+  const supabase = createClient();
+  const [session, setSession] = useState<any>(null);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -36,15 +37,31 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Check auth state from both sources
+  // Check auth state from Supabase and local
   useEffect(() => {
-    if (status === "authenticated" && session?.user) {
-      const syncedUser = syncSessionWithLocal(session.user);
-      setUser(syncedUser);
-    } else {
-      setUser(getUser());
-    }
-  }, [pathname, status, session]);
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      setSession(currentSession);
+      if (currentSession?.user) {
+        const syncedUser = syncSessionWithLocal({
+          name: currentSession.user.user_metadata.full_name || currentSession.user.email,
+          email: currentSession.user.email,
+          image: currentSession.user.user_metadata.avatar_url,
+        });
+        setUser(syncedUser);
+      } else {
+        setUser(getUser());
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (!session) {
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [pathname, supabase.auth]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -67,7 +84,8 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     logout();
     setUser(null);
     setDropdownOpen(false);
@@ -147,9 +165,9 @@ export default function Navbar() {
                   }`}
                 >
                   <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-sm font-bold shadow-[0_4px_12px_rgba(255,92,26,0.3)] overflow-hidden relative">
-                    {session?.user?.image ? (
+                    {session?.user?.user_metadata?.avatar_url ? (
                       <Image 
-                        src={session.user.image} 
+                        src={session.user.user_metadata.avatar_url} 
                         alt={user.name} 
                         fill 
                         className="object-cover"
@@ -282,9 +300,9 @@ export default function Navbar() {
         {user && (
           <div className="px-5 py-4 border-b border-black/6 flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-sm font-bold overflow-hidden relative">
-              {session?.user?.image ? (
+              {session?.user?.user_metadata?.avatar_url ? (
                 <Image 
-                  src={session.user.image} 
+                  src={session.user.user_metadata.avatar_url} 
                   alt={user.name} 
                   fill 
                   className="object-cover"

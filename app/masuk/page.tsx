@@ -1,16 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Mail, Lock, ArrowRight, ArrowLeft, ShieldCheck, Eye, EyeOff } from "lucide-react";
-import { signIn, useSession } from "next-auth/react";
-import { login, syncSessionWithLocal } from "@/lib/auth";
 import GoogleLoginModal from "@/components/GoogleLoginModal";
+import { createClient } from "@/utils/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const searchParams = useSearchParams();
+  const supabase = createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
@@ -18,15 +18,20 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [showGoogleMock, setShowGoogleMock] = useState(false);
 
-  // Sync real session with local storage logic
   useEffect(() => {
-    if (status === "authenticated" && session?.user) {
-      syncSessionWithLocal(session.user);
-      router.push("/dashboard");
+    if (searchParams.get('registered') === '1') {
+      setError("Pendaftaran berhasil! Silakan masuk.");
     }
-  }, [status, session, router]);
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        router.push("/dashboard");
+      }
+    };
+    checkSession();
+  }, [router, searchParams, supabase]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -37,26 +42,30 @@ export default function LoginPage() {
 
     setLoading(true);
 
-    setTimeout(() => {
-      const result = login(email, password);
-      if (result.success) {
-        router.push("/dashboard");
-      } else {
-        setError(result.error || "Gagal masuk");
-        setLoading(false);
-      }
-    }, 800);
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    } else {
+      router.push("/dashboard");
+    }
   };
 
-  const handleGoogleLogin = () => {
-    // Detect if we have real environment variables
-    const hasEnv = process.env.NEXT_PUBLIC_HAS_GOOGLE_AUTH === "true";
-    
-    if (hasEnv) {
-      setLoading(true);
-      signIn("google");
-    } else {
-      setShowGoogleMock(true);
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) {
+      setError(error.message);
+      setLoading(false);
     }
   };
 
@@ -66,7 +75,7 @@ export default function LoginPage() {
     
     // Simulate network delay
     setTimeout(() => {
-      syncSessionWithLocal(mockUser);
+      // Mock logic can be kept for UI demo
       router.push("/dashboard");
     }, 1200);
   };

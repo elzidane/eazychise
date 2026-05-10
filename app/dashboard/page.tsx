@@ -12,13 +12,13 @@ import { getUser, logout, User, removeSavedFranchise } from "@/lib/auth";
 import { FRANCHISE_DATA } from "@/lib/franchise-data";
 import { generateBrandReportPDF } from "@/lib/pdf-generator";
 import { formatRupiah, formatJuta, formatAngkaSingkat } from "@/lib/utils/formatRupiah";
-import { useSession } from "next-auth/react";
+import { createClient } from "@/utils/supabase/client";
 import DashboardSkeleton from "@/components/DashboardSkeleton";
 import LocalBusinessTracker from "@/components/LocalBusinessTracker";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const supabase = createClient();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [showBrandDetails, setShowBrandDetails] = useState(false);
@@ -106,21 +106,34 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    const currentUser = getUser();
-    if (!currentUser) {
-      router.replace("/masuk");
-      return;
-    }
-    
-    const timer = setTimeout(() => {
-      setUser(currentUser);
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      const currentUser = getUser();
+      if (!session && !currentUser) {
+        router.replace("/masuk");
+        return;
+      }
+      
+      setUser(currentUser || {
+        id: session?.user.id,
+        name: session?.user.user_metadata.full_name || session?.user.email,
+        email: session?.user.email,
+        role: session?.user.user_metadata.role || 'franchisee',
+        savedFranchises: [],
+        searchHistory: []
+      } as any);
       setLoading(false);
+    };
+
+    const timer = setTimeout(() => {
+      checkUser();
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, [router]);
+  }, [router, supabase.auth]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     logout();
     router.push("/");
   };
