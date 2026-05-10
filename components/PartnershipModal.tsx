@@ -3,14 +3,16 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle2, Loader2, Send, ChevronLeft } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 
 type PartnershipModalProps = {
   isOpen: boolean;
   onClose: () => void;
   franchiseName: string;
+  franchiseId?: string;
 };
 
-export default function PartnershipModal({ isOpen, onClose, franchiseName }: PartnershipModalProps) {
+export default function PartnershipModal({ isOpen, onClose, franchiseName, franchiseId }: PartnershipModalProps) {
   const [step, setStep] = useState<"form" | "submitting" | "success">("form");
   const [formData, setFormData] = useState({
     name: "",
@@ -56,11 +58,30 @@ export default function PartnershipModal({ isOpen, onClose, franchiseName }: Par
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
+    if (!franchiseId) return;
     
     setStep("submitting");
     
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    const { error } = await supabase.from('partnership_requests').insert({
+      franchise_id: franchiseId,
+      user_id: session?.user?.id || null,
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      location: formData.location,
+      message: formData.message,
+      status: 'Baru'
+    });
+
+    if (error) {
+      console.error(error);
+      alert("Terjadi kesalahan saat mengirim pengajuan.");
+      setStep("form");
+      return;
+    }
     
     setStep("success");
   };

@@ -28,6 +28,7 @@ export default function DashboardPage() {
   
   const [savedFranchises, setSavedFranchises] = useState<any[]>([]);
   const [franchisorBrands, setFranchisorBrands] = useState<any[]>([]);
+  const [franchisorLeads, setFranchisorLeads] = useState<any[]>([]);
 
 
   const [brandFormData, setBrandFormData] = useState({
@@ -129,6 +130,14 @@ export default function DashboardPage() {
           .eq('owner_id', session.user.id);
         if (brands) {
           setFranchisorBrands(brands);
+        }
+
+        const { data: leads } = await supabase
+          .from('partnership_requests')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (leads) {
+          setFranchisorLeads(leads);
         }
       }
 
@@ -410,8 +419,8 @@ export default function DashboardPage() {
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                   {[
-                    { label: "Dilihat", value: formatAngkaSingkat(1240 * franchisorBrands.length), icon: Eye, color: "#7C3AED" },
-                    { label: "Leads", value: (45 * franchisorBrands.length).toString(), icon: UserIcon, color: "#FF5C1A" },
+                    { label: "Dilihat", value: formatAngkaSingkat(1240 * (franchisorBrands.length || 1)), icon: Eye, color: "#7C3AED" },
+                    { label: "Leads", value: franchisorLeads.length.toString(), icon: UserIcon, color: "#FF5C1A" },
                     { label: "Konversi", value: "3.6%", icon: TrendingUp, color: "#1B8C5A" },
                     { label: "Rating", value: "4.8", icon: Star, color: "#FFCF40" },
                   ].map((stat) => (
@@ -472,24 +481,24 @@ export default function DashboardPage() {
                     Leads Terbaru
                   </h2>
                   <div className="space-y-3">
-                    {[
-                      { name: "Budi Santoso", date: "Hari ini", status: "Dihubungi" },
-                      { name: "Rina Kartika", date: "Kemarin", status: "Baru" },
-                      { name: "Andi Wijaya", date: "4 Mei", status: "Follow Up" },
-                    ].map((lead, i) => (
-                      <div key={i} className="flex items-center justify-between p-3.5 rounded-xl bg-[#F8F8F6] hover:bg-white border border-transparent hover:border-black/5 transition-all">
-                        <div>
-                          <p className="font-bold text-sm text-[#333]">{lead.name}</p>
-                          <p className="text-[0.65rem] text-[#999] mt-0.5">{lead.date}</p>
+                    {franchisorLeads.length === 0 ? (
+                      <p className="text-sm text-gray-500 text-center py-4">Belum ada leads yang masuk.</p>
+                    ) : (
+                      franchisorLeads.slice(0, 5).map((lead, i) => (
+                        <div key={i} className="flex items-center justify-between p-3.5 rounded-xl bg-[#F8F8F6] hover:bg-white border border-transparent hover:border-black/5 transition-all">
+                          <div>
+                            <p className="font-bold text-sm text-[#333]">{lead.name}</p>
+                            <p className="text-[0.65rem] text-[#999] mt-0.5">{new Date(lead.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</p>
+                          </div>
+                          <span className={`text-[0.55rem] font-extrabold uppercase tracking-widest px-2 py-1 rounded-md ${
+                            lead.status === "Baru" ? "bg-green-100 text-green-700" : 
+                            lead.status === "Dihubungi" ? "bg-blue-100 text-blue-700" : "bg-orange-100 text-orange-700"
+                          }`}>
+                            {lead.status}
+                          </span>
                         </div>
-                        <span className={`text-[0.55rem] font-extrabold uppercase tracking-widest px-2 py-1 rounded-md ${
-                          lead.status === "Baru" ? "bg-green-100 text-green-700" : 
-                          lead.status === "Dihubungi" ? "bg-blue-100 text-blue-700" : "bg-orange-100 text-orange-700"
-                        }`}>
-                          {lead.status}
-                        </span>
-                      </div>
-                    ))}
+                      ))
+                    )}
                   </div>
                 </motion.div>
 

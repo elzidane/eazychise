@@ -13,7 +13,7 @@ export const FRANCHISE_DATA: Franchise[] = [
   {
     img: "https://pacificplace.b-cdn.net/directory_image/l00iC/xiboba.jpg",
     alt: "Boba", cat: "Minuman", catKey: "minuman",
-    name: "XIBOBA", rating: 4.8, city: "Jawa, Bali, Sumatera",
+    name: "XIBOBA - FILE STATIS", rating: 4.8, city: "Jawa, Bali, Sumatera",
     invest: "Rp 3,5 Juta", investNum: 3_500_000, roi: "4–6 bln",
     omzet: "Rp 12–22 Juta", mitra: "2.300+",
     badge: "Terpopuler", badgeColor: "#FF5C1A",

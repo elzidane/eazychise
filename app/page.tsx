@@ -33,6 +33,7 @@ async function getFranchises() {
 
 export default async function Home() {
   const franchises = await getFranchises();
+  const safeData = franchises && franchises.length > 0 ? franchises : undefined;
 
   return (
     <main>
@@ -45,7 +46,7 @@ export default async function Home() {
       </section>
 
       <section id="featured">
-        <FeaturedSection initialData={franchises} />
+        <FeaturedSection initialData={safeData} />
       </section>
 
       <section id="showcase">

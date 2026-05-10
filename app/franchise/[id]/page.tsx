@@ -472,6 +472,7 @@ export default function FranchiseDetailPage({
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
         franchiseName={franchise.name} 
+        franchiseId={franchise.id}
       />
     </main>
   );

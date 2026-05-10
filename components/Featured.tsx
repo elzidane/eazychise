@@ -24,6 +24,10 @@ export default function FeaturedSection({ initialData = FRANCHISE_DATA }: { init
 
   const [main, ...rest] = items;
 
+  if (!main) {
+    return null; // Return null or a skeleton if no data is available
+  }
+
   return (
     <section id="unggulan" className="bg-[#111111] px-[5%] py-24 overflow-hidden">
 

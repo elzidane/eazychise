@@ -27,10 +27,11 @@ async function getFranchises() {
 
 export default async function FranchisePage() {
   const franchises = await getFranchises();
+  const safeData = franchises && franchises.length > 0 ? franchises : undefined;
 
   return (
     <main className="pt-20">
-      <FranchiseListings initialData={franchises} />
+      <FranchiseListings initialData={safeData} />
     </main>
   );
 }
