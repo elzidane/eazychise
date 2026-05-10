@@ -40,13 +40,68 @@ export default function DashboardPage() {
     desc: ""
   });
 
-  const handleBrandSubmit = (e: React.FormEvent) => {
+  const handleBrandSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) return;
+
     if (formMode === 'add') {
-      setFranchisorBrands([...franchisorBrands, { ...brandFormData, status: "Aktif" }]);
+      // Create new brand in Supabase
+      const newBrand = {
+        name: brandFormData.name,
+        cat: brandFormData.cat,
+        cat_key: brandFormData.cat.toLowerCase().replace(/\s+/g, '-'),
+        img: brandFormData.img,
+        invest_text: brandFormData.invest,
+        city: brandFormData.location,
+        owner_id: user.id,
+        // Default values for missing schema fields
+        rating: 0.0,
+        invest_num: 0,
+        roi: "12 Bulan",
+        omzet: "Belum ada data",
+        mitra_count: 0
+      };
+
+      const { data, error } = await supabase
+        .from('franchises')
+        .insert(newBrand)
+        .select();
+
+      if (error) {
+        alert("Gagal menambahkan brand. " + error.message);
+        console.error(error);
+        return;
+      }
+
+      if (data) {
+        // Map the city back to location for the UI
+        const addedBrand = { ...data[0], location: data[0].city };
+        setFranchisorBrands([...franchisorBrands, addedBrand]);
+      }
     } else if (selectedBrandIndex !== null) {
+      // Update existing brand
+      const brandToUpdate = franchisorBrands[selectedBrandIndex];
+      const updatedBrand = {
+        name: brandFormData.name,
+        cat: brandFormData.cat,
+        img: brandFormData.img,
+        invest_text: brandFormData.invest,
+        city: brandFormData.location,
+      };
+
+      const { error } = await supabase
+        .from('franchises')
+        .update(updatedBrand)
+        .eq('id', brandToUpdate.id);
+
+      if (error) {
+        alert("Gagal mengupdate brand. " + error.message);
+        console.error(error);
+        return;
+      }
+
       const updated = [...franchisorBrands];
-      updated[selectedBrandIndex] = { ...brandFormData, status: "Aktif" };
+      updated[selectedBrandIndex] = { ...brandToUpdate, ...updatedBrand, location: brandFormData.location };
       setFranchisorBrands(updated);
     }
     setShowBrandForm(false);
@@ -797,10 +852,38 @@ export default function DashboardPage() {
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-[#999] uppercase tracking-wider">Foto Brand</label>
                     <div className="flex items-center gap-4">
-                      <div className="w-20 h-20 rounded-2xl bg-[#F8F8F6] border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-[#bbb] group hover:border-[#FF5C1A] hover:text-[#FF5C1A] transition-all cursor-pointer">
-                        <ImageIcon className="w-6 h-6 mb-1" />
-                        <span className="text-[10px] font-bold">Upload</span>
-                      </div>
+                      <label htmlFor="brand-image-upload" className="w-20 h-20 rounded-2xl bg-[#F8F8F6] border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-[#bbb] group hover:border-[#FF5C1A] hover:text-[#FF5C1A] transition-all cursor-pointer overflow-hidden relative">
+                        {brandFormData.img && brandFormData.img.startsWith('data:') ? (
+                          <img src={brandFormData.img} alt="Preview" className="w-full h-full object-cover" />
+                        ) : brandFormData.img && brandFormData.img.startsWith('http') ? (
+                          <img src={brandFormData.img} alt="Preview" className="w-full h-full object-cover opacity-50" />
+                        ) : (
+                          <>
+                            <ImageIcon className="w-6 h-6 mb-1" />
+                            <span className="text-[10px] font-bold">Upload</span>
+                          </>
+                        )}
+                        <input 
+                          type="file" 
+                          id="brand-image-upload" 
+                          accept="image/png, image/jpeg, image/jpg" 
+                          className="hidden" 
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              if (file.size > 2 * 1024 * 1024) {
+                                alert("Ukuran file terlalu besar! Maksimal 2MB.");
+                                return;
+                              }
+                              const reader = new FileReader();
+                              reader.onloadend = () => {
+                                setBrandFormData({...brandFormData, img: reader.result as string});
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }} 
+                        />
+                      </label>
                       <p className="text-xs text-[#999] max-w-[200px]">Format: JPG, PNG. Maksimal 2MB. Gunakan foto berkualitas tinggi.</p>
                     </div>
                   </div>

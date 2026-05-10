@@ -5,19 +5,10 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function check() {
-  const { data, error } = await supabase
-    .from('franchises')
-    .insert({
-      name: "Test",
-      cat: "Test",
-      cat_key: "test",
-      img: "test.jpg",
-      invest_text: "Rp 10 Juta",
-      city: "Jakarta",
-      owner_id: "00000000-0000-0000-0000-000000000000"
-    })
-    .select();
-  console.log("INSERT ERROR:", error);
+  const { data, error } = await supabase.rpc('get_schema');
+  // or just select 1 row
+  const { data: row } = await supabase.from('franchises').select('*').limit(1);
+  console.log("COLUMNS:", Object.keys(row[0]));
 }
 
 check();

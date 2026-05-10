@@ -35,6 +35,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "sitespirit.co"},
       { protocol: "https", hostname: "lh3.googleusercontent.com"},
       { protocol: "https", hostname: "api.dicebear.com"},
+      { protocol: "https", hostname: "images.unsplash.com"},
     ],
   },
   env: {
