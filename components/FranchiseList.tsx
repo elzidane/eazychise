@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,6 +11,7 @@ import { Franchise } from "@/types";
 import { FRANCHISE_DATA } from "@/lib/franchise-data";
 import { FRANCHISE_FILTERS } from "@/lib/constants";
 import { TiltCard } from "./Reactbitseffects";
+import { createClient } from "@/utils/supabase/client";
 
 const INITIAL_COUNT = 9;
 
@@ -34,6 +35,29 @@ export default function FranchiseListings({ initialData = FRANCHISE_DATA }: { in
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
   const [compareList, setCompareList] = useState<string[]>([]);
   const router = useRouter();
+  const supabase = createClient();
+
+  // Debounce search query to save to database
+  useEffect(() => {
+    const saveSearch = async () => {
+      if (searchQuery.trim().length > 2) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          // Hanya simpan pencarian jika user login
+          await supabase.from('search_history').insert({
+            user_id: session.user.id,
+            keyword: searchQuery.trim()
+          });
+        }
+      }
+    };
+
+    const timeoutId = setTimeout(() => {
+      if (searchQuery) saveSearch();
+    }, 2000); // 2 second debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, supabase]);
 
   const filtered = useMemo(() => applyFilter(data, active, searchQuery), [active, searchQuery]);
   const visibleItems = filtered.slice(0, visibleCount);

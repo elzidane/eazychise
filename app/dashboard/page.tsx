@@ -30,6 +30,7 @@ export default function DashboardPage() {
   const [savedFranchises, setSavedFranchises] = useState<any[]>([]);
   const [franchisorBrands, setFranchisorBrands] = useState<any[]>([]);
   const [franchisorLeads, setFranchisorLeads] = useState<any[]>([]);
+  const [franchisorStats, setFranchisorStats] = useState<{totalViews: number, organicPercent: number, aiPercent: number, leadsCount: number} | null>(null);
 
 
   const [brandFormData, setBrandFormData] = useState({
@@ -207,6 +208,19 @@ export default function DashboardPage() {
         if (saved) {
           setSavedFranchises(saved.map((s: any) => ({ ...s.franchises, saved_id: s.id })));
         }
+
+        const { data: history } = await supabase
+          .from('search_history')
+          .select('keyword')
+          .eq('user_id', session.user.id)
+          .order('created_at', { ascending: false })
+          .limit(10);
+        
+        if (history) {
+          // Extract unique keywords
+          const keywords = Array.from(new Set(history.map((h: any) => h.keyword))).slice(0, 5);
+          setUser(prev => prev ? { ...prev, searchHistory: keywords } : prev);
+        }
       } else {
         // Get brands owned by this user
         const { data: brands } = await supabase
@@ -226,6 +240,27 @@ export default function DashboardPage() {
               .order('created_at', { ascending: false });
             if (leads) {
               setFranchisorLeads(leads);
+            }
+            
+            // Fetch Analytics (Page Views)
+            const { data: views } = await supabase
+              .from('page_views')
+              .select('source')
+              .in('franchise_id', brandIds);
+            
+            if (views) {
+              const totalViews = views.length;
+              const organicViews = views.filter((v: any) => v.source === 'Organic').length;
+              const aiViews = views.filter((v: any) => v.source === 'AI').length;
+              const organicPercent = totalViews > 0 ? Math.round((organicViews / totalViews) * 100) : 0;
+              const aiPercent = totalViews > 0 ? Math.round((aiViews / totalViews) * 100) : 0;
+              
+              setFranchisorStats({
+                totalViews,
+                organicPercent,
+                aiPercent,
+                leadsCount: leads?.length || 0
+              });
             }
           }
         }
@@ -488,10 +523,10 @@ export default function DashboardPage() {
                 className="grid grid-cols-2 sm:grid-cols-4 gap-4"
               >
                 {[
-                  { label: "Dilihat", value: formatAngkaSingkat(1240 * (franchisorBrands.length || 1)), icon: Eye, color: "#7C3AED" },
+                  { label: "Dilihat", value: franchisorStats?.totalViews ? formatAngkaSingkat(franchisorStats.totalViews) : "0", icon: Eye, color: "#7C3AED" },
                   { label: "Leads Masuk", value: franchisorLeads.length.toString(), icon: UserIcon, color: "#FF5C1A" },
-                  { label: "Konversi", value: "3.6%", icon: TrendingUp, color: "#1B8C5A" },
-                  { label: "Rating", value: "4.8", icon: Star, color: "#FFCF40" },
+                  { label: "Konversi", value: franchisorStats?.totalViews && franchisorStats.totalViews > 0 ? ((franchisorLeads.length / franchisorStats.totalViews) * 100).toFixed(1) + "%" : "0%", icon: TrendingUp, color: "#1B8C5A" },
+                  { label: "Organic vs AI", value: `${franchisorStats?.organicPercent || 0}% / ${franchisorStats?.aiPercent || 0}%`, icon: Star, color: "#FFCF40" },
                 ].map((stat) => (
                   <div key={stat.label} className="bg-white rounded-2xl p-5 border border-black/5 shadow-sm">
                     <div className="flex items-center gap-2 mb-3">
@@ -704,29 +739,21 @@ export default function DashboardPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
                   <div className="bg-[#F8F8F6] p-4 rounded-2xl border border-black/5">
                     <p className="text-xs text-[#777] font-semibold uppercase mb-1">Dilihat</p>
-                    <p className="text-2xl font-bold text-[#111]">{formatAngkaSingkat(1240)}</p>
-                    <p className="text-xs text-green-600 font-bold flex items-center gap-1 mt-1">
-                      <TrendingUp className="w-3 h-3" /> +12%
-                    </p>
+                    <p className="text-2xl font-bold text-[#111]">{franchisorStats?.totalViews ? formatAngkaSingkat(franchisorStats.totalViews) : "0"}</p>
                   </div>
                   <div className="bg-[#F8F8F6] p-4 rounded-2xl border border-black/5">
                     <p className="text-xs text-[#777] font-semibold uppercase mb-1">Total Leads</p>
-                    <p className="text-2xl font-bold text-[#111]">45</p>
-                    <p className="text-xs text-green-600 font-bold flex items-center gap-1 mt-1">
-                      <TrendingUp className="w-3 h-3" /> +5%
-                    </p>
+                    <p className="text-2xl font-bold text-[#111]">{franchisorLeads.length}</p>
                   </div>
                   <div className="bg-[#F8F8F6] p-4 rounded-2xl border border-black/5">
                     <p className="text-xs text-[#777] font-semibold uppercase mb-1">Konversi</p>
-                    <p className="text-2xl font-bold text-[#111]">3.6%</p>
-                    <p className="text-xs text-[#999] font-medium mt-1">Rata-rata</p>
+                    <p className="text-2xl font-bold text-[#111]">{franchisorStats?.totalViews && franchisorStats.totalViews > 0 ? ((franchisorLeads.length / franchisorStats.totalViews) * 100).toFixed(1) + "%" : "0%"}</p>
                   </div>
                   <div className="bg-[#F8F8F6] p-4 rounded-2xl border border-black/5">
                     <p className="text-xs text-[#777] font-semibold uppercase mb-1">Rating</p>
                     <p className="text-2xl font-bold text-[#111] flex items-baseline gap-1">
-                      4.8 <Star className="w-4 h-4 fill-[#FFCF40] text-[#FFCF40]" />
+                      {selectedBrandIndex !== null ? franchisorBrands[selectedBrandIndex].rating : 0} <Star className="w-4 h-4 fill-[#FFCF40] text-[#FFCF40]" />
                     </p>
-                    <p className="text-xs text-[#999] font-medium mt-1">Dari 120 ulasan</p>
                   </div>
                 </div>
 
@@ -751,18 +778,18 @@ export default function DashboardPage() {
                 <div className="mb-8">
                   <div className="flex items-center justify-between text-sm mb-2">
                     <span className="font-semibold text-[#555]">Pencarian Organik</span>
-                    <span className="font-bold">65%</span>
+                    <span className="font-bold">{franchisorStats?.organicPercent || 0}%</span>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-2 mb-4">
-                    <div className="bg-[#FF5C1A] h-2 rounded-full" style={{ width: '65%' }}></div>
+                    <div className="bg-[#FF5C1A] h-2 rounded-full" style={{ width: `${franchisorStats?.organicPercent || 0}%` }}></div>
                   </div>
                   
                   <div className="flex items-center justify-between text-sm mb-2">
                     <span className="font-semibold text-[#555]">Rekomendasi AI</span>
-                    <span className="font-bold">35%</span>
+                    <span className="font-bold">{franchisorStats?.aiPercent || 0}%</span>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-2">
-                    <div className="bg-[#7C3AED] h-2 rounded-full" style={{ width: '35%' }}></div>
+                    <div className="bg-[#7C3AED] h-2 rounded-full" style={{ width: `${franchisorStats?.aiPercent || 0}%` }}></div>
                   </div>
                 </div>
 

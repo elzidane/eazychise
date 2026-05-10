@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ArrowRight, X, User as UserIcon, LayoutDashboard, LogOut, ChevronDown } from "lucide-react";
+import { ArrowRight, X, User as UserIcon, LayoutDashboard, LogOut, ChevronDown, Bell } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { getUser, logout, User, syncSessionWithLocal } from "@/lib/auth";
 import { STATS } from "@/lib/constants";
@@ -25,6 +25,8 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
@@ -62,6 +64,28 @@ export default function Navbar() {
 
     return () => subscription.unsubscribe();
   }, [pathname, supabase.auth]);
+
+  // Fetch Notifications
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      if (session?.user) {
+        const { data } = await supabase
+          .from('notifications')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .eq('is_read', false)
+          .order('created_at', { ascending: false });
+        if (data) setNotifications(data);
+      }
+    };
+    fetchNotifications();
+  }, [session, supabase]);
+
+  const markNotificationsAsRead = async () => {
+    if (!session?.user) return;
+    await supabase.from('notifications').update({ is_read: true }).eq('user_id', session.user.id);
+    setNotifications([]);
+  };
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -155,6 +179,50 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-3">
             {user ? (
               /* ── Logged-in state ── */
+              <div className="flex items-center gap-2">
+                {/* Notifications */}
+                <div className="relative">
+                  <button 
+                    onClick={() => { setShowNotifications(!showNotifications); setDropdownOpen(false); }}
+                    className={`relative p-2 rounded-full transition-colors cursor-pointer ${scrolled ? "hover:bg-white/10 text-white" : "hover:bg-black/5 text-[#555]"}`}
+                  >
+                    <Bell className="w-5 h-5" />
+                    {notifications.length > 0 && (
+                      <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+                    )}
+                  </button>
+                  {showNotifications && (
+                    <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-black/5 overflow-hidden z-50 animate-fade-up">
+                       <div className="p-4 border-b border-black/5 flex items-center justify-between">
+                         <h4 className="font-bold text-sm text-[#111]">Notifikasi</h4>
+                         {notifications.length > 0 && (
+                           <button onClick={markNotificationsAsRead} className="text-[0.65rem] font-bold uppercase tracking-wider text-[#FF5C1A] cursor-pointer hover:underline">
+                             Tandai dibaca
+                           </button>
+                         )}
+                       </div>
+                       <div className="max-h-80 overflow-y-auto">
+                         {notifications.length === 0 ? (
+                           <div className="p-8 text-center text-sm font-medium text-gray-400">Belum ada notifikasi baru</div>
+                         ) : (
+                           notifications.map(n => (
+                             <div key={n.id} className="p-4 border-b border-black/5 hover:bg-[#F8F8F6] transition-colors cursor-pointer">
+                               <div className="flex items-start gap-3">
+                                 <div className="w-2 h-2 mt-1.5 rounded-full bg-[#FF5C1A] flex-shrink-0" />
+                                 <div>
+                                   <p className="font-bold text-sm text-[#111]">{n.title}</p>
+                                   <p className="text-xs text-[#666] mt-1 leading-relaxed">{n.message}</p>
+                                   <p className="text-[0.6rem] text-[#999] mt-2 font-medium">{new Date(n.created_at).toLocaleString('id-ID')}</p>
+                                 </div>
+                               </div>
+                             </div>
+                           ))
+                         )}
+                       </div>
+                    </div>
+                  )}
+                </div>
+
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -218,6 +286,7 @@ export default function Navbar() {
                     </div>
                   </div>
                 )}
+              </div>
               </div>
             ) : (
               /* ── Logged-out state ── */
