@@ -5,26 +5,16 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function check() {
-  console.log("Fetching a franchise id...");
-  const { data: franchises } = await supabase.from('franchises').select('id').limit(1);
-  const fId = franchises[0].id;
-
-  console.log("Inserting dummy lead without select()...");
-  const { error } = await supabase.from('partnership_requests').insert({
-    franchise_id: fId,
-    name: "Test Lead",
-    email: "test@example.com",
-    phone: "08123456789",
-    location: "Jakarta",
-    message: "This is a test lead from script",
-    status: "Baru"
-  });
-
-  if (error) {
-    console.error("ERROR INSERTING:", error);
-  } else {
-    console.log("SUCCESS INSERTING!");
-  }
+  console.log("Checking if we can update franchises...");
+  // We need to login as some user to try to update. Or try anon.
+  const { data, error } = await supabase
+    .from('franchises')
+    .update({ name: "Kopi Studio 24" })
+    .eq('name', 'Kopi Studio 24')
+    .select();
+    
+  console.log("UPDATE result:", data);
+  console.log("UPDATE error:", error);
 }
 
 check();
