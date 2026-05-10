@@ -25,6 +25,7 @@ export default function DashboardPage() {
   const [showBrandForm, setShowBrandForm] = useState(false);
   const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
   const [selectedBrandIndex, setSelectedBrandIndex] = useState<number | null>(null);
+  const [isGeneratingDesc, setIsGeneratingDesc] = useState(false);
   
   const [savedFranchises, setSavedFranchises] = useState<any[]>([]);
   const [franchisorBrands, setFranchisorBrands] = useState<any[]>([]);
@@ -39,6 +40,34 @@ export default function DashboardPage() {
     location: "",
     desc: ""
   });
+
+  const handleGenerateDesc = async () => {
+    if (!brandFormData.name) {
+      alert("Silakan isi Nama Brand terlebih dahulu!");
+      return;
+    }
+    
+    setIsGeneratingDesc(true);
+    try {
+      const res = await fetch("/api/generate-desc", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: brandFormData.name, cat: brandFormData.cat })
+      });
+      
+      const data = await res.json();
+      if (res.ok && data.description) {
+        setBrandFormData(prev => ({ ...prev, desc: data.description }));
+      } else {
+        alert(data.error || "Gagal membuat deskripsi");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Terjadi kesalahan saat memanggil AI");
+    } finally {
+      setIsGeneratingDesc(false);
+    }
+  };
 
   const handleBrandSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -941,7 +970,18 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-[#999] uppercase tracking-wider">Deskripsi Brand</label>
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold text-[#999] uppercase tracking-wider">Deskripsi Brand</label>
+                      <button 
+                        type="button" 
+                        onClick={handleGenerateDesc}
+                        disabled={isGeneratingDesc}
+                        className="text-xs font-bold text-[#7C3AED] hover:text-[#5b2ab3] flex items-center gap-1 disabled:opacity-50"
+                      >
+                        <Zap className="w-3 h-3" />
+                        {isGeneratingDesc ? "Generating..." : "Generate with AI"}
+                      </button>
+                    </div>
                     <textarea 
                       rows={3}
                       required
