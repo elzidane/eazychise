@@ -181,7 +181,7 @@ export default function Navbar() {
                         Dashboard
                       </Link>
                       <Link
-                        href="/dashboard"
+                        href="/profile"
                         onClick={() => setDropdownOpen(false)}
                         className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#555] hover:bg-[#FFF3E5] hover:text-[#FF5C1A] transition-colors font-medium"
                       >
@@ -323,19 +323,34 @@ export default function Navbar() {
           })}
 
           {user && (
-            <li>
-              <Link
-                href="/dashboard"
-                onClick={() => setMenuOpen(false)}
-                className={`flex items-center justify-between px-4 py-3 rounded-xl text-[0.88rem] font-medium transition-all ${
-                  pathname === "/dashboard"
-                    ? "bg-[#FF5C1A]/10 text-[#FF5C1A]"
-                    : "text-[#333] hover:bg-black/4 hover:text-[#111]"
-                }`}
-              >
-                <span className="flex items-center gap-2"><LayoutDashboard className="w-4 h-4" /> Dashboard</span>
-              </Link>
-            </li>
+            <>
+              <li>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMenuOpen(false)}
+                  className={`flex items-center justify-between px-4 py-3 rounded-xl text-[0.88rem] font-medium transition-all ${
+                    pathname === "/dashboard"
+                      ? "bg-[#FF5C1A]/10 text-[#FF5C1A]"
+                      : "text-[#333] hover:bg-black/4 hover:text-[#111]"
+                  }`}
+                >
+                  <span className="flex items-center gap-2"><LayoutDashboard className="w-4 h-4" /> Dashboard</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/profile"
+                  onClick={() => setMenuOpen(false)}
+                  className={`flex items-center justify-between px-4 py-3 rounded-xl text-[0.88rem] font-medium transition-all ${
+                    pathname === "/profile"
+                      ? "bg-[#FF5C1A]/10 text-[#FF5C1A]"
+                      : "text-[#333] hover:bg-black/4 hover:text-[#111]"
+                  }`}
+                >
+                  <span className="flex items-center gap-2"><UserIcon className="w-4 h-4" /> Profil</span>
+                </Link>
+              </li>
+            </>
           )}
         </ul>
 
