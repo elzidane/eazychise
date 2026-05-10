@@ -1,26 +1,24 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { User, Mail, Lock, Phone, ArrowRight, CheckCircle2, ArrowLeft, ShieldCheck, Sparkles, Eye, EyeOff } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { MdPerson, MdStore } from "react-icons/md";
-import { signIn, useSession } from "next-auth/react";
-import { register, syncSessionWithLocal, UserRole } from "@/lib/auth";
-import { useEffect } from "react";
 import GoogleLoginModal from "@/components/GoogleLoginModal";
+import { createClient } from "@/utils/supabase/client";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const supabase = createClient();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     password: "",
     confirmPassword: "",
-    role: "franchisee" as UserRole,
+    role: "franchisee",
     agreeTerms: false,
   });
   const [error, setError] = useState("");
@@ -28,15 +26,17 @@ export default function RegisterPage() {
   const [showPass, setShowPass] = useState(false);
   const [showGoogleMock, setShowGoogleMock] = useState(false);
 
-  // Sync session with local storage logic
   useEffect(() => {
-    if (status === "authenticated" && session?.user) {
-      syncSessionWithLocal(session.user, formData.role);
-      router.push("/dashboard");
-    }
-  }, [status, session, router, formData.role]);
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        router.push("/dashboard");
+      }
+    };
+    checkSession();
+  }, [router, supabase]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -67,31 +67,38 @@ export default function RegisterPage() {
     }
 
     setLoading(true);
-    setTimeout(() => {
-      const result = register({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        password: formData.password,
-        role: formData.role,
-      });
-
-      if (result.success) {
-        router.push("/masuk?registered=1");
-      } else {
-        setError(result.error || "Terjadi kesalahan.");
-        setLoading(false);
+    
+    const { error } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+      options: {
+        data: {
+          full_name: formData.name,
+          phone: formData.phone,
+          role: formData.role,
+        }
       }
-    }, 600);
+    });
+
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    } else {
+      router.push("/masuk?registered=1");
+    }
   };
 
-  const handleGoogleRegister = () => {
-    const hasEnv = process.env.NEXT_PUBLIC_HAS_GOOGLE_AUTH === "true";
-    if (hasEnv) {
-      setLoading(true);
-      signIn("google");
-    } else {
-      setShowGoogleMock(true);
+  const handleGoogleRegister = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback?source=register`,
+      },
+    });
+    if (error) {
+      setError(error.message);
+      setLoading(false);
     }
   };
 
@@ -99,7 +106,6 @@ export default function RegisterPage() {
     setLoading(true);
     setShowGoogleMock(false);
     setTimeout(() => {
-      syncSessionWithLocal(mockUser, formData.role);
       router.push("/dashboard");
     }, 1200);
   };

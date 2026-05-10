@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Star, CheckCircle2, ArrowRight, X, TrendingUp, Sparkles, Brain } from "lucide-react";
 import { MdBalance } from "react-icons/md";
 import { Franchise } from "@/types";
-import { FRANCHISE_DATA } from "@/lib/franchise-data";
+import { createClient } from "@/utils/supabase/client";
 import SpotlightCard from "@/components/SpotlightCard";
 import Typewriter from "@/components/Typewriter";
 import AIConsultantCard from "@/components/AIConsultantCard";
@@ -55,14 +55,36 @@ Berikan analisis dalam format berikut (Gunakan Bahasa Indonesia yang elegan):
 
 
   useEffect(() => {
-    try {
-      const stored = sessionStorage.getItem("eazychise_compare");
-      if (stored) {
-        const names: string[] = JSON.parse(stored);
-        const found = names.map(n => FRANCHISE_DATA.find(f => f.name === n)).filter(Boolean) as Franchise[];
-        setItems(found);
-      }
-    } catch {}
+    const fetchCompareData = async () => {
+      try {
+        const stored = sessionStorage.getItem("eazychise_compare");
+        if (stored) {
+          const names: string[] = JSON.parse(stored);
+          const supabase = createClient();
+          const { data } = await supabase.from('franchises').select('*').in('name', names);
+          if (data) {
+             const mappedData = data.map(f => ({
+                id: f.id,
+                name: f.name,
+                cat: f.cat,
+                catKey: f.cat_key,
+                city: f.city,
+                rating: f.rating,
+                invest: f.invest_text,
+                investNum: f.invest_num,
+                roi: f.roi,
+                omzet: f.omzet,
+                mitra: f.mitra_count,
+                badge: f.badge,
+                badgeColor: f.badge_color,
+                img: f.img
+             }));
+             setItems(mappedData);
+          }
+        }
+      } catch {}
+    };
+    fetchCompareData();
   }, []);
 
 

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,24 +11,55 @@ import { Franchise } from "@/types";
 import { FRANCHISE_DATA } from "@/lib/franchise-data";
 import { FRANCHISE_FILTERS } from "@/lib/constants";
 import { TiltCard } from "./Reactbitseffects";
+import { createClient } from "@/utils/supabase/client";
 
-const data = FRANCHISE_DATA;
 const INITIAL_COUNT = 9;
 
-function applyFilter(list: Franchise[], key: string) {
-  if (key === "all") return list;
-  if (key === "under5") return list.filter((f) => (f.investNum || 0) < 5_000_000);
-  if (key === "5to20") return list.filter((f) => (f.investNum || 0) >= 5_000_000 && (f.investNum || 0) <= 20_000_000);
-  return list.filter((f) => f.catKey === key);
+function applyFilter(list: Franchise[], key: string, query: string) {
+  let result = list;
+  if (key !== "all") {
+    if (key === "under5") result = result.filter((f) => (f.investNum || 0) < 5_000_000);
+    else if (key === "5to20") result = result.filter((f) => (f.investNum || 0) >= 5_000_000 && (f.investNum || 0) <= 20_000_000);
+    else result = result.filter((f) => f.catKey === key);
+  }
+  if (query.trim() !== "") {
+    result = result.filter((f) => f.name.toLowerCase().includes(query.toLowerCase()));
+  }
+  return result;
 }
 
-export default function FranchiseListings() {
+export default function FranchiseListings({ initialData = FRANCHISE_DATA }: { initialData?: Franchise[] }) {
+  const data = initialData;
   const [active, setActive] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
   const [compareList, setCompareList] = useState<string[]>([]);
   const router = useRouter();
+  const supabase = createClient();
 
-  const filtered = useMemo(() => applyFilter(data, active), [active]);
+  // Debounce search query to save to database
+  useEffect(() => {
+    const saveSearch = async () => {
+      if (searchQuery.trim().length > 2) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          // Hanya simpan pencarian jika user login
+          await supabase.from('search_history').insert({
+            user_id: session.user.id,
+            keyword: searchQuery.trim()
+          });
+        }
+      }
+    };
+
+    const timeoutId = setTimeout(() => {
+      if (searchQuery) saveSearch();
+    }, 2000); // 2 second debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, supabase]);
+
+  const filtered = useMemo(() => applyFilter(data, active, searchQuery), [active, searchQuery]);
   const visibleItems = filtered.slice(0, visibleCount);
   const hasMore = filtered.length > visibleCount;
 
@@ -69,6 +100,22 @@ export default function FranchiseListings() {
           Lihat Semua
           <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
         </Link>
+      </div>
+
+      {/* ── Search bar ── */}
+      <div className="mb-6 max-w-xl">
+        <div className="relative">
+          <input 
+            type="text" 
+            placeholder="Cari nama franchise..." 
+            value={searchQuery}
+            onChange={(e) => { setSearchQuery(e.target.value); setVisibleCount(INITIAL_COUNT); }}
+            className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white border border-black/10 focus:border-[#FF5C1A] outline-none shadow-sm transition-all font-medium text-sm"
+          />
+          <svg className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
       </div>
 
       {/* ── Filter bar ── */}
@@ -256,7 +303,7 @@ export default function FranchiseListings() {
               <div className="flex items-center gap-2.5">
                 <div className="flex -space-x-2.5 mr-1">
                   {compareList.map(name => {
-                    const f = FRANCHISE_DATA.find(d => d.name === name);
+                    const f = data.find(d => d.name === name);
                     return (
                       <div key={name} className="relative group/chip">
                         <div className="w-10 h-10 rounded-xl overflow-hidden border-2 border-[#FF5C1A] bg-white relative">

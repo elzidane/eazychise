@@ -2,8 +2,8 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ArrowRight, X, User as UserIcon, LayoutDashboard, LogOut, ChevronDown } from "lucide-react";
-import { useSession, signOut } from "next-auth/react";
+import { ArrowRight, X, User as UserIcon, LayoutDashboard, LogOut, ChevronDown, Bell } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 import { getUser, logout, User, syncSessionWithLocal } from "@/lib/auth";
 import { STATS } from "@/lib/constants";
 import Image from "next/image";
@@ -19,11 +19,14 @@ const links = [
 ];
 
 export default function Navbar() {
-  const { data: session, status } = useSession();
+  const supabase = createClient();
+  const [session, setSession] = useState<any>(null);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
@@ -36,15 +39,83 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Check auth state from both sources
+  // Check auth state from Supabase and local
   useEffect(() => {
-    if (status === "authenticated" && session?.user) {
-      const syncedUser = syncSessionWithLocal(session.user);
-      setUser(syncedUser);
-    } else {
-      setUser(getUser());
-    }
-  }, [pathname, status, session]);
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      setSession(currentSession);
+      if (currentSession?.user) {
+        const syncedUser = syncSessionWithLocal({
+          name: currentSession.user.user_metadata.full_name || currentSession.user.email,
+          email: currentSession.user.email,
+          image: currentSession.user.user_metadata.avatar_url,
+        });
+        setUser(syncedUser);
+      } else {
+        setUser(getUser());
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (!session) {
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [pathname, supabase.auth]);
+
+  // Fetch Notifications & Setup Realtime
+  useEffect(() => {
+    let channel: any = null;
+
+    const setupNotifications = async () => {
+      if (session?.user) {
+        // Fetch awal
+        const { data } = await supabase
+          .from('notifications')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .eq('is_read', false)
+          .order('created_at', { ascending: false });
+        if (data) setNotifications(data);
+
+        // Realtime Subscription
+        // Gunakan nama channel unik per user agar tidak bentrok dengan Strict Mode atau koneksi sebelumnya
+        const channelName = `notifications-${session.user.id}-${Date.now()}`;
+        channel = supabase
+          .channel(channelName)
+          .on(
+            'postgres_changes',
+            {
+              event: 'INSERT',
+              schema: 'public',
+              table: 'notifications',
+              filter: `user_id=eq.${session.user.id}`
+            },
+            (payload) => {
+              const newNotification = payload.new;
+              setNotifications((prev) => [newNotification, ...prev]);
+            }
+          )
+          .subscribe();
+      }
+    };
+
+    setupNotifications();
+
+    return () => {
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
+    };
+  }, [session, supabase]);
+
+  const markNotificationsAsRead = async () => {
+    if (!session?.user) return;
+    await supabase.from('notifications').update({ is_read: true }).eq('user_id', session.user.id);
+    setNotifications([]);
+  };
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -67,7 +138,8 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     logout();
     setUser(null);
     setDropdownOpen(false);
@@ -137,6 +209,50 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-3">
             {user ? (
               /* ── Logged-in state ── */
+              <div className="flex items-center gap-2">
+                {/* Notifications */}
+                <div className="relative">
+                  <button 
+                    onClick={() => { setShowNotifications(!showNotifications); setDropdownOpen(false); }}
+                    className={`relative p-2 rounded-full transition-colors cursor-pointer ${scrolled ? "hover:bg-white/10 text-white" : "hover:bg-black/5 text-[#555]"}`}
+                  >
+                    <Bell className="w-5 h-5" />
+                    {notifications.length > 0 && (
+                      <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+                    )}
+                  </button>
+                  {showNotifications && (
+                    <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-black/5 overflow-hidden z-50 animate-fade-up">
+                       <div className="p-4 border-b border-black/5 flex items-center justify-between">
+                         <h4 className="font-bold text-sm text-[#111]">Notifikasi</h4>
+                         {notifications.length > 0 && (
+                           <button onClick={markNotificationsAsRead} className="text-[0.65rem] font-bold uppercase tracking-wider text-[#FF5C1A] cursor-pointer hover:underline">
+                             Tandai dibaca
+                           </button>
+                         )}
+                       </div>
+                       <div className="max-h-80 overflow-y-auto">
+                         {notifications.length === 0 ? (
+                           <div className="p-8 text-center text-sm font-medium text-gray-400">Belum ada notifikasi baru</div>
+                         ) : (
+                           notifications.map(n => (
+                             <div key={n.id} className="p-4 border-b border-black/5 hover:bg-[#F8F8F6] transition-colors cursor-pointer">
+                               <div className="flex items-start gap-3">
+                                 <div className="w-2 h-2 mt-1.5 rounded-full bg-[#FF5C1A] flex-shrink-0" />
+                                 <div>
+                                   <p className="font-bold text-sm text-[#111]">{n.title}</p>
+                                   <p className="text-xs text-[#666] mt-1 leading-relaxed">{n.message}</p>
+                                   <p className="text-[0.6rem] text-[#999] mt-2 font-medium">{new Date(n.created_at).toLocaleString('id-ID')}</p>
+                                 </div>
+                               </div>
+                             </div>
+                           ))
+                         )}
+                       </div>
+                    </div>
+                  )}
+                </div>
+
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -147,9 +263,9 @@ export default function Navbar() {
                   }`}
                 >
                   <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-sm font-bold shadow-[0_4px_12px_rgba(255,92,26,0.3)] overflow-hidden relative">
-                    {session?.user?.image ? (
+                    {session?.user?.user_metadata?.avatar_url ? (
                       <Image 
-                        src={session.user.image} 
+                        src={session.user.user_metadata.avatar_url} 
                         alt={user.name} 
                         fill 
                         className="object-cover"
@@ -200,6 +316,7 @@ export default function Navbar() {
                     </div>
                   </div>
                 )}
+              </div>
               </div>
             ) : (
               /* ── Logged-out state ── */
@@ -282,9 +399,9 @@ export default function Navbar() {
         {user && (
           <div className="px-5 py-4 border-b border-black/6 flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-sm font-bold overflow-hidden relative">
-              {session?.user?.image ? (
+              {session?.user?.user_metadata?.avatar_url ? (
                 <Image 
-                  src={session.user.image} 
+                  src={session.user.user_metadata.avatar_url} 
                   alt={user.name} 
                   fill 
                   className="object-cover"

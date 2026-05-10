@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2, TrendingUp, Users, MapPin, Star, Download, Brain, Sparkles, Zap } from "lucide-react";
+import { ArrowLeft, CheckCircle2, TrendingUp, Users, MapPin, Star, Download, Brain, Sparkles, Zap, Heart } from "lucide-react";
 import { generateProposalPDF } from "@/lib/pdf-generator";
-import { FRANCHISE_DATA } from "@/lib/franchise-data";
+import { createClient } from "@/utils/supabase/client";
 import PartnershipModal from "@/components/PartnershipModal";
 import LocationRecommender from "@/components/LocationRecommender";
 import SpotlightCard from "@/components/SpotlightCard";
@@ -22,6 +22,115 @@ export default function FranchiseDetailPage({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [analysis, setAnalysis] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [franchise, setFranchise] = useState<any>(null);
+  const [loadingData, setLoadingData] = useState(true);
+  const [isSaved, setIsSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviewForm, setReviewForm] = useState({ rating: 5, comment: "" });
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      const currentUserId = session?.user?.id || null;
+      setUserId(currentUserId);
+
+      const { data } = await supabase.from('franchises').select('*');
+      if (data) {
+        const decodedSlug = decodeURIComponent(slug);
+        const f = data.find(item => {
+          const brandSlug = item.name.toLowerCase().replace(/\s+/g, '-');
+          return brandSlug === decodedSlug || brandSlug === slug;
+        });
+
+        if (f) {
+          setFranchise({
+            id: f.id,
+            name: f.name,
+            cat: f.cat,
+            catKey: f.cat_key,
+            city: f.city,
+            rating: f.rating,
+            invest: f.invest_text,
+            investNum: f.invest_num,
+            roi: f.roi,
+            omzet: f.omzet,
+            mitra: f.mitra_count,
+            badge: f.badge,
+            badgeColor: f.badge_color,
+            img: f.img
+          });
+
+          // Check if saved
+          if (currentUserId) {
+            const { data: savedData } = await supabase
+              .from('saved_franchises')
+              .select('id')
+              .eq('user_id', currentUserId)
+              .eq('franchise_id', f.id)
+              .single();
+            if (savedData) setIsSaved(true);
+          }
+
+          // Record page view (Analytics)
+          try {
+            let source = 'Organic';
+            if (typeof window !== 'undefined') {
+               const urlParams = new URLSearchParams(window.location.search);
+               if (urlParams.get('source') === 'ai') source = 'AI';
+            }
+            await supabase.from('page_views').insert({
+              franchise_id: f.id,
+              viewer_id: currentUserId,
+              source: source
+            });
+          } catch (e) {
+            console.error("Failed to record view", e);
+          }
+
+          // Fetch reviews
+          const { data: reviewsData } = await supabase
+            .from('reviews')
+            .select('*')
+            .eq('franchise_id', f.id)
+            .order('created_at', { ascending: false });
+          if (reviewsData) {
+            setReviews(reviewsData);
+          }
+        }
+      }
+      setLoadingData(false);
+    };
+    fetchData();
+  }, [slug]);
+
+  const handleSave = async () => {
+    if (!userId || !franchise) {
+      alert("Silakan login terlebih dahulu untuk menyimpan franchise.");
+      return;
+    }
+    setSaving(true);
+    const supabase = createClient();
+    
+    if (isSaved) {
+      // Remove
+      await supabase.from('saved_franchises').delete()
+        .eq('user_id', userId)
+        .eq('franchise_id', franchise.id);
+      setIsSaved(false);
+    } else {
+      // Add
+      await supabase.from('saved_franchises').insert({
+        user_id: userId,
+        franchise_id: franchise.id
+      });
+      setIsSaved(true);
+    }
+    setSaving(false);
+  };
 
   const generateAnalysis = async () => {
     if (isAnalyzing || !franchise) return;
@@ -49,15 +158,45 @@ export default function FranchiseDetailPage({
     }
   };
 
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userId || !franchise) {
+      alert("Silakan login untuk memberikan ulasan.");
+      return;
+    }
+    if (!reviewForm.comment.trim()) {
+      alert("Komentar tidak boleh kosong.");
+      return;
+    }
+
+    setIsSubmittingReview(true);
+    const supabase = createClient();
+    const { data, error } = await supabase.from('reviews').insert({
+      franchise_id: franchise.id,
+      user_id: userId,
+      rating: reviewForm.rating,
+      comment: reviewForm.comment
+    }).select();
+
+    if (!error && data) {
+      setReviews([data[0], ...reviews]);
+      setReviewForm({ rating: 5, comment: "" });
+    } else {
+      console.error(error);
+      alert("Gagal mengirim ulasan.");
+    }
+    setIsSubmittingReview(false);
+  };
+
+
   
-  // Find the franchise in our data with robust slug matching
-  const decodedSlug = decodeURIComponent(slug);
-  const franchise = FRANCHISE_DATA.find(f => {
-    const brandSlug = f.name.toLowerCase().replace(/\s+/g, '-');
-    return brandSlug === decodedSlug || brandSlug === slug;
-  });
-
-
+  if (loadingData) {
+    return (
+      <main className="pt-32 pb-20 min-h-screen bg-[#FFF9F0] flex flex-col items-center justify-center">
+        <span className="w-8 h-8 border-4 border-[#FF5C1A]/30 border-t-[#FF5C1A] rounded-full animate-spin" />
+      </main>
+    );
+  }
 
   if (!franchise) {
     return (
@@ -235,6 +374,18 @@ export default function FranchiseDetailPage({
                   <Download className="w-5 h-5" />
                   Unduh Proposal PDF
                 </button>
+                <button 
+                  onClick={handleSave}
+                  disabled={saving}
+                  className={`w-full border-2 py-4 rounded-2xl font-bold text-[0.9rem] transition-all flex items-center justify-center gap-2 active:scale-95 ${
+                    isSaved 
+                      ? "bg-red-50 border-red-200 text-red-500 hover:bg-red-100" 
+                      : "bg-white border-black/5 text-[#111] hover:border-red-400 hover:text-red-500"
+                  }`}
+                >
+                  <Heart className={`w-5 h-5 ${isSaved ? "fill-red-500 text-red-500" : ""}`} />
+                  {isSaved ? "Tersimpan di Bookmark" : "Simpan ke Bookmark"}
+                </button>
               </div>
 
               {/* Trust Badge */}
@@ -356,9 +507,97 @@ export default function FranchiseDetailPage({
           )}
         </motion.div>
 
+        {/* Reviews Section */}
+        <ScrollReveal variants={fadeUp} className="mt-16 bg-white rounded-[2.5rem] p-8 md:p-12 shadow-xl border border-black/5">
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="font-syne font-extrabold text-2xl text-[#111]">Ulasan Mitra</h3>
+            <div className="flex items-center gap-2 bg-[#F8F8F6] px-4 py-2 rounded-full">
+              <Star className="w-5 h-5 text-[#FFCF40] fill-[#FFCF40]" />
+              <span className="font-bold text-[#111]">{franchise.rating}</span>
+              <span className="text-sm text-[#999]">({reviews.length} ulasan)</span>
+            </div>
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div>
+              {reviews.length > 0 ? (
+                <div className="space-y-6 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
+                  {reviews.map((rev) => (
+                    <div key={rev.id} className="bg-gray-50 p-5 rounded-2xl border border-black/5">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center font-bold text-gray-600 text-xs">
+                            A
+                          </div>
+                          <p className="font-bold text-sm">Mitra Anonim</p>
+                        </div>
+                        <div className="flex text-[#FFCF40]">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className={`w-3 h-3 ${i < rev.rating ? "fill-[#FFCF40]" : "text-gray-300"}`} />
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-600 leading-relaxed">{rev.comment}</p>
+                      <p className="text-[0.6rem] text-gray-400 mt-3 font-medium uppercase">
+                        {new Date(rev.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-10 bg-gray-50 rounded-2xl border border-black/5">
+                  <Star className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+                  <p className="font-bold text-gray-500">Belum ada ulasan</p>
+                  <p className="text-xs text-gray-400 mt-1">Jadilah yang pertama memberikan ulasan!</p>
+                </div>
+              )}
+            </div>
 
-          <ScrollReveal variants={fadeUp} delay={0.1} className="mt-12">
+            <div>
+              <form onSubmit={handleSubmitReview} className="bg-[#F8F8F6] p-6 rounded-3xl border border-black/5">
+                <h4 className="font-syne font-bold text-lg mb-4">Tulis Ulasan Anda</h4>
+                
+                <div className="mb-4">
+                  <label className="text-xs font-bold text-[#999] uppercase tracking-wider block mb-2">Rating</label>
+                  <div className="flex gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setReviewForm({ ...reviewForm, rating: star })}
+                        className="focus:outline-none transition-transform hover:scale-110"
+                      >
+                        <Star className={`w-8 h-8 ${reviewForm.rating >= star ? "fill-[#FFCF40] text-[#FFCF40]" : "text-gray-300 fill-transparent"}`} />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <label className="text-xs font-bold text-[#999] uppercase tracking-wider block mb-2">Komentar</label>
+                  <textarea
+                    rows={4}
+                    required
+                    value={reviewForm.comment}
+                    onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
+                    placeholder="Bagaimana pengalaman atau pendapat Anda tentang franchise ini?"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-black/10 focus:border-[#FF5C1A] outline-none transition-all text-sm resize-none"
+                  ></textarea>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmittingReview || !userId}
+                  className="w-full bg-[#111] hover:bg-[#FF5C1A] text-white py-3.5 rounded-xl font-bold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {isSubmittingReview ? "Mengirim..." : !userId ? "Login untuk Ulasan" : "Kirim Ulasan"}
+                </button>
+              </form>
+            </div>
+          </div>
+        </ScrollReveal>
+
+          <ScrollReveal variants={fadeUp} delay={0.1} className="mt-16">
             <div className="bg-[#111] rounded-[32px] p-10 text-white flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden relative">
               <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
               <div className="relative z-10 text-center md:text-left">
@@ -381,6 +620,7 @@ export default function FranchiseDetailPage({
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
         franchiseName={franchise.name} 
+        franchiseId={franchise.id}
       />
     </main>
   );
