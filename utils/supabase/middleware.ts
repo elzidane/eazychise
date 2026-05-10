@@ -40,11 +40,33 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // Jika user sudah login dan mencoba mengakses halaman masuk atau daftar
-  if (user && (request.nextUrl.pathname.startsWith('/masuk') || request.nextUrl.pathname.startsWith('/daftar'))) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/dashboard'
-    return NextResponse.redirect(url)
+  // Logika Onboarding
+  if (user) {
+    const role = user.user_metadata?.role;
+    const isDashboard = request.nextUrl.pathname.startsWith('/dashboard');
+    const isOnboarding = request.nextUrl.pathname.startsWith('/onboarding');
+    const isAuthPage = request.nextUrl.pathname.startsWith('/masuk') || request.nextUrl.pathname.startsWith('/daftar');
+
+    if (!role && isDashboard) {
+      // User belum punya role, paksa ke onboarding
+      const url = request.nextUrl.clone()
+      url.pathname = '/onboarding'
+      return NextResponse.redirect(url)
+    }
+
+    if (role && isOnboarding) {
+      // User sudah punya role, jangan biarkan akses onboarding lagi
+      const url = request.nextUrl.clone()
+      url.pathname = '/dashboard'
+      return NextResponse.redirect(url)
+    }
+
+    if (isAuthPage) {
+      // Jika user sudah login, redirect dari halaman masuk/daftar ke tempat yang semestinya
+      const url = request.nextUrl.clone()
+      url.pathname = role ? '/dashboard' : '/onboarding'
+      return NextResponse.redirect(url)
+    }
   }
 
   return supabaseResponse
