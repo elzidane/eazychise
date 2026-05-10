@@ -2,6 +2,7 @@
 export type UserRole = "franchisee" | "franchisor";
 
 export type User = {
+  id?: string;
   name: string;
   email: string;
   phone: string;
