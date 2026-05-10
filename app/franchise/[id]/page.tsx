@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2, TrendingUp, Users, MapPin, Star, Download, Brain, Sparkles, Zap } from "lucide-react";
+import { ArrowLeft, CheckCircle2, TrendingUp, Users, MapPin, Star, Download, Brain, Sparkles, Zap, Heart } from "lucide-react";
 import { generateProposalPDF } from "@/lib/pdf-generator";
-import { FRANCHISE_DATA } from "@/lib/franchise-data";
+import { createClient } from "@/utils/supabase/client";
 import PartnershipModal from "@/components/PartnershipModal";
 import LocationRecommender from "@/components/LocationRecommender";
 import SpotlightCard from "@/components/SpotlightCard";
@@ -22,6 +22,86 @@ export default function FranchiseDetailPage({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [analysis, setAnalysis] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [franchise, setFranchise] = useState<any>(null);
+  const [loadingData, setLoadingData] = useState(true);
+  const [isSaved, setIsSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      const currentUserId = session?.user?.id || null;
+      setUserId(currentUserId);
+
+      const { data } = await supabase.from('franchises').select('*');
+      if (data) {
+        const decodedSlug = decodeURIComponent(slug);
+        const f = data.find(item => {
+          const brandSlug = item.name.toLowerCase().replace(/\s+/g, '-');
+          return brandSlug === decodedSlug || brandSlug === slug;
+        });
+
+        if (f) {
+          setFranchise({
+            id: f.id,
+            name: f.name,
+            cat: f.cat,
+            catKey: f.cat_key,
+            city: f.city,
+            rating: f.rating,
+            invest: f.invest_text,
+            investNum: f.invest_num,
+            roi: f.roi,
+            omzet: f.omzet,
+            mitra: f.mitra_count,
+            badge: f.badge,
+            badgeColor: f.badge_color,
+            img: f.img
+          });
+
+          // Check if saved
+          if (currentUserId) {
+            const { data: savedData } = await supabase
+              .from('saved_franchises')
+              .select('id')
+              .eq('user_id', currentUserId)
+              .eq('franchise_id', f.id)
+              .single();
+            if (savedData) setIsSaved(true);
+          }
+        }
+      }
+      setLoadingData(false);
+    };
+    fetchData();
+  }, [slug]);
+
+  const handleSave = async () => {
+    if (!userId || !franchise) {
+      alert("Silakan login terlebih dahulu untuk menyimpan franchise.");
+      return;
+    }
+    setSaving(true);
+    const supabase = createClient();
+    
+    if (isSaved) {
+      // Remove
+      await supabase.from('saved_franchises').delete()
+        .eq('user_id', userId)
+        .eq('franchise_id', franchise.id);
+      setIsSaved(false);
+    } else {
+      // Add
+      await supabase.from('saved_franchises').insert({
+        user_id: userId,
+        franchise_id: franchise.id
+      });
+      setIsSaved(true);
+    }
+    setSaving(false);
+  };
 
   const generateAnalysis = async () => {
     if (isAnalyzing || !franchise) return;
@@ -50,14 +130,13 @@ export default function FranchiseDetailPage({
   };
 
   
-  // Find the franchise in our data with robust slug matching
-  const decodedSlug = decodeURIComponent(slug);
-  const franchise = FRANCHISE_DATA.find(f => {
-    const brandSlug = f.name.toLowerCase().replace(/\s+/g, '-');
-    return brandSlug === decodedSlug || brandSlug === slug;
-  });
-
-
+  if (loadingData) {
+    return (
+      <main className="pt-32 pb-20 min-h-screen bg-[#FFF9F0] flex flex-col items-center justify-center">
+        <span className="w-8 h-8 border-4 border-[#FF5C1A]/30 border-t-[#FF5C1A] rounded-full animate-spin" />
+      </main>
+    );
+  }
 
   if (!franchise) {
     return (
@@ -234,6 +313,18 @@ export default function FranchiseDetailPage({
                 >
                   <Download className="w-5 h-5" />
                   Unduh Proposal PDF
+                </button>
+                <button 
+                  onClick={handleSave}
+                  disabled={saving}
+                  className={`w-full border-2 py-4 rounded-2xl font-bold text-[0.9rem] transition-all flex items-center justify-center gap-2 active:scale-95 ${
+                    isSaved 
+                      ? "bg-red-50 border-red-200 text-red-500 hover:bg-red-100" 
+                      : "bg-white border-black/5 text-[#111] hover:border-red-400 hover:text-red-500"
+                  }`}
+                >
+                  <Heart className={`w-5 h-5 ${isSaved ? "fill-red-500 text-red-500" : ""}`} />
+                  {isSaved ? "Tersimpan di Bookmark" : "Simpan ke Bookmark"}
                 </button>
               </div>
 

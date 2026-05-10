@@ -4,8 +4,36 @@ import FeaturedSection from "@/components/Featured";
 import ReactBitsShowcase from "@/components/Reactbitsshowcase";
 import AIAdvisorSection from "@/components/AIAdvisorSection";
 import CTASection from "@/components/CTA";
+import { createClient } from "@/utils/supabase/server";
 
-export default function Home() {
+async function getFranchises() {
+  const supabase = await createClient();
+  const { data } = await supabase.from('franchises').select('*');
+  
+  if (!data) return undefined;
+  
+  // Format to match old structure
+  return data.map(f => ({
+    id: f.id,
+    name: f.name,
+    cat: f.cat,
+    catKey: f.cat_key,
+    city: f.city,
+    rating: f.rating,
+    invest: f.invest_text,
+    investNum: f.invest_num,
+    roi: f.roi,
+    omzet: f.omzet,
+    mitra: f.mitra_count,
+    badge: f.badge,
+    badgeColor: f.badge_color,
+    img: f.img
+  }));
+}
+
+export default async function Home() {
+  const franchises = await getFranchises();
+
   return (
     <main>
       <section id="hero">
@@ -17,7 +45,7 @@ export default function Home() {
       </section>
 
       <section id="featured">
-        <FeaturedSection />
+        <FeaturedSection initialData={franchises} />
       </section>
 
       <section id="showcase">

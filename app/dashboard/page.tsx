@@ -26,17 +26,9 @@ export default function DashboardPage() {
   const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
   const [selectedBrandIndex, setSelectedBrandIndex] = useState<number | null>(null);
   
-  const [franchisorBrands, setFranchisorBrands] = useState([
-    {
-      name: "Kopi Nusantara",
-      cat: "Minuman / Coffee Shop",
-      img: "https://blue.kumparan.com/image/upload/fl_progressive,fl_lossy,c_fill,f_auto,q_auto:best,w_640/v1642665363/h2jq4cvxrovsvl03r0os.png",
-      status: "Aktif",
-      invest: "50.000.000",
-      location: "Jakarta",
-      desc: "Kopi Nusantara adalah brand kopi lokal dengan cita rasa autentik yang sudah tersebar di seluruh Indonesia."
-    }
-  ]);
+  const [savedFranchises, setSavedFranchises] = useState<any[]>([]);
+  const [franchisorBrands, setFranchisorBrands] = useState<any[]>([]);
+
 
   const [brandFormData, setBrandFormData] = useState({
     name: "",
@@ -106,31 +98,45 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    const checkUser = async () => {
+    const checkUserAndFetchData = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      const currentUser = getUser();
-      if (!session && !currentUser) {
+      if (!session) {
         router.replace("/masuk");
         return;
       }
       
-      setUser(currentUser || {
-        id: session?.user.id,
-        name: session?.user.user_metadata.full_name || session?.user.email,
-        email: session?.user.email,
-        role: session?.user.user_metadata.role || 'franchisee',
+      const role = session.user.user_metadata.role || 'franchisee';
+      setUser({
+        id: session.user.id,
+        name: session.user.user_metadata.full_name || session.user.email,
+        email: session.user.email,
+        role: role,
         savedFranchises: [],
         searchHistory: []
       } as any);
+
+      if (role === 'franchisee') {
+        const { data: saved } = await supabase
+          .from('saved_franchises')
+          .select('id, franchises(*)');
+        if (saved) {
+          setSavedFranchises(saved.map((s: any) => ({ ...s.franchises, saved_id: s.id })));
+        }
+      } else {
+        const { data: brands } = await supabase
+          .from('franchises')
+          .select('*')
+          .eq('owner_id', session.user.id);
+        if (brands) {
+          setFranchisorBrands(brands);
+        }
+      }
+
       setLoading(false);
     };
 
-    const timer = setTimeout(() => {
-      checkUser();
-    }, 1500);
-
-    return () => clearTimeout(timer);
-  }, [router, supabase.auth]);
+    checkUserAndFetchData();
+  }, [router, supabase]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -138,18 +144,14 @@ export default function DashboardPage() {
     router.push("/");
   };
 
-  const handleRemoveSaved = (name: string) => {
-    removeSavedFranchise(name);
-    setUser(getUser());
+  const handleRemoveSaved = async (savedId: string) => {
+    await supabase.from('saved_franchises').delete().eq('id', savedId);
+    setSavedFranchises(prev => prev.filter(f => f.saved_id !== savedId));
   };
 
   if (loading || !user) {
     return <DashboardSkeleton />;
   }
-
-  const savedFranchises = FRANCHISE_DATA.filter(f => 
-    user.savedFranchises.includes(f.name)
-  );
 
   const recommendedFranchises = FRANCHISE_DATA.slice(0, 4);
 
@@ -206,7 +208,7 @@ export default function DashboardPage() {
             className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10"
           >
             {[
-              { icon: Bookmark, label: "Franchise Disimpan", value: user.savedFranchises.length.toString(), color: "#FF5C1A" },
+              { icon: Bookmark, label: "Franchise Disimpan", value: savedFranchises.length.toString(), color: "#FF5C1A" },
               { icon: Clock, label: "Riwayat Pencarian", value: user.searchHistory.length.toString(), color: "#7C3AED" },
               { icon: TrendingUp, label: "Franchise Dilihat", value: "12", color: "#1B8C5A" },
               { icon: Coffee, label: "Franchise Tersedia", value: FRANCHISE_DATA.length.toString(), color: "#FFCF40" },
@@ -279,7 +281,7 @@ export default function DashboardPage() {
                             <span className="font-bold text-[#111]">{f.rating}</span>
                           </div>
                           <button
-                            onClick={() => handleRemoveSaved(f.name)}
+                            onClick={() => handleRemoveSaved(f.saved_id)}
                             className="text-[#ccc] hover:text-red-400 transition-colors p-1"
                             title="Hapus"
                           >

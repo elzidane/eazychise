@@ -7,21 +7,21 @@ import { ArrowRight, Star } from "lucide-react";
 import { FRANCHISE_DATA } from "@/lib/franchise-data";
 import { ScrollReveal, StaggerReveal, fadeLeft, fadeRight, slideUp } from "./ScrollMotion";
 
-const items = [
-  FRANCHISE_DATA.find(f => f.name === "Wizzmie")!,
-  FRANCHISE_DATA.find(f => f.name === "XIBOBA")!,
-  FRANCHISE_DATA.find(f => f.name === "Kopi Kenangan")!,
-].map(f => ({
-  src: f.img || "",
-  alt: f.alt || f.name,
-  cat: f.cat,
-  title: f.name,
-  price: f.invest,
-  rating: f.rating.toString(),
-  badge: f.badge,
-}));
+export default function FeaturedSection({ initialData = FRANCHISE_DATA }: { initialData?: any[] }) {
+  const items = [
+    initialData.find(f => f.name === "Wizzmie") || initialData[0],
+    initialData.find(f => f.name === "XIBOBA") || initialData[1],
+    initialData.find(f => f.name === "Kopi Kenangan") || initialData[2],
+  ].filter(Boolean).map(f => ({
+    src: f.img || "",
+    alt: f.alt || f.name,
+    cat: f.cat,
+    title: f.name,
+    price: f.invest,
+    rating: f.rating?.toString() || "0",
+    badge: f.badge,
+  }));
 
-export default function FeaturedSection() {
   const [main, ...rest] = items;
 
   return (

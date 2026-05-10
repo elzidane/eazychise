@@ -12,7 +12,6 @@ import { FRANCHISE_DATA } from "@/lib/franchise-data";
 import { FRANCHISE_FILTERS } from "@/lib/constants";
 import { TiltCard } from "./Reactbitseffects";
 
-const data = FRANCHISE_DATA;
 const INITIAL_COUNT = 9;
 
 function applyFilter(list: Franchise[], key: string) {
@@ -22,7 +21,8 @@ function applyFilter(list: Franchise[], key: string) {
   return list.filter((f) => f.catKey === key);
 }
 
-export default function FranchiseListings() {
+export default function FranchiseListings({ initialData = FRANCHISE_DATA }: { initialData?: Franchise[] }) {
+  const data = initialData;
   const [active, setActive] = useState("all");
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
   const [compareList, setCompareList] = useState<string[]>([]);
@@ -256,7 +256,7 @@ export default function FranchiseListings() {
               <div className="flex items-center gap-2.5">
                 <div className="flex -space-x-2.5 mr-1">
                   {compareList.map(name => {
-                    const f = FRANCHISE_DATA.find(d => d.name === name);
+                    const f = data.find(d => d.name === name);
                     return (
                       <div key={name} className="relative group/chip">
                         <div className="w-10 h-10 rounded-xl overflow-hidden border-2 border-[#FF5C1A] bg-white relative">
