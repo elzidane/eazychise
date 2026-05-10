@@ -19,7 +19,9 @@ function LoginContent() {
   const [showGoogleMock, setShowGoogleMock] = useState(false);
 
   useEffect(() => {
-    if (searchParams.get('registered') === '1') {
+    if (searchParams.get('error') === 'not_registered') {
+      setError("Akun Anda belum terdaftar. Silakan daftar terlebih dahulu.");
+    } else if (searchParams.get('registered') === '1') {
       setError("Pendaftaran berhasil! Silakan masuk.");
     }
     const checkSession = async () => {
@@ -60,7 +62,7 @@ function LoginContent() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback?source=login`,
       },
     });
     if (error) {
