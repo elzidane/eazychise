@@ -124,20 +124,26 @@ export default function DashboardPage() {
           setSavedFranchises(saved.map((s: any) => ({ ...s.franchises, saved_id: s.id })));
         }
       } else {
+        // Get brands owned by this user
         const { data: brands } = await supabase
           .from('franchises')
           .select('*')
           .eq('owner_id', session.user.id);
         if (brands) {
           setFranchisorBrands(brands);
-        }
-
-        const { data: leads } = await supabase
-          .from('partnership_requests')
-          .select('*')
-          .order('created_at', { ascending: false });
-        if (leads) {
-          setFranchisorLeads(leads);
+          
+          // Fetch leads only for franchises this user owns
+          if (brands.length > 0) {
+            const brandIds = brands.map((b: any) => b.id);
+            const { data: leads } = await supabase
+              .from('partnership_requests')
+              .select('*, franchises(name)')
+              .in('franchise_id', brandIds)
+              .order('created_at', { ascending: false });
+            if (leads) {
+              setFranchisorLeads(leads);
+            }
+          }
         }
       }
 
@@ -383,223 +389,189 @@ export default function DashboardPage() {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-8 space-y-8">
-              {/* ── Brand Summary & Quick Stats ── */}
-              <motion.div 
+          <>
+          {/* ── Franchisor Dashboard ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            {/* Left Column: Stats + Leads */}
+            <div className="lg:col-span-7 space-y-6">
+
+              {/* Stats Row */}
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="bg-white rounded-3xl p-8 border border-black/5 shadow-sm"
+                className="grid grid-cols-2 sm:grid-cols-4 gap-4"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-                  <div>
-                    <h2 className="font-syne font-extrabold text-xl text-[#111] flex items-center gap-2">
-                      <Coffee className="w-6 h-6 text-[#FF5C1A]" />
-                      Performa Brand Saya
-                    </h2>
-                    <p className="text-[#999] text-xs font-medium mt-1">Pantau perkembangan bisnis Anda secara real-time.</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button 
-                      onClick={openAddForm}
-                      className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#FF5C1A] text-white font-bold text-xs hover:bg-[#e04710] transition-all shadow-md shadow-orange-200"
-                    >
-                      <Plus className="w-4 h-4" /> Tambah Brand
-                    </button>
-                    <button 
-                      onClick={handleDownloadReport}
-                      className="p-2.5 rounded-xl bg-gray-100 text-[#555] hover:bg-[#111] hover:text-white transition-all"
-                      title="Unduh Laporan PDF"
-                    >
-                      <Download className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                  {[
-                    { label: "Dilihat", value: formatAngkaSingkat(1240 * (franchisorBrands.length || 1)), icon: Eye, color: "#7C3AED" },
-                    { label: "Leads", value: franchisorLeads.length.toString(), icon: UserIcon, color: "#FF5C1A" },
-                    { label: "Konversi", value: "3.6%", icon: TrendingUp, color: "#1B8C5A" },
-                    { label: "Rating", value: "4.8", icon: Star, color: "#FFCF40" },
-                  ].map((stat) => (
-                    <div key={stat.label} className="bg-[#F8F8F6] p-4 rounded-2xl border border-black/5">
-                      <div className="flex items-center gap-2 mb-2">
-                        <stat.icon className="w-3.5 h-3.5" style={{ color: stat.color }} />
-                        <span className="text-[0.6rem] text-[#777] font-bold uppercase tracking-wider">{stat.label}</span>
-                      </div>
-                      <p className="text-xl font-bold text-[#111]">{stat.value}</p>
+                {[
+                  { label: "Dilihat", value: formatAngkaSingkat(1240 * (franchisorBrands.length || 1)), icon: Eye, color: "#7C3AED" },
+                  { label: "Leads Masuk", value: franchisorLeads.length.toString(), icon: UserIcon, color: "#FF5C1A" },
+                  { label: "Konversi", value: "3.6%", icon: TrendingUp, color: "#1B8C5A" },
+                  { label: "Rating", value: "4.8", icon: Star, color: "#FFCF40" },
+                ].map((stat) => (
+                  <div key={stat.label} className="bg-white rounded-2xl p-5 border border-black/5 shadow-sm">
+                    <div className="flex items-center gap-2 mb-3">
+                      <stat.icon className="w-4 h-4" style={{ color: stat.color }} />
+                      <span className="text-[0.6rem] text-[#999] font-bold uppercase tracking-wider">{stat.label}</span>
                     </div>
-                  ))}
-                </div>
-
-                <div className="space-y-4">
-                  {franchisorBrands.map((brand, index) => (
-                    <div key={index} className="p-4 rounded-2xl border border-black/5 flex items-center gap-4 bg-white hover:border-[#FF5C1A]/20 transition-all group">
-                      <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 relative">
-                        <img src={brand.img} alt={brand.name} className="w-full h-full object-cover" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-[#111]">{brand.name}</h3>
-                        <div className="flex items-center gap-3 mt-1">
-                          <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full uppercase tracking-wider">{brand.status}</span>
-                          <p className="text-xs text-[#999] truncate">Kategori: {brand.cat}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <button 
-                          onClick={() => openEditForm(index)}
-                          className="p-2.5 rounded-xl bg-gray-50 text-[#999] hover:bg-[#111] hover:text-white transition-all"
-                          title="Edit Brand"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button 
-                          onClick={() => { setSelectedBrandIndex(index); setShowBrandDetails(true); }}
-                          className="p-2.5 rounded-xl bg-gray-50 text-[#999] hover:bg-[#111] hover:text-white transition-all"
-                          title="Detail Analitik"
-                        >
-                          <ChevronRight className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    <p className="text-2xl font-bold text-[#111]">{stat.value}</p>
+                  </div>
+                ))}
               </motion.div>
 
-              {/* ── Leads & Traffic ── */}
-              <div className="grid md:grid-cols-2 gap-8">
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="bg-white rounded-3xl p-7 border border-black/5"
-                >
-                  <h2 className="font-syne font-extrabold text-lg text-[#111] flex items-center gap-2 mb-6">
-                    <UserIcon className="w-5 h-5 text-[#1B8C5A]" />
-                    Leads Terbaru
+              {/* Leads Inbox */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="bg-white rounded-3xl border border-black/5 shadow-sm overflow-hidden"
+              >
+                <div className="px-7 py-5 flex items-center justify-between border-b border-black/5">
+                  <h2 className="font-syne font-extrabold text-lg text-[#111] flex items-center gap-2">
+                    <UserIcon className="w-5 h-5 text-[#FF5C1A]" />
+                    Kotak Masuk Leads
+                    {franchisorLeads.length > 0 && (
+                      <span className="ml-1 text-[0.6rem] font-black bg-[#FF5C1A] text-white px-2 py-0.5 rounded-full">
+                        {franchisorLeads.length}
+                      </span>
+                    )}
                   </h2>
-                  <div className="space-y-3">
-                    {franchisorLeads.length === 0 ? (
-                      <p className="text-sm text-gray-500 text-center py-4">Belum ada leads yang masuk.</p>
-                    ) : (
-                      franchisorLeads.slice(0, 5).map((lead, i) => (
-                        <div key={i} className="flex items-center justify-between p-3.5 rounded-xl bg-[#F8F8F6] hover:bg-white border border-transparent hover:border-black/5 transition-all">
-                          <div>
-                            <p className="font-bold text-sm text-[#333]">{lead.name}</p>
-                            <p className="text-[0.65rem] text-[#999] mt-0.5">{new Date(lead.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</p>
+                </div>
+                <div className="divide-y divide-black/5">
+                  {franchisorLeads.length === 0 ? (
+                    <div className="py-12 text-center">
+                      <div className="w-14 h-14 mx-auto bg-gray-50 rounded-full flex items-center justify-center mb-3">
+                        <UserIcon className="w-6 h-6 text-gray-300" />
+                      </div>
+                      <p className="text-sm font-bold text-[#999]">Belum ada leads yang masuk</p>
+                      <p className="text-xs text-[#bbb] mt-1">Leads akan muncul di sini saat calon mitra mengajukan kemitraan</p>
+                    </div>
+                  ) : (
+                    franchisorLeads.slice(0, 8).map((lead: any, i: number) => (
+                      <div key={i} className="flex items-center justify-between px-7 py-4 hover:bg-[#FFF9F6] transition-colors group">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FF5C1A]/20 to-[#FF8C42]/20 flex items-center justify-center text-[#FF5C1A] font-bold text-sm flex-shrink-0">
+                            {lead.name.charAt(0).toUpperCase()}
                           </div>
-                          <span className={`text-[0.55rem] font-extrabold uppercase tracking-widest px-2 py-1 rounded-md ${
+                          <div>
+                            <p className="font-bold text-sm text-[#222]">{lead.name}</p>
+                            <p className="text-[0.65rem] text-[#aaa] mt-0.5">
+                              {lead.email} · {lead.phone} · {new Date(lead.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            </p>
+                            {lead.franchises?.name && (
+                              <p className="text-[0.6rem] text-[#FF5C1A] font-bold mt-0.5">📌 {lead.franchises.name}</p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 flex-shrink-0">
+                          {lead.location && (
+                            <span className="hidden sm:block text-[0.6rem] text-[#999] font-medium bg-gray-50 px-2 py-1 rounded-lg">{lead.location}</span>
+                          )}
+                          <span className={`text-[0.55rem] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-lg ${
                             lead.status === "Baru" ? "bg-green-100 text-green-700" : 
                             lead.status === "Dihubungi" ? "bg-blue-100 text-blue-700" : "bg-orange-100 text-orange-700"
                           }`}>
                             {lead.status}
                           </span>
                         </div>
-                      ))
-                    )}
-                  </div>
-                </motion.div>
-
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="bg-white rounded-3xl p-7 border border-black/5"
-                >
-                  <h2 className="font-syne font-extrabold text-lg text-[#111] flex items-center gap-2 mb-6">
-                    <TrendingUp className="w-5 h-5 text-[#7C3AED]" />
-                    Sumber Traffic
-                  </h2>
-                  <div className="space-y-5">
-                    <div>
-                      <div className="flex justify-between text-xs font-bold mb-2 text-[#555]">
-                        <span>Organik</span>
-                        <span>65%</span>
                       </div>
-                      <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-[#FF5C1A]" style={{ width: '65%' }}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-xs font-bold mb-2 text-[#555]">
-                        <span>Rekomendasi AI</span>
-                        <span>35%</span>
-                      </div>
-                      <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-[#7C3AED]" style={{ width: '35%' }}></div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
+                    ))
+                  )}
+                </div>
+              </motion.div>
             </div>
 
-            {/* ── AI Insights Sidebar ── */}
-            <div className="lg:col-span-4">
-              <motion.div 
+            {/* Right Column: Brand List + AI Sidebar */}
+            <div className="lg:col-span-5 space-y-6">
+
+              {/* Brand List */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-white rounded-3xl border border-black/5 shadow-sm overflow-hidden"
+              >
+                <div className="px-6 py-5 flex items-center justify-between border-b border-black/5">
+                  <h2 className="font-syne font-extrabold text-base text-[#111] flex items-center gap-2">
+                    <Coffee className="w-5 h-5 text-[#FF5C1A]" />
+                    Brand Saya
+                  </h2>
+                  <div className="flex items-center gap-2">
+                    <button onClick={openAddForm} className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#FF5C1A] text-white font-bold text-xs hover:bg-[#e04710] transition-all">
+                      <Plus className="w-3.5 h-3.5" /> Tambah
+                    </button>
+                    <button onClick={handleDownloadReport} className="p-2 rounded-xl bg-gray-100 text-[#555] hover:bg-[#111] hover:text-white transition-all" title="Unduh Laporan">
+                      <Download className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+                <div className="divide-y divide-black/5 max-h-72 overflow-y-auto">
+                  {franchisorBrands.length === 0 ? (
+                    <div className="py-10 text-center">
+                      <p className="text-sm font-bold text-[#999]">Belum ada brand</p>
+                      <p className="text-xs text-[#bbb] mt-1">Tambahkan brand franchise Anda</p>
+                    </div>
+                  ) : (
+                    franchisorBrands.map((brand: any, index: number) => (
+                      <div key={index} className="flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors">
+                        <div className="w-11 h-11 rounded-xl overflow-hidden flex-shrink-0">
+                          <img src={brand.img} alt={brand.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-bold text-sm text-[#111] truncate">{brand.name}</p>
+                          <p className="text-[0.65rem] text-[#999] truncate">{brand.cat}</p>
+                        </div>
+                        <div className="flex gap-1.5 flex-shrink-0">
+                          <button onClick={() => openEditForm(index)} className="p-1.5 rounded-lg bg-gray-100 text-[#777] hover:bg-[#111] hover:text-white transition-all"><Edit className="w-3.5 h-3.5" /></button>
+                          <button onClick={() => { setSelectedBrandIndex(index); setShowBrandDetails(true); }} className="p-1.5 rounded-lg bg-gray-100 text-[#777] hover:bg-[#111] hover:text-white transition-all"><ChevronRight className="w-3.5 h-3.5" /></button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </motion.div>
+
+              {/* AI Insights */}
+              <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 }}
-                className="bg-[#111] rounded-3xl p-8 text-white relative overflow-hidden h-full sticky top-24"
+                transition={{ delay: 0.4 }}
+                className="bg-[#111] rounded-3xl p-7 text-white relative overflow-hidden"
               >
-                <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF5C1A] opacity-10 blur-[100px] -mr-32 -mt-32"></div>
-                
-                <h2 className="font-syne font-extrabold text-xl mb-8 flex items-center gap-3">
-                  <Zap className="w-6 h-6 text-[#FF5C1A]" />
-                  Analisa AI
+                <div className="absolute top-0 right-0 w-48 h-48 bg-[#FF5C1A] opacity-10 blur-[80px] -mr-20 -mt-20"></div>
+                <h2 className="font-syne font-extrabold text-lg mb-5 flex items-center gap-2 relative z-10">
+                  <Zap className="w-5 h-5 text-[#FF5C1A]" />
+                  Insight AI
                 </h2>
-
-                <div className="space-y-6">
-                  <div className="p-5 rounded-2xl bg-white/5 border border-white/10">
-                    <div className="flex items-center gap-3 mb-4 text-white/50">
-                      <MessageCircle className="w-4 h-4" />
-                      <span className="text-[0.65rem] font-bold uppercase tracking-widest">Sentimen</span>
+                <div className="relative z-10 space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
+                      <p className="text-[0.6rem] text-white/40 font-bold uppercase mb-1">Sentimen</p>
+                      <p className="text-lg font-bold">Positif</p>
+                      <p className="text-[0.6rem] text-[#FF5C1A] font-bold">88%</p>
                     </div>
-                    <p className="text-2xl font-bold mb-1">Positif (88%)</p>
-                    <p className="text-[0.65rem] text-white/40 leading-relaxed">Analisa 120 ulasan pelanggan terakhir menunjukkan tingkat kepuasan tinggi.</p>
-                  </div>
-
-                  <div className="p-5 rounded-2xl bg-white/5 border border-white/10">
-                    <div className="flex items-center gap-3 mb-4 text-white/50">
-                      <BarChart3 className="w-4 h-4" />
-                      <span className="text-[0.65rem] font-bold uppercase tracking-widest">Prediksi</span>
+                    <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
+                      <p className="text-[0.6rem] text-white/40 font-bold uppercase mb-1">Prediksi</p>
+                      <p className="text-lg font-bold">+15.4%</p>
+                      <p className="text-[0.6rem] text-green-400 font-bold">Leads bulan depan</p>
                     </div>
-                    <p className="text-2xl font-bold mb-1">+15.4%</p>
-                    <p className="text-[0.65rem] text-white/40 leading-relaxed">Estimasi kenaikan leads pada periode bulan berikutnya.</p>
                   </div>
-
-                  <div className="pt-4">
-                    <h3 className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[#FF5C1A] mb-5">Rekomendasi</h3>
-                    <ul className="space-y-4">
-                      {[
-                        "Optimasi galeri foto profil brand.",
-                        "Targetkan wilayah Jawa Barat.",
-                        "Luncurkan paket 'Light Edition'."
-                      ].map((rec, i) => (
-                        <li key={i} className="flex gap-3 group">
-                          <div className="w-5 h-5 rounded-lg bg-[#FF5C1A]/20 flex-shrink-0 flex items-center justify-center text-[#FF5C1A] text-[9px] font-bold">
-                            {i+1}
-                          </div>
-                          <p className="text-[0.7rem] text-white/60 group-hover:text-white transition-colors">
-                            {rec}
-                          </p>
+                  <div>
+                    <p className="text-[0.6rem] text-[#FF5C1A] font-bold uppercase tracking-widest mb-3">Rekomendasi</p>
+                    <ul className="space-y-2">
+                      {["Optimasi foto profil brand.", "Targetkan wilayah Jawa Barat.", "Luncurkan paket 'Light Edition'."].map((rec, i) => (
+                        <li key={i} className="flex gap-2 text-[0.7rem] text-white/60">
+                          <span className="w-4 h-4 rounded-md bg-[#FF5C1A]/20 flex items-center justify-center text-[#FF5C1A] text-[8px] font-bold flex-shrink-0">{i+1}</span>
+                          {rec}
                         </li>
                       ))}
                     </ul>
                   </div>
-
-                  <button 
-                    onClick={() => setShowBrandDetails(true)}
-                    className="w-full mt-6 py-4 rounded-2xl bg-white text-black font-bold text-sm hover:bg-gray-100 transition-all shadow-xl"
-                  >
-                    Detail Analitik
-                  </button>
                 </div>
               </motion.div>
             </div>
           </div>
+          </>
         )}
       </div>
 
