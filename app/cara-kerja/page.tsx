@@ -1,4 +1,4 @@
-import HowItWorks from "@/components/HowItWorks";
+import HowItWorks from "@/components/sections/HowItWorks";
 
 export default function CaraKerjaPage() {
   return (

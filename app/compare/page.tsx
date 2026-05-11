@@ -7,9 +7,9 @@ import { ArrowLeft, Star, CheckCircle2, ArrowRight, X, TrendingUp, Sparkles, Bra
 import { MdBalance } from "react-icons/md";
 import { Franchise } from "@/types";
 import { createClient } from "@/utils/supabase/client";
-import SpotlightCard from "@/components/SpotlightCard";
-import Typewriter from "@/components/Typewriter";
-import AIConsultantCard from "@/components/AIConsultantCard";
+import SpotlightCard from "@/components/cards/SpotlightCard";
+import Typewriter from "@/components/effects/Typewriter";
+import AIConsultantCard from "@/components/features/AIConsultantCard";
 
 export default function ComparePage() {
   const router = useRouter();

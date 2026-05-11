@@ -1,7 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { ScrollProgressLine } from "@/components/ScrollMotion";
+import { ScrollProgressLine } from "@/components/effects/ScrollMotion";
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

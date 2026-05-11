@@ -13,8 +13,8 @@ import { FRANCHISE_DATA } from "@/lib/franchise-data";
 import { generateBrandReportPDF } from "@/lib/pdf-generator";
 import { formatRupiah, formatJuta, formatAngkaSingkat } from "@/lib/utils/formatRupiah";
 import { createClient } from "@/utils/supabase/client";
-import DashboardSkeleton from "@/components/DashboardSkeleton";
-import LocalBusinessTracker from "@/components/LocalBusinessTracker";
+import DashboardSkeleton from "@/components/skeletons/DashboardSkeleton";
+import LocalBusinessTracker from "@/components/features/LocalBusinessTracker";
 
 export default function DashboardPage() {
   const router = useRouter();

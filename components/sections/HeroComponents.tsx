@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
-import { CountUp } from "./Reactbitseffects";
-import { Stat } from "../types";
+import { CountUp } from "../effects/Reactbitseffects";
+import { Stat } from "../../types";
 import { MdRestaurant, MdLocalCafe, MdWhatshot, MdCheckCircle } from "react-icons/md";
 
 export function HeroStats({ stats }: { stats: Stat[] }) {

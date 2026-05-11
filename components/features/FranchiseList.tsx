@@ -10,7 +10,7 @@ import { MdRestaurant } from "react-icons/md";
 import { Franchise } from "@/types";
 import { FRANCHISE_DATA } from "@/lib/franchise-data";
 import { FRANCHISE_FILTERS } from "@/lib/constants";
-import { TiltCard } from "./Reactbitseffects";
+import { TiltCard } from "../effects/Reactbitseffects";
 import { createClient } from "@/utils/supabase/client";
 
 const INITIAL_COUNT = 9;

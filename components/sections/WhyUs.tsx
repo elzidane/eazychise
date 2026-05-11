@@ -3,7 +3,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { CheckCircle2, ShieldCheck, UserRound, BarChart3, ArrowRight, Star } from "lucide-react";
 import { STATS } from "@/lib/constants";
-import { ScrollReveal, StaggerReveal, ParallaxScroll, fadeRight, fadeLeft, slideUp, AnimatedCounter } from "./ScrollMotion";
+import { ScrollReveal, StaggerReveal, ParallaxScroll, fadeRight, fadeLeft, slideUp, AnimatedCounter } from "../effects/ScrollMotion";
 
 const features = [
   {

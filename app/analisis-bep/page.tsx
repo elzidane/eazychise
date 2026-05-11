@@ -1,4 +1,4 @@
-import BEPCalculator from "@/components/BEPCalculator";
+import BEPCalculator from "@/components/features/BEPCalculator";
 
 export default function AnalisisBEPPage() {
   return (

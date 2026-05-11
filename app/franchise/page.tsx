@@ -1,4 +1,4 @@
-import FranchiseListings from "@/components/FranchiseList";
+import FranchiseListings from "@/components/features/FranchiseList";
 import { createClient } from "@/utils/supabase/server";
 
 async function getFranchises() {

@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import Typewriter from "./Typewriter";
+import Typewriter from "../effects/Typewriter";
 
 export function OrbitRing({ size, duration, delay, opacity }: { size: number; duration: number; delay: number; opacity: number }) {
   return (

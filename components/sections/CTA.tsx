@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
-import { ScrollReveal, StaggerReveal, fadeUp, slideUp } from "./ScrollMotion";
+import { ScrollReveal, StaggerReveal, fadeUp, slideUp } from "../effects/ScrollMotion";
 
 export default function CTASection() {
   return (

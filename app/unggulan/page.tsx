@@ -1,4 +1,4 @@
-import FeaturedSection from "@/components/Featured";
+import FeaturedSection from "@/components/sections/Featured";
 
 export default function UnggulanPage() {
   return (

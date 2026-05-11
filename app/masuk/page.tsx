@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Mail, Lock, ArrowRight, ArrowLeft, ShieldCheck, Eye, EyeOff } from "lucide-react";
-import GoogleLoginModal from "@/components/GoogleLoginModal";
+import GoogleLoginModal from "@/components/modals/GoogleLoginModal";
 import { createClient } from "@/utils/supabase/client";
 
 function LoginContent() {

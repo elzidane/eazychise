@@ -2,12 +2,12 @@
 import { useState, useEffect } from "react";
 import { motion, useSpring, useTransform } from "framer-motion";
 import { Calculator, TrendingUp, DollarSign, Clock, Pencil, Rocket, AlertCircle, Brain, Sparkles, Zap } from "lucide-react";
-import SpotlightCard from "./SpotlightCard";
-import Typewriter from "./Typewriter";
+import SpotlightCard from "../cards/SpotlightCard";
+import Typewriter from "../effects/Typewriter";
 
 import { MdLightbulb } from "react-icons/md";
 import { formatRupiah } from "@/lib/utils/formatRupiah";
-import AnimatedNumber from "./ui/AnimatedNumber";
+import AnimatedNumber from "../ui/AnimatedNumber";
 
 export default function BEPCalculator() {
   const [modalAwal, setModalAwal] = useState<number>(50000000);

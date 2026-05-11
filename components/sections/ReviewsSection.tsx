@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, MessageSquare, Send, CheckCircle2, MapPin, Coffee } from "lucide-react";
 import { MdSearch } from "react-icons/md";
-import SpotlightCard from "./SpotlightCard";
+import SpotlightCard from "../cards/SpotlightCard";
 import { ReviewCard, ReviewForm } from "./ReviewsSectionComponents";
 
 import { Review } from "@/types";

@@ -6,12 +6,12 @@ import Link from "next/link";
 import { ArrowLeft, CheckCircle2, TrendingUp, Users, MapPin, Star, Download, Brain, Sparkles, Zap, Heart } from "lucide-react";
 import { generateProposalPDF } from "@/lib/pdf-generator";
 import { createClient } from "@/utils/supabase/client";
-import PartnershipModal from "@/components/PartnershipModal";
-import LocationRecommender from "@/components/LocationRecommender";
-import SpotlightCard from "@/components/SpotlightCard";
-import Typewriter from "@/components/Typewriter";
+import PartnershipModal from "@/components/modals/PartnershipModal";
+import LocationRecommender from "@/components/features/LocationRecommender";
+import SpotlightCard from "@/components/cards/SpotlightCard";
+import Typewriter from "@/components/effects/Typewriter";
 import { motion } from "framer-motion";
-import { ScrollReveal, StaggerReveal, fadeRight, fadeLeft, fadeUp, slideUp } from "@/components/ScrollMotion";
+import { ScrollReveal, StaggerReveal, fadeRight, fadeLeft, fadeUp, slideUp } from "@/components/effects/ScrollMotion";
 import { DbFranchise, DbReview, Franchise } from "@/types";
 
 export default function FranchiseDetailPage({

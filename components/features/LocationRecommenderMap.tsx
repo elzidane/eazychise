@@ -153,7 +153,7 @@ function buildQuery(catLower: string, lat: number, lon: number, r = 4000) {
 }
 
 // ── Map Events & Sync ──────────────────────────────────────────
-import { useToast } from "./ui/Toast";
+import { useToast } from "../ui/Toast";
 
 function MapControl({ center, onMoveEnd }: { center: [number, number], onMoveEnd: (center: [number, number]) => void }) {
   const map = useMap();
