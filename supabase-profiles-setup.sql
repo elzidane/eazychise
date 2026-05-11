@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   bio TEXT,
   avatar_url TEXT,
   location TEXT DEFAULT 'Indonesia',
+  phone TEXT,
+  website TEXT,
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -22,23 +24,21 @@ DROP POLICY IF EXISTS "Public profiles are viewable by everyone." ON public.prof
 CREATE POLICY "Public profiles are viewable by everyone." ON public.profiles
   FOR SELECT USING (true);
 
-DROP POLICY IF EXISTS "Users can insert their own profile." ON public.profiles;
-CREATE POLICY "Users can insert their own profile." ON public.profiles
-  FOR INSERT WITH CHECK (auth.uid() = id);
-
-DROP POLICY IF EXISTS "Users can update own profile." ON public.profiles;
-CREATE POLICY "Users can update own profile." ON public.profiles
-  FOR UPDATE USING (auth.uid() = id);
+DROP POLICY IF EXISTS "Users can manage own profile" ON public.profiles;
+CREATE POLICY "Users can manage own profile" ON public.profiles
+  FOR ALL
+  TO authenticated
+  USING (auth.uid() = id)
+  WITH CHECK (auth.uid() = id);
 
 -- 4. Create function to handle new user signup
--- This automatically creates a profile entry when a new user signs up in auth.users
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
 BEGIN
   INSERT INTO public.profiles (id, full_name, avatar_url, username)
   VALUES (
-    new.id, 
-    new.raw_user_meta_data->>'full_name', 
+    new.id,
+    new.raw_user_meta_data->>'full_name',
     new.raw_user_meta_data->>'avatar_url',
     COALESCE(new.raw_user_meta_data->>'username', split_part(new.email, '@', 1))
   )
@@ -53,7 +53,11 @@ CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- 6. Pre-fill profiles for existing users (Optional but helpful)
+-- 6. Add new columns if upgrading an existing table
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS phone TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS website TEXT;
+
+-- 7. Pre-fill profiles for existing users
 INSERT INTO public.profiles (id, full_name, username, created_at)
 SELECT id, raw_user_meta_data->>'full_name', COALESCE(raw_user_meta_data->>'username', split_part(email, '@', 1)), created_at
 FROM auth.users

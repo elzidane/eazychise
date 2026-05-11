@@ -1,65 +1,59 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { User, Mail, FileText, ChevronLeft, Loader2, ShieldCheck } from 'lucide-react';
+import { Camera, User, Mail, FileText, ChevronLeft, Save, Loader2, Phone, MapPin, Globe, Check } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
+import { useRouter } from 'next/navigation';
 
 function EditProfilePage() {
   const supabase = createClient();
-  
+  const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
   const [nama, setNama] = useState('');
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [location, setLocation] = useState('');
+  const [website, setWebsite] = useState('');
+  const [foto, setFoto] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
-          setNama(user.user_metadata?.full_name || '');
-          setUsername(user.user_metadata?.username || user.email?.split('@')[0] || '');
-          setBio(user.user_metadata?.bio || '');
           setEmail(user.email || '');
-          setPreviewUrl(user.user_metadata?.avatar_url || null);
+          const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+          if (profile) {
+            setNama(profile.full_name || '');
+            setUsername(profile.username || '');
+            setBio(profile.bio || '');
+            setPhone(profile.phone || '');
+            setLocation(profile.location || '');
+            setWebsite(profile.website || '');
+            if (profile.avatar_url) setPreviewUrl(profile.avatar_url);
+          } else {
+            setNama(user.user_metadata?.full_name || '');
+            setUsername(user.user_metadata?.username || user.email?.split('@')[0] || '');
+            setBio(user.user_metadata?.bio || '');
+          }
         }
       } catch (err) {
-        console.error('Gagal memuat data profil', err);
+        console.error('Gagal memuat profil', err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchUser();
   }, [supabase]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
-
-    try {
-      const { error } = await supabase.auth.updateUser({
-        data: { 
-          full_name: nama,
-          username: username,
-          bio: bio
-        }
-      });
-
-      if (error) throw error;
-
-      alert('Profil berhasil diperbarui!');
-      router.push('/profile');
-      router.refresh();
-    } catch (error: any) {
-      alert('Gagal memperbarui profil: ' + error.message);
-    } finally {
-      setSaving(false);
-    }
-  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -69,112 +63,230 @@ function EditProfilePage() {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setError('');
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Tidak ada sesi pengguna');
+
+      let avatarUrl = previewUrl;
+
+      // 1. Upload photo if new file selected
+      if (foto) {
+        const fileExt = foto.name.split('.').pop();
+        const filePath = `${user.id}/${user.id}-${Date.now()}.${fileExt}`;
+        const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, foto, { upsert: true });
+        if (uploadError) throw uploadError;
+        const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(filePath);
+        avatarUrl = publicUrl;
+      }
+
+      // 2. Upsert profiles table
+      const { error: profileError } = await supabase.from('profiles').upsert({
+        id: user.id,
+        full_name: nama,
+        username: username,
+        bio: bio,
+        phone: phone,
+        location: location,
+        website: website,
+        avatar_url: avatarUrl,
+        updated_at: new Date().toISOString(),
+      });
+      if (profileError) throw profileError;
+
+      // 3. Sync auth metadata
+      await supabase.auth.updateUser({ data: { full_name: nama, username, bio, avatar_url: avatarUrl } });
+
+      setSaved(true);
+      setTimeout(() => {
+        router.push('/profile');
+        router.refresh();
+      }, 1200);
+    } catch (err: any) {
+      setError(err.message || 'Terjadi kesalahan');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#FFF9F0] flex flex-col items-center justify-center">
-        <Loader2 className="w-10 h-10 text-[#FF5C1A] animate-spin mb-4" />
-        <p className="text-sm font-bold text-gray-400">Memuat Informasi...</p>
+        <Loader2 className="w-10 h-10 text-[#FF5C1A] animate-spin mb-3" />
+        <p className="text-sm font-bold text-gray-400">Memuat data profil...</p>
       </div>
     );
   }
 
+  const initials = nama.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || '?';
+
+  const fields = [
+    {
+      label: 'Nama Lengkap', icon: User, value: nama, setter: setNama,
+      type: 'text', placeholder: 'Nama lengkap Anda', required: true
+    },
+    {
+      label: 'Username', icon: () => <span className="font-black text-base leading-none">@</span>,
+      value: username, setter: setUsername, type: 'text', placeholder: 'username_anda', required: true
+    },
+    {
+      label: 'Nomor Telepon', icon: Phone, value: phone, setter: setPhone,
+      type: 'tel', placeholder: '08xx-xxxx-xxxx', required: false
+    },
+    {
+      label: 'Lokasi', icon: MapPin, value: location, setter: setLocation,
+      type: 'text', placeholder: 'Jakarta, Indonesia', required: false
+    },
+    {
+      label: 'Website / LinkedIn', icon: Globe, value: website, setter: setWebsite,
+      type: 'url', placeholder: 'https://', required: false
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#FFF9F0] pt-28 pb-12 sm:pt-32 px-4 sm:px-6 lg:px-8 font-jakarta">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
+    <div className="min-h-screen bg-[#FFF9F0] font-jakarta pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-2xl mx-auto"
       >
         {/* Header */}
-        <div className="mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Link 
-              href="/profile" 
-              className="w-10 h-10 rounded-2xl bg-white border border-black/5 flex items-center justify-center text-gray-500 hover:text-[#FF5C1A] hover:border-[#FF5C1A]/20 transition-all shadow-sm flex-shrink-0"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </Link>
-            <div>
-              <h1 className="text-2xl font-black text-[#111] font-syne tracking-tight">Informasi Pribadi</h1>
-              <p className="text-xs text-gray-500 font-medium tracking-wide">Detail data akun yang terdaftar di sistem</p>
-            </div>
-          </div>
-          <div className="w-fit flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-2 rounded-2xl text-[0.7rem] font-bold uppercase tracking-wider border border-blue-100">
-            <ShieldCheck className="w-3.5 h-3.5" />
-            Data Terlindungi
+        <div className="flex items-center gap-4 mb-8">
+          <Link href="/profile"
+            className="w-11 h-11 rounded-2xl bg-white border border-black/5 shadow-sm flex items-center justify-center text-gray-500 hover:text-[#FF5C1A] hover:border-[#FF5C1A]/30 transition-all flex-shrink-0">
+            <ChevronLeft className="w-5 h-5" />
+          </Link>
+          <div>
+            <h1 className="text-2xl font-black text-[#111] font-syne tracking-tight">Edit Profil</h1>
+            <p className="text-xs text-gray-400 font-medium mt-0.5">Perbarui informasi publik Anda</p>
           </div>
         </div>
 
-        <div className="space-y-6">
-          {/* Profile Card */}
-          <div className="bg-white p-8 rounded-[3rem] border border-black/5 shadow-[0_20px_50px_rgba(0,0,0,0.03)] flex flex-col items-center text-center">
-            <div className="w-32 h-32 rounded-[2.5rem] bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-4xl font-black shadow-[0_20px_50px_rgba(255,92,26,0.2)] overflow-hidden border-4 border-white">
-              {previewUrl ? (
-                <img src={previewUrl} alt="Avatar" className="w-full h-full object-cover" />
-              ) : (
-                nama.charAt(0).toUpperCase()
-              )}
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Avatar Uploader */}
+          <div className="bg-white rounded-[2.5rem] border border-black/5 shadow-[0_8px_32px_rgba(0,0,0,0.05)] p-8 flex flex-col items-center gap-4">
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="relative cursor-pointer group"
+            >
+              <div className="w-28 h-28 rounded-[1.75rem] bg-gradient-to-br from-[#FF5C1A] to-[#FFAB48] overflow-hidden flex items-center justify-center text-white text-3xl font-black font-syne shadow-[0_12px_30px_rgba(255,92,26,0.3)] border-4 border-white transition-transform group-hover:scale-105">
+                {previewUrl
+                  ? <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                  : initials}
+              </div>
+              <div className="absolute -bottom-2 -right-2 w-9 h-9 bg-[#FF5C1A] rounded-2xl shadow-lg border-2 border-white flex items-center justify-center text-white group-hover:scale-110 transition-transform">
+                <Camera className="w-4 h-4" />
+              </div>
             </div>
-            <h2 className="mt-6 text-2xl font-black text-[#111] font-syne">{nama || 'User'}</h2>
-            <p className="text-sm text-[#FF5C1A] font-bold tracking-widest mt-1">@{username}</p>
+            <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+            <div className="text-center">
+              <p className="text-sm font-bold text-[#111]">{nama || 'Nama Anda'}</p>
+              <p className="text-xs text-gray-400 mt-0.5">Klik foto untuk mengubah • JPG, PNG, max 5MB</p>
+            </div>
           </div>
 
-          {/* Details Grid */}
-          <div className="bg-white p-8 rounded-[3rem] border border-black/5 shadow-[0_20px_50px_rgba(0,0,0,0.03)] space-y-8">
-            {/* Full Name */}
-            <div className="flex items-start gap-6 group">
-              <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-[#FF5C1A]/5 group-hover:text-[#FF5C1A] transition-colors flex-shrink-0">
-                <User className="w-5 h-5" />
-              </div>
-              <div className="border-b border-gray-50 pb-4 flex-1">
-                <p className="text-[0.65rem] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Nama Lengkap</p>
-                <p className="text-base font-bold text-[#111]">{nama || '-'}</p>
-              </div>
-            </div>
+          {/* Form Fields */}
+          <div className="bg-white rounded-[2.5rem] border border-black/5 shadow-[0_8px_32px_rgba(0,0,0,0.05)] p-6 sm:p-8 space-y-6">
+            <p className="text-[0.65rem] font-black text-gray-400 uppercase tracking-[0.2em]">Informasi Pribadi</p>
 
-            {/* Username */}
-            <div className="flex items-start gap-6 group">
-              <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-[#FF5C1A]/5 group-hover:text-[#FF5C1A] transition-colors flex-shrink-0">
-                <div className="font-black text-lg">@</div>
-              </div>
-              <div className="border-b border-gray-50 pb-4 flex-1">
-                <p className="text-[0.65rem] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Username</p>
-                <p className="text-base font-bold text-[#111]">{username || '-'}</p>
-              </div>
-            </div>
+            {fields.map((field, i) => {
+              const IconComp = field.icon;
+              return (
+                <div key={i} className="space-y-1.5">
+                  <label className="text-xs font-bold text-gray-500 flex items-center gap-1.5 ml-1">
+                    {field.label}
+                    {field.required && <span className="text-[#FF5C1A]">*</span>}
+                  </label>
+                  <div className="relative">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-gray-400">
+                      <IconComp />
+                    </div>
+                    <input
+                      type={field.type}
+                      value={field.value}
+                      onChange={e => field.setter(e.target.value)}
+                      placeholder={field.placeholder}
+                      required={field.required}
+                      className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-gray-50 border border-transparent text-sm font-medium text-[#111] placeholder:text-gray-300 focus:outline-none focus:bg-white focus:border-[#FF5C1A] focus:ring-4 focus:ring-[#FF5C1A]/10 transition-all"
+                    />
+                  </div>
+                </div>
+              );
+            })}
 
-            {/* Email */}
-            <div className="flex items-start gap-6 group">
-              <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-[#FF5C1A]/5 group-hover:text-[#FF5C1A] transition-colors flex-shrink-0">
-                <Mail className="w-5 h-5" />
+            {/* Email (read-only) */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-gray-500 flex items-center gap-1.5 ml-1">
+                <span>Email</span>
+              </label>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2">
+                  <Mail className="w-4 h-4 text-gray-300" />
+                </div>
+                <input
+                  type="email"
+                  value={email}
+                  disabled
+                  className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-gray-100 border border-transparent text-sm font-medium text-gray-400 cursor-not-allowed"
+                />
               </div>
-              <div className="border-b border-gray-50 pb-4 flex-1">
-                <p className="text-[0.65rem] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Email Kemitraan</p>
-                <p className="text-base font-bold text-[#111]">{email}</p>
-              </div>
+              <p className="text-[10px] text-gray-400 ml-1">Email tidak dapat diubah</p>
             </div>
 
             {/* Bio */}
-            <div className="flex items-start gap-6 group">
-              <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-[#FF5C1A]/5 group-hover:text-[#FF5C1A] transition-colors flex-shrink-0">
-                <FileText className="w-5 h-5" />
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-gray-500 flex items-center gap-1.5 ml-1">
+                <span>Bio</span>
+              </label>
+              <div className="relative">
+                <FileText className="absolute left-4 top-4 w-4 h-4 text-gray-400" />
+                <textarea
+                  value={bio}
+                  onChange={e => setBio(e.target.value)}
+                  rows={4}
+                  placeholder="Ceritakan sedikit tentang diri Anda, minat bisnis, atau pengalaman di dunia franchise..."
+                  className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-gray-50 border border-transparent text-sm font-medium text-[#111] placeholder:text-gray-300 focus:outline-none focus:bg-white focus:border-[#FF5C1A] focus:ring-4 focus:ring-[#FF5C1A]/10 transition-all resize-none"
+                />
               </div>
-              <div className="flex-1">
-                <p className="text-[0.65rem] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Bio / Deskripsi</p>
-                <p className="text-sm font-medium text-gray-600 leading-relaxed italic">
-                  {bio || 'Pengguna belum menambahkan biografi.'}
-                </p>
-              </div>
+              <p className="text-[10px] text-gray-400 text-right mr-1">{bio.length}/300 karakter</p>
             </div>
           </div>
 
-          {/* Notice */}
-          <div className="bg-[#111] p-6 rounded-[2.5rem] text-center">
-            <p className="text-[0.65rem] text-white/50 font-medium leading-relaxed">
-              Informasi ini bersifat rahasia dan hanya dapat diakses oleh pemilik akun. Hubungi pusat bantuan jika Anda menemukan kesalahan data.
-            </p>
-          </div>
-        </div>
+          {/* Error */}
+          {error && (
+            <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+              className="bg-red-50 border border-red-200 text-red-600 text-sm font-medium px-5 py-3.5 rounded-2xl">
+              ⚠️ {error}
+            </motion.div>
+          )}
+
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={saving || saved}
+            className={`w-full py-4 rounded-[1.5rem] font-bold text-base flex items-center justify-center gap-2.5 transition-all shadow-[0_12px_32px_rgba(255,92,26,0.25)] ${
+              saved
+                ? 'bg-emerald-500 text-white'
+                : 'bg-[#FF5C1A] text-white hover:bg-[#e04710] hover:-translate-y-0.5 disabled:opacity-60 disabled:hover:translate-y-0'
+            }`}
+          >
+            {saved ? (
+              <><Check className="w-5 h-5" /> Tersimpan! Mengalihkan...</>
+            ) : saving ? (
+              <><Loader2 className="w-5 h-5 animate-spin" /> Menyimpan...</>
+            ) : (
+              <><Save className="w-5 h-5" /> Simpan Perubahan</>
+            )}
+          </button>
+
+          <p className="text-center text-[10px] text-gray-400 font-medium">
+            Perubahan akan langsung terlihat di halaman profil Anda
+          </p>
+        </form>
       </motion.div>
     </div>
   );
