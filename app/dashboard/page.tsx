@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  User as UserIcon, Search, Heart, Clock, LogOut, ArrowRight, 
+  User as UserIcon, Search, Heart, Clock, ArrowRight, 
   Bookmark, TrendingUp, Coffee, ChevronRight, Star, Settings, Eye, X, Download, Edit, Plus, Image as ImageIcon,
   Zap, BarChart3, MessageCircle
 } from "lucide-react";
@@ -272,12 +272,6 @@ export default function DashboardPage() {
     checkUserAndFetchData();
   }, [router, supabase]);
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    logout();
-    router.push("/");
-  };
-
   const handleRemoveSaved = async (savedId: string) => {
     await supabase.from('saved_franchises').delete().eq('id', savedId);
     setSavedFranchises(prev => prev.filter(f => f.saved_id !== savedId));
@@ -323,13 +317,6 @@ export default function DashboardPage() {
                 Cari Franchise
               </Link>
             ) : null}
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 border border-black/10 text-[#777] px-5 py-3 rounded-xl font-semibold text-sm hover:border-red-300 hover:text-red-500 hover:bg-red-50 transition-all"
-            >
-              <LogOut className="w-4 h-4" />
-              Keluar
-            </button>
           </div>
         </motion.div>
 
