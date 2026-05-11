@@ -1,21 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Camera, User, Mail, FileText, ChevronLeft, Save } from 'lucide-react';
+import { Camera, User, Mail, FileText, ChevronLeft, Save, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { createClient } from '@/utils/supabase/client';
+import { useRouter } from 'next/navigation';
 
 function EditProfilePage() {
-  const [nama, setNama] = useState('John Doe');
-  const [username, setUsername] = useState('johndoe');
-  const [bio, setBio] = useState('ini adalah bio');
-  const [email, setEmail] = useState('johndoe@example.com');
+  const supabase = createClient();
+  const router = useRouter();
+  
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [nama, setNama] = useState('');
+  const [username, setUsername] = useState('');
+  const [bio, setBio] = useState('');
+  const [email, setEmail] = useState('');
   const [foto, setFoto] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setNama(user.user_metadata?.full_name || '');
+        setUsername(user.user_metadata?.username || user.email?.split('@')[0] || '');
+        setBio(user.user_metadata?.bio || '');
+        setEmail(user.email || '');
+      }
+      setLoading(false);
+    };
+
+    fetchUser();
+  }, [supabase]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simpan data ke database atau API
-    console.log({ nama, username, bio, email, foto });
-    alert('Profil berhasil diperbarui!');
+    setSaving(true);
+
+    try {
+      const { error } = await supabase.auth.updateUser({
+        data: { 
+          full_name: nama,
+          username: username,
+          bio: bio
+        }
+      });
+
+      if (error) throw error;
+
+      alert('Profil berhasil diperbarui!');
+      router.push('/profile');
+      router.refresh();
+    } catch (error: any) {
+      alert('Gagal memperbarui profil: ' + error.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,6 +65,14 @@ function EditProfilePage() {
       setPreviewUrl(URL.createObjectURL(file));
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#FFF9F0] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-[#FF5C1A] animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FFF9F0] py-12 px-4 sm:px-6 lg:px-8">
@@ -50,7 +98,7 @@ function EditProfilePage() {
                   {previewUrl ? (
                     <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
                   ) : (
-                    nama.charAt(0).toUpperCase()
+                    nama ? nama.charAt(0).toUpperCase() : <User className="w-12 h-12" />
                   )}
                 </div>
                 <label className="absolute bottom-[-10px] right-[-10px] bg-white p-2.5 rounded-2xl shadow-lg border border-black/5 cursor-pointer hover:bg-[#FF5C1A] hover:text-white transition-all group-hover:scale-110">
@@ -73,7 +121,7 @@ function EditProfilePage() {
                   value={nama} 
                   onChange={(e) => setNama(e.target.value)} 
                   className="w-full px-5 py-3.5 rounded-2xl bg-gray-50 border border-transparent focus:bg-white focus:border-[#FF5C1A] focus:ring-4 focus:ring-[#FF5C1A]/10 outline-none transition-all text-sm font-medium"
-                  placeholder="John Doe"
+                  placeholder="Masukkan nama lengkap"
                   required
                 />
               </div>
@@ -89,7 +137,7 @@ function EditProfilePage() {
                   value={username} 
                   onChange={(e) => setUsername(e.target.value)} 
                   className="w-full px-5 py-3.5 rounded-2xl bg-gray-50 border border-transparent focus:bg-white focus:border-[#FF5C1A] focus:ring-4 focus:ring-[#FF5C1A]/10 outline-none transition-all text-sm font-medium"
-                  placeholder="johndoe"
+                  placeholder="username"
                   required
                 />
               </div>
@@ -103,12 +151,11 @@ function EditProfilePage() {
                 <input 
                   type="email" 
                   value={email} 
-                  onChange={(e) => setEmail(e.target.value)} 
-                  className="w-full px-5 py-3.5 rounded-2xl bg-gray-50 border border-transparent focus:bg-white focus:border-[#FF5C1A] focus:ring-4 focus:ring-[#FF5C1A]/10 outline-none transition-all text-sm font-medium"
-                  placeholder="johndoe@example.com"
-                  required
+                  disabled
+                  className="w-full px-5 py-3.5 rounded-2xl bg-gray-100 border border-transparent outline-none text-sm font-medium text-gray-500 cursor-not-allowed"
+                  placeholder="email@example.com"
                 />
-                <p className="text-[10px] text-gray-400 ml-1 italic">* Pastikan email Anda aktif untuk menerima notifikasi</p>
+                <p className="text-[10px] text-gray-400 ml-1 italic">* Email tidak dapat diubah untuk alasan keamanan</p>
               </div>
 
               {/* Bio */}
@@ -130,10 +177,20 @@ function EditProfilePage() {
             <div className="pt-4">
               <button 
                 type="submit" 
-                className="w-full bg-[#FF5C1A] text-white py-4 rounded-2xl font-bold shadow-[0_10px_25px_rgba(255,92,26,0.3)] hover:bg-[#e04710] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+                disabled={saving}
+                className="w-full bg-[#FF5C1A] text-white py-4 rounded-2xl font-bold shadow-[0_10px_25px_rgba(255,92,26,0.3)] hover:bg-[#e04710] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:translate-y-0"
               >
-                <Save className="w-5 h-5" />
-                Simpan Perubahan
+                {saving ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Menyimpan...
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-5 h-5" />
+                    Simpan Perubahan
+                  </>
+                )}
               </button>
             </div>
           </form>

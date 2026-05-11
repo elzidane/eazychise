@@ -309,7 +309,7 @@ export default function ReactBitsShowcase() {
               title: 'Komunitas Mitra',
               description: 'Bergabung dengan jaringan pengusaha F&B aktif untuk berbagi insight, tips, dan peluang kolaborasi.',
               label: 'Sosial',
-              stat: '9.000+',
+              stat: '320+',
               statLabel: ' mitra aktif'
             },
             {

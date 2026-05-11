@@ -1,18 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, Mail, FileText, Settings, Edit3, ArrowRight, MapPin, Calendar } from 'lucide-react';
+import { User, Mail, FileText, Settings, Edit3, ArrowRight, MapPin, Calendar, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { createClient } from '@/utils/supabase/client';
 
 function ProfilePage() {
-  // Data dummy (biasanya diambil dari session/API)
-  const userData = {
-    name: 'John Doe',
-    username: 'johndoe',
-    email: 'johndoe@example.com',
+  const supabase = createClient();
+  const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState({
+    name: 'User',
+    username: 'user',
+    email: '',
     bio: 'Wirausahawan muda yang tertarik pada ekosistem franchise F&B di Indonesia.',
     location: 'Jakarta, Indonesia',
-    joinedDate: 'Mei 2024'
-  };
+    joinedDate: '...'
+  });
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUserData({
+          name: user.user_metadata?.full_name || 'User',
+          username: user.user_metadata?.username || user.email?.split('@')[0] || 'user',
+          email: user.email || '',
+          bio: user.user_metadata?.bio || 'Belum ada bio.',
+          location: user.user_metadata?.location || 'Indonesia',
+          joinedDate: new Date(user.created_at).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })
+        });
+      }
+      setLoading(false);
+    };
+
+    fetchUser();
+  }, [supabase]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#FFF9F0] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-[#FF5C1A] animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FFF9F0] py-12 px-4 sm:px-6 lg:px-8">
@@ -29,7 +58,7 @@ function ProfilePage() {
               <div className="relative">
                 <div className="w-32 h-32 rounded-3xl bg-white p-1.5 shadow-xl">
                   <div className="w-full h-full rounded-2xl bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-4xl font-bold">
-                    {userData.name.charAt(0)}
+                    {userData.name.charAt(0).toUpperCase()}
                   </div>
                 </div>
                 <div className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 border-4 border-white rounded-full" />
