@@ -120,6 +120,18 @@ export default function Navbar() {
     setNotifications([]);
   };
 
+  const handleNotificationClick = async (notification: Notification) => {
+    // Mark as read
+    await supabase.from('notifications').update({ is_read: true }).eq('id', notification.id);
+    setNotifications(prev => prev.filter(n => n.id !== notification.id));
+
+    // Handle navigation
+    if (notification.type === 'lead' && notification.metadata?.lead_id) {
+      router.push(`/dashboard?leadId=${notification.metadata.lead_id}`);
+    }
+    setShowNotifications(false);
+  };
+
   // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -239,7 +251,11 @@ export default function Navbar() {
                            <div className="p-8 text-center text-sm font-medium text-gray-400">Belum ada notifikasi baru</div>
                          ) : (
                            notifications.map(n => (
-                             <div key={n.id} className="p-4 border-b border-black/5 hover:bg-[#F8F8F6] transition-colors cursor-pointer">
+                             <div 
+                               key={n.id} 
+                               onClick={() => handleNotificationClick(n)}
+                               className="p-4 border-b border-black/5 hover:bg-[#F8F8F6] transition-colors cursor-pointer"
+                             >
                                <div className="flex items-start gap-3">
                                  <div className="w-2 h-2 mt-1.5 rounded-full bg-[#FF5C1A] flex-shrink-0" />
                                  <div>

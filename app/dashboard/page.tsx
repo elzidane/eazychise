@@ -6,23 +6,29 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   User as UserIcon, Search, Heart, Clock, ArrowRight, 
   Bookmark, TrendingUp, Coffee, ChevronRight, Star, Settings, Eye, X, Download, Edit, Plus, Image as ImageIcon,
-  Zap, BarChart3, MessageCircle
+  Zap, BarChart3, MessageCircle, Mail, Phone, MapPin, Calendar, Clock as ClockIcon, CheckCircle2, AlertCircle
 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { getUser, logout, User, removeSavedFranchise } from "@/lib/auth";
 import { FRANCHISE_DATA } from "@/lib/franchise-data";
 import { generateBrandReportPDF } from "@/lib/pdf-generator";
 import { formatRupiah, formatJuta, formatAngkaSingkat } from "@/lib/utils/formatRupiah";
 import { createClient } from "@/utils/supabase/client";
+import { useToast } from "@/components/ui/Toast";
 import DashboardSkeleton from "@/components/skeletons/DashboardSkeleton";
 import LocalBusinessTracker from "@/components/features/LocalBusinessTracker";
 
 export default function DashboardPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
+  const { showToast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [showBrandDetails, setShowBrandDetails] = useState(false);
   const [showBrandForm, setShowBrandForm] = useState(false);
+  const [showLeadModal, setShowLeadModal] = useState(false);
+  const [selectedLead, setSelectedLead] = useState<any>(null);
   const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
   const [selectedBrandIndex, setSelectedBrandIndex] = useState<number | null>(null);
   const [isGeneratingDesc, setIsGeneratingDesc] = useState(false);
@@ -44,7 +50,7 @@ export default function DashboardPage() {
 
   const handleGenerateDesc = async () => {
     if (!brandFormData.name) {
-      alert("Silakan isi Nama Brand terlebih dahulu!");
+      showToast("Silakan isi Nama Brand terlebih dahulu!", "error");
       return;
     }
     
@@ -60,11 +66,11 @@ export default function DashboardPage() {
       if (res.ok && data.description) {
         setBrandFormData(prev => ({ ...prev, desc: data.description }));
       } else {
-        alert(data.error || "Gagal membuat deskripsi");
+        showToast(data.error || "Gagal membuat deskripsi", "error");
       }
     } catch (error) {
       console.error(error);
-      alert("Terjadi kesalahan saat memanggil AI");
+      showToast("Terjadi kesalahan saat memanggil AI", "error");
     } finally {
       setIsGeneratingDesc(false);
     }
@@ -98,7 +104,7 @@ export default function DashboardPage() {
         .select();
 
       if (error) {
-        alert("Gagal menambahkan brand. " + error.message);
+        showToast("Gagal menambahkan brand. " + error.message, "error");
         console.error(error);
         return;
       }
@@ -125,7 +131,7 @@ export default function DashboardPage() {
         .eq('id', brandToUpdate.id);
 
       if (error) {
-        alert("Gagal mengupdate brand. " + error.message);
+        showToast("Gagal mengupdate brand. " + error.message, "error");
         console.error(error);
         return;
       }
@@ -271,6 +277,38 @@ export default function DashboardPage() {
 
     checkUserAndFetchData();
   }, [router, supabase]);
+
+  // Handle deep link to specific lead
+  useEffect(() => {
+    const leadId = searchParams.get('leadId');
+    if (leadId && franchisorLeads.length > 0) {
+      const lead = franchisorLeads.find(l => l.id === leadId);
+      if (lead) {
+        setSelectedLead(lead);
+        setShowLeadModal(true);
+        // Clear param without refresh
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
+      }
+    }
+  }, [searchParams, franchisorLeads]);
+
+  const handleUpdateLeadStatus = async (id: string, newStatus: string) => {
+    const { error } = await supabase
+      .from('partnership_requests')
+      .update({ status: newStatus })
+      .eq('id', id);
+
+    if (error) {
+      showToast("Gagal memperbarui status: " + error.message, "error");
+      return;
+    }
+
+    setFranchisorLeads(prev => prev.map(l => l.id === id ? { ...l, status: newStatus } : l));
+    if (selectedLead && selectedLead.id === id) {
+      setSelectedLead({ ...selectedLead, status: newStatus });
+    }
+  };
 
   const handleRemoveSaved = async (savedId: string) => {
     await supabase.from('saved_franchises').delete().eq('id', savedId);
@@ -554,7 +592,11 @@ export default function DashboardPage() {
                     </div>
                   ) : (
                     franchisorLeads.slice(0, 8).map((lead: any, i: number) => (
-                      <div key={i} className="flex items-center justify-between px-7 py-4 hover:bg-[#FFF9F6] transition-colors group">
+                      <div 
+                        key={i} 
+                        onClick={() => { setSelectedLead(lead); setShowLeadModal(true); }}
+                        className="flex items-center justify-between px-7 py-4 hover:bg-[#FFF9F6] transition-colors group cursor-pointer"
+                      >
                         <div className="flex items-center gap-4">
                           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FF5C1A]/20 to-[#FF8C42]/20 flex items-center justify-center text-[#FF5C1A] font-bold text-sm flex-shrink-0">
                             {lead.name.charAt(0).toUpperCase()}
@@ -915,7 +957,7 @@ export default function DashboardPage() {
                             const file = e.target.files?.[0];
                             if (file) {
                               if (file.size > 2 * 1024 * 1024) {
-                                alert("Ukuran file terlalu besar! Maksimal 2MB.");
+                                showToast("Ukuran file terlalu besar! Maksimal 2MB.", "error");
                                 return;
                               }
                               const reader = new FileReader();
@@ -1022,6 +1064,139 @@ export default function DashboardPage() {
                     </button>
                   </div>
                 </form>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {showLeadModal && selectedLead && (
+          <div className="fixed inset-0 z-[70] flex items-center justify-center px-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowLeadModal(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-md"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 30 }}
+              className="relative w-full max-w-3xl bg-white rounded-[2.5rem] overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.3)] flex flex-col md:flex-row min-h-[500px]"
+            >
+              {/* Sidebar Info */}
+              <div className="w-full md:w-72 bg-[#111] p-8 text-white flex flex-col justify-between">
+                <div>
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-2xl font-bold mb-6 shadow-[0_8px_20px_rgba(255,92,26,0.3)]">
+                    {selectedLead.name.charAt(0).toUpperCase()}
+                  </div>
+                  <h3 className="font-syne font-extrabold text-xl leading-tight mb-2">{selectedLead.name}</h3>
+                  <p className="text-white/40 text-[0.7rem] font-bold uppercase tracking-widest mb-8">Pemohon Kemitraan</p>
+                  
+                  <div className="space-y-5">
+                    <div className="flex items-center gap-3 text-white/70 hover:text-white transition-colors group">
+                      <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-[#FF5C1A]/20 group-hover:text-[#FF5C1A] transition-all">
+                        <Mail className="w-4 h-4" />
+                      </div>
+                      <span className="text-xs font-medium truncate">{selectedLead.email}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-white/70 hover:text-white transition-colors group">
+                      <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-[#FF5C1A]/20 group-hover:text-[#FF5C1A] transition-all">
+                        <Phone className="w-4 h-4" />
+                      </div>
+                      <span className="text-xs font-medium">{selectedLead.phone}</span>
+                    </div>
+                    {selectedLead.location && (
+                      <div className="flex items-center gap-3 text-white/70 hover:text-white transition-colors group">
+                        <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-[#FF5C1A]/20 group-hover:text-[#FF5C1A] transition-all">
+                          <MapPin className="w-4 h-4" />
+                        </div>
+                        <span className="text-xs font-medium">{selectedLead.location}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="mt-12 pt-8 border-t border-white/10">
+                  <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest mb-3">Status Saat Ini</p>
+                  <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[0.65rem] font-black uppercase tracking-wider ${
+                    selectedLead.status === 'Baru' ? 'bg-green-500/20 text-green-400' :
+                    selectedLead.status === 'Dihubungi' ? 'bg-blue-500/20 text-blue-400' : 'bg-orange-500/20 text-orange-400'
+                  }`}>
+                    <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse"></span>
+                    {selectedLead.status}
+                  </span>
+                </div>
+              </div>
+
+              {/* Main Content (Email Like) */}
+              <div className="flex-1 bg-[#FDFDFB] p-8 md:p-10 flex flex-col">
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-3 text-[#999]">
+                    <div className="p-2 rounded-xl bg-gray-100">
+                      <Calendar className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs font-bold">{new Date(selectedLead.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                    <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                    <span className="text-xs font-bold">{new Date(selectedLead.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>
+                  </div>
+                  <button 
+                    onClick={() => setShowLeadModal(false)}
+                    className="p-2 text-[#999] hover:text-[#111] hover:bg-gray-100 rounded-full transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div className="mb-8">
+                  <h2 className="font-syne font-extrabold text-2xl text-[#111] mb-2">
+                    Pengajuan Kemitraan: <span className="text-[#FF5C1A]">{selectedLead.franchises?.name}</span>
+                  </h2>
+                  <div className="h-1 w-20 bg-[#FF5C1A] rounded-full"></div>
+                </div>
+
+                <div className="flex-1 bg-white rounded-3xl border border-black/5 p-6 shadow-sm mb-8 overflow-y-auto max-h-64">
+                  <div className="flex items-center gap-2 mb-4 text-[#FF5C1A]">
+                    <MessageCircle className="w-4 h-4" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">Pesan Terlampir</span>
+                  </div>
+                  <p className="text-sm text-[#555] leading-[1.8] italic font-medium">
+                    "{selectedLead.message || 'Tidak ada pesan tambahan dari pemohon.'}"
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <p className="text-[10px] text-[#999] font-black uppercase tracking-widest">Update Tindakan</p>
+                  <div className="flex flex-wrap gap-3">
+                    <button 
+                      onClick={() => handleUpdateLeadStatus(selectedLead.id, 'Dihubungi')}
+                      className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-xs transition-all ${
+                        selectedLead.status === 'Dihubungi' 
+                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' 
+                        : 'bg-white border border-black/5 text-[#555] hover:border-blue-400 hover:text-blue-600'
+                      }`}
+                    >
+                      <Phone className="w-3.5 h-3.5" /> Tandai Dihubungi
+                    </button>
+                    <button 
+                      onClick={() => handleUpdateLeadStatus(selectedLead.id, 'Follow Up')}
+                      className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-xs transition-all ${
+                        selectedLead.status === 'Follow Up' 
+                        ? 'bg-orange-600 text-white shadow-lg shadow-orange-200' 
+                        : 'bg-white border border-black/5 text-[#555] hover:border-orange-400 hover:text-orange-600'
+                      }`}
+                    >
+                      <ClockIcon className="w-3.5 h-3.5" /> Set Follow Up
+                    </button>
+                    <button 
+                      className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#111] text-white font-bold text-xs hover:bg-[#333] transition-all ml-auto"
+                      onClick={() => window.location.href = `mailto:${selectedLead.email}?subject=Tanggapan Pengajuan Kemitraan: ${selectedLead.franchises?.name}`}
+                    >
+                      <Mail className="w-3.5 h-3.5" /> Balas via Email
+                    </button>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </div>

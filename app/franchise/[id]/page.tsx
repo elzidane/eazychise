@@ -11,6 +11,7 @@ import LocationRecommender from "@/components/features/LocationRecommender";
 import SpotlightCard from "@/components/cards/SpotlightCard";
 import Typewriter from "@/components/effects/Typewriter";
 import { motion } from "framer-motion";
+import { useToast } from "@/components/ui/Toast";
 import { ScrollReveal, StaggerReveal, fadeRight, fadeLeft, fadeUp, slideUp } from "@/components/effects/ScrollMotion";
 import { DbFranchise, DbReview, Franchise } from "@/types";
 
@@ -20,6 +21,7 @@ export default function FranchiseDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id: slug } = React.use(params);
+  const { showToast } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [analysis, setAnalysis] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -110,7 +112,7 @@ export default function FranchiseDetailPage({
 
   const handleSave = async () => {
     if (!userId || !franchise) {
-      alert("Silakan login terlebih dahulu untuk menyimpan franchise.");
+      showToast("Silakan login terlebih dahulu untuk menyimpan franchise.", "error");
       return;
     }
     setSaving(true);
@@ -162,11 +164,11 @@ export default function FranchiseDetailPage({
   const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userId || !franchise) {
-      alert("Silakan login untuk memberikan ulasan.");
+      showToast("Silakan login untuk memberikan ulasan.", "error");
       return;
     }
     if (!reviewForm.comment.trim()) {
-      alert("Komentar tidak boleh kosong.");
+      showToast("Komentar tidak boleh kosong.", "error");
       return;
     }
 
@@ -184,7 +186,7 @@ export default function FranchiseDetailPage({
       setReviewForm({ rating: 5, comment: "" });
     } else {
       console.error(error);
-      alert("Gagal mengirim ulasan.");
+      showToast("Gagal mengirim ulasan.", "error");
     }
     setIsSubmittingReview(false);
   };

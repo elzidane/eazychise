@@ -78,6 +78,13 @@ export interface Notification {
   title: string;
   message: string;
   is_read: boolean;
+  type?: string;
+  metadata?: {
+    lead_id?: string;
+    requester_name?: string;
+    franchise_name?: string;
+    [key: string]: any;
+  };
   created_at: string;
 }
 export interface DbFranchise {

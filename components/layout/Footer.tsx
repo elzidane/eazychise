@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
+import { useToast } from "@/components/ui/Toast";
 import { ScrollReveal, StaggerReveal, fadeUp, fadeRight, slideUp } from "../effects/ScrollMotion";
 
 type NavItem = { label: string; href: string };
@@ -39,6 +40,7 @@ const socials = [
 
 export default function Footer() {
   const pathname = usePathname();
+  const { showToast } = useToast();
   if (pathname === "/masuk" || pathname === "/daftar") return null;
 
   return (
@@ -74,7 +76,7 @@ export default function Footer() {
                   onClick={(e) => {
                     if (s.href === "#") {
                       e.preventDefault();
-                      alert(`Fitur Sosial Media (${s.label}) sedang dalam tahap pengembangan. Ikuti kami terus ya! 😊`);
+                      showToast(`Fitur Sosial Media (${s.label}) sedang dalam tahap pengembangan. Ikuti kami terus ya! 😊`, "info");
                     }
                   }}
                   target={s.href === "#" ? undefined : "_blank"}

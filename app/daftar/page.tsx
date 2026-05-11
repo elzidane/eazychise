@@ -8,10 +8,12 @@ import { FcGoogle } from "react-icons/fc";
 import { MdPerson, MdStore } from "react-icons/md";
 import GoogleLoginModal from "@/components/modals/GoogleLoginModal";
 import { createClient } from "@/utils/supabase/client";
+import { useToast } from "@/components/ui/Toast";
 
 export default function RegisterPage() {
   const router = useRouter();
   const supabase = createClient();
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -405,7 +407,7 @@ export default function RegisterPage() {
                 </button>
                 <button 
                   type="button"
-                  onClick={() => alert("🚀 Fitur Facebook Login segera hadir!")}
+                  onClick={() => showToast("🚀 Fitur Facebook Login segera hadir!", "info")}
                   className="flex items-center justify-center gap-3 py-3.5 border border-black/5 rounded-2xl font-bold text-sm text-[#333] hover:bg-gray-50 transition-all active:scale-95"
                   suppressHydrationWarning={true}
                 >

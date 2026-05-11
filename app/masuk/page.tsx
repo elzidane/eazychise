@@ -6,11 +6,13 @@ import { motion } from "framer-motion";
 import { Mail, Lock, ArrowRight, ArrowLeft, ShieldCheck, Eye, EyeOff } from "lucide-react";
 import GoogleLoginModal from "@/components/modals/GoogleLoginModal";
 import { createClient } from "@/utils/supabase/client";
+import { useToast } from "@/components/ui/Toast";
 
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
+  const { showToast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
@@ -213,7 +215,7 @@ function LoginContent() {
               Google
             </button>
             <button 
-              onClick={() => alert("🚀 Fitur Facebook Login segera hadir!")}
+              onClick={() => showToast("🚀 Fitur Facebook Login segera hadir!", "info")}
               className="flex items-center justify-center gap-3 py-3.5 border border-black/5 rounded-2xl font-bold text-sm text-[#333] hover:bg-gray-50 transition-all active:scale-95"
               suppressHydrationWarning={true}
             >

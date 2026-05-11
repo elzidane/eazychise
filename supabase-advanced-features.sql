@@ -76,6 +76,7 @@ CREATE TABLE IF NOT EXISTS public.notifications (
     message TEXT NOT NULL,
     is_read BOOLEAN DEFAULT false,
     type TEXT DEFAULT 'system',
+    metadata JSONB DEFAULT '{}'::jsonb,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -102,12 +103,17 @@ BEGIN
 
     -- If the franchise has an owner, insert a notification
     IF brand_owner_id IS NOT NULL THEN
-        INSERT INTO public.notifications (user_id, title, message, type)
+        INSERT INTO public.notifications (user_id, title, message, type, metadata)
         VALUES (
             brand_owner_id, 
             'Leads Baru: ' || brand_name, 
             'Ada pengajuan kemitraan baru dari ' || NEW.name || '. Segera periksa di dashboard Anda!', 
-            'lead'
+            'lead',
+            jsonb_build_object(
+                'lead_id', NEW.id,
+                'requester_name', NEW.name,
+                'franchise_name', brand_name
+            )
         );
     END IF;
 

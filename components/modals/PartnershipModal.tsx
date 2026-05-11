@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CheckCircle2, Loader2, Send, ChevronLeft } from "lucide-react";
+import { ChevronLeft, X, CheckCircle2, Loader2, Send } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
+import { useToast } from "@/components/ui/Toast";
 
 type PartnershipModalProps = {
   isOpen: boolean;
@@ -13,6 +14,7 @@ type PartnershipModalProps = {
 };
 
 export default function PartnershipModal({ isOpen, onClose, franchiseName, franchiseId }: PartnershipModalProps) {
+  const { showToast } = useToast();
   const [step, setStep] = useState<"form" | "submitting" | "success">("form");
   const [formData, setFormData] = useState({
     name: "",
@@ -78,7 +80,7 @@ export default function PartnershipModal({ isOpen, onClose, franchiseName, franc
 
     if (error) {
       console.error(error);
-      alert("Terjadi kesalahan saat mengirim pengajuan.");
+      showToast("Terjadi kesalahan saat mengirim pengajuan.", "error");
       setStep("form");
       return;
     }
