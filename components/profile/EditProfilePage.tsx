@@ -1,49 +1,36 @@
+"use client";
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Camera, User, Mail, FileText, ChevronLeft, Save, Loader2 } from 'lucide-react';
+import { User, Mail, FileText, ChevronLeft, Loader2, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
-import { useRouter } from 'next/navigation';
 
 function EditProfilePage() {
   const supabase = createClient();
-  const router = useRouter();
   
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [nama, setNama] = useState('');
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
   const [email, setEmail] = useState('');
-  const [foto, setFoto] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setEmail(user.email || '');
-        
-        // Fetch from profiles table
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-        
-        if (profile) {
-          setNama(profile.full_name || '');
-          setUsername(profile.username || '');
-          setBio(profile.bio || '');
-          if (profile.avatar_url) setPreviewUrl(profile.avatar_url);
-        } else {
-          // Fallback to metadata if profile doesn't exist yet
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
           setNama(user.user_metadata?.full_name || '');
           setUsername(user.user_metadata?.username || user.email?.split('@')[0] || '');
           setBio(user.user_metadata?.bio || '');
+          setEmail(user.email || '');
+          setPreviewUrl(user.user_metadata?.avatar_url || null);
         }
+      } catch (err) {
+        console.error('Gagal memuat data profil', err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchUser();
@@ -54,58 +41,15 @@ function EditProfilePage() {
     setSaving(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Tidak ada sesi pengguna');
-
-      let avatarUrl = previewUrl;
-
-      // 1. Upload photo if selected
-      if (foto) {
-        const fileExt = foto.name.split('.').pop();
-        const fileName = `${user.id}-${Math.random()}.${fileExt}`;
-        const filePath = `${user.id}/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from('avatars')
-          .upload(filePath, foto, {
-            upsert: true
-          });
-
-        if (uploadError) throw uploadError;
-
-        // Get public URL
-        const { data: { publicUrl } } = supabase.storage
-          .from('avatars')
-          .getPublicUrl(filePath);
-        
-        avatarUrl = publicUrl;
-      }
-
-      // 2. Update profiles table
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .upsert({
-          id: user.id,
-          full_name: nama,
-          username: username,
-          bio: bio,
-          avatar_url: avatarUrl,
-          updated_at: new Date().toISOString()
-        });
-
-      if (profileError) throw profileError;
-
-      // 3. Also update auth metadata for consistency
-      const { error: authError } = await supabase.auth.updateUser({
+      const { error } = await supabase.auth.updateUser({
         data: { 
           full_name: nama,
           username: username,
-          bio: bio,
-          avatar_url: avatarUrl
+          bio: bio
         }
       });
 
-      if (authError) throw authError;
+      if (error) throw error;
 
       alert('Profil berhasil diperbarui!');
       router.push('/profile');
@@ -127,132 +71,109 @@ function EditProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FFF9F0] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-[#FF5C1A] animate-spin" />
+      <div className="min-h-screen bg-[#FFF9F0] flex flex-col items-center justify-center">
+        <Loader2 className="w-10 h-10 text-[#FF5C1A] animate-spin mb-4" />
+        <p className="text-sm font-bold text-gray-400">Memuat Informasi...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FFF9F0] py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#FFF9F0] pt-28 pb-12 sm:pt-32 px-4 sm:px-6 lg:px-8 font-jakarta">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-2xl mx-auto"
       >
-        <div className="mb-8 flex items-center justify-between">
-          <Link href="/profile" className="flex items-center gap-2 text-gray-500 hover:text-[#FF5C1A] transition-colors">
-            <ChevronLeft className="w-5 h-5" />
-            <span className="font-medium text-sm">Kembali ke Profil</span>
-          </Link>
-          <h1 className="text-2xl font-bold text-gray-900 font-syne">Edit Profil</h1>
+        {/* Header */}
+        <div className="mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <Link 
+              href="/profile" 
+              className="w-10 h-10 rounded-2xl bg-white border border-black/5 flex items-center justify-center text-gray-500 hover:text-[#FF5C1A] hover:border-[#FF5C1A]/20 transition-all shadow-sm flex-shrink-0"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </Link>
+            <div>
+              <h1 className="text-2xl font-black text-[#111] font-syne tracking-tight">Informasi Pribadi</h1>
+              <p className="text-xs text-gray-500 font-medium tracking-wide">Detail data akun yang terdaftar di sistem</p>
+            </div>
+          </div>
+          <div className="w-fit flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-2 rounded-2xl text-[0.7rem] font-bold uppercase tracking-wider border border-blue-100">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            Data Terlindungi
+          </div>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-black/5 overflow-hidden">
-          <form onSubmit={handleSubmit} className="p-8 space-y-8">
-            {/* Profile Picture Upload */}
-            <div className="flex flex-col items-center gap-4">
-              <div className="relative group">
-                <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-4xl font-bold shadow-xl overflow-hidden relative border-4 border-white">
-                  {previewUrl ? (
-                    <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
-                  ) : (
-                    nama ? nama.charAt(0).toUpperCase() : <User className="w-12 h-12" />
-                  )}
-                </div>
-                <label className="absolute bottom-[-10px] right-[-10px] bg-white p-2.5 rounded-2xl shadow-lg border border-black/5 cursor-pointer hover:bg-[#FF5C1A] hover:text-white transition-all group-hover:scale-110">
-                  <Camera className="w-5 h-5" />
-                  <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" />
-                </label>
-              </div>
-              <p className="text-sm text-gray-500 font-medium">Ubah Foto Profil</p>
+        <div className="space-y-6">
+          {/* Profile Card */}
+          <div className="bg-white p-8 rounded-[3rem] border border-black/5 shadow-[0_20px_50px_rgba(0,0,0,0.03)] flex flex-col items-center text-center">
+            <div className="w-32 h-32 rounded-[2.5rem] bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-4xl font-black shadow-[0_20px_50px_rgba(255,92,26,0.2)] overflow-hidden border-4 border-white">
+              {previewUrl ? (
+                <img src={previewUrl} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                nama.charAt(0).toUpperCase()
+              )}
             </div>
+            <h2 className="mt-6 text-2xl font-black text-[#111] font-syne">{nama || 'User'}</h2>
+            <p className="text-sm text-[#FF5C1A] font-bold tracking-widest mt-1">@{username}</p>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Nama */}
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2 ml-1">
-                  <User className="w-4 h-4 text-[#FF5C1A]" />
-                  Nama Lengkap
-                </label>
-                <input 
-                  type="text" 
-                  value={nama} 
-                  onChange={(e) => setNama(e.target.value)} 
-                  className="w-full px-5 py-3.5 rounded-2xl bg-gray-50 border border-transparent focus:bg-white focus:border-[#FF5C1A] focus:ring-4 focus:ring-[#FF5C1A]/10 outline-none transition-all text-sm font-medium"
-                  placeholder="Masukkan nama lengkap"
-                  required
-                />
+          {/* Details Grid */}
+          <div className="bg-white p-8 rounded-[3rem] border border-black/5 shadow-[0_20px_50px_rgba(0,0,0,0.03)] space-y-8">
+            {/* Full Name */}
+            <div className="flex items-start gap-6 group">
+              <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-[#FF5C1A]/5 group-hover:text-[#FF5C1A] transition-colors flex-shrink-0">
+                <User className="w-5 h-5" />
               </div>
-
-              {/* Username */}
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2 ml-1">
-                  <span className="text-[#FF5C1A] font-bold">@</span>
-                  Username
-                </label>
-                <input 
-                  type="text" 
-                  value={username} 
-                  onChange={(e) => setUsername(e.target.value)} 
-                  className="w-full px-5 py-3.5 rounded-2xl bg-gray-50 border border-transparent focus:bg-white focus:border-[#FF5C1A] focus:ring-4 focus:ring-[#FF5C1A]/10 outline-none transition-all text-sm font-medium"
-                  placeholder="username"
-                  required
-                />
-              </div>
-
-              {/* Email */}
-              <div className="space-y-2 md:col-span-2">
-                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2 ml-1">
-                  <Mail className="w-4 h-4 text-[#FF5C1A]" />
-                  Alamat Email
-                </label>
-                <input 
-                  type="email" 
-                  value={email} 
-                  disabled
-                  className="w-full px-5 py-3.5 rounded-2xl bg-gray-100 border border-transparent outline-none text-sm font-medium text-gray-500 cursor-not-allowed"
-                  placeholder="email@example.com"
-                />
-                <p className="text-[10px] text-gray-400 ml-1 italic">* Email tidak dapat diubah untuk alasan keamanan</p>
-              </div>
-
-              {/* Bio */}
-              <div className="space-y-2 md:col-span-2">
-                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2 ml-1">
-                  <FileText className="w-4 h-4 text-[#FF5C1A]" />
-                  Bio
-                </label>
-                <textarea 
-                  value={bio} 
-                  onChange={(e) => setBio(e.target.value)} 
-                  rows={4}
-                  className="w-full px-5 py-3.5 rounded-2xl bg-gray-50 border border-transparent focus:bg-white focus:border-[#FF5C1A] focus:ring-4 focus:ring-[#FF5C1A]/10 outline-none transition-all text-sm font-medium resize-none"
-                  placeholder="Ceritakan sedikit tentang Anda..."
-                />
+              <div className="border-b border-gray-50 pb-4 flex-1">
+                <p className="text-[0.65rem] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Nama Lengkap</p>
+                <p className="text-base font-bold text-[#111]">{nama || '-'}</p>
               </div>
             </div>
 
-            <div className="pt-4">
-              <button 
-                type="submit" 
-                disabled={saving}
-                className="w-full bg-[#FF5C1A] text-white py-4 rounded-2xl font-bold shadow-[0_10px_25px_rgba(255,92,26,0.3)] hover:bg-[#e04710] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:translate-y-0"
-              >
-                {saving ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Menyimpan...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-5 h-5" />
-                    Simpan Perubahan
-                  </>
-                )}
-              </button>
+            {/* Username */}
+            <div className="flex items-start gap-6 group">
+              <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-[#FF5C1A]/5 group-hover:text-[#FF5C1A] transition-colors flex-shrink-0">
+                <div className="font-black text-lg">@</div>
+              </div>
+              <div className="border-b border-gray-50 pb-4 flex-1">
+                <p className="text-[0.65rem] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Username</p>
+                <p className="text-base font-bold text-[#111]">{username || '-'}</p>
+              </div>
             </div>
-          </form>
+
+            {/* Email */}
+            <div className="flex items-start gap-6 group">
+              <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-[#FF5C1A]/5 group-hover:text-[#FF5C1A] transition-colors flex-shrink-0">
+                <Mail className="w-5 h-5" />
+              </div>
+              <div className="border-b border-gray-50 pb-4 flex-1">
+                <p className="text-[0.65rem] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Email Kemitraan</p>
+                <p className="text-base font-bold text-[#111]">{email}</p>
+              </div>
+            </div>
+
+            {/* Bio */}
+            <div className="flex items-start gap-6 group">
+              <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-[#FF5C1A]/5 group-hover:text-[#FF5C1A] transition-colors flex-shrink-0">
+                <FileText className="w-5 h-5" />
+              </div>
+              <div className="flex-1">
+                <p className="text-[0.65rem] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Bio / Deskripsi</p>
+                <p className="text-sm font-medium text-gray-600 leading-relaxed italic">
+                  {bio || 'Pengguna belum menambahkan biografi.'}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Notice */}
+          <div className="bg-[#111] p-6 rounded-[2.5rem] text-center">
+            <p className="text-[0.65rem] text-white/50 font-medium leading-relaxed">
+              Informasi ini bersifat rahasia dan hanya dapat diakses oleh pemilik akun. Hubungi pusat bantuan jika Anda menemukan kesalahan data.
+            </p>
+          </div>
         </div>
       </motion.div>
     </div>

@@ -171,13 +171,16 @@ function ProfilePage() {
 
             {/* Quick Settings Link */}
             <div className="bg-white rounded-[2rem] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-black/5">
-              <button className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 transition-all text-gray-700 font-bold text-sm">
+              <Link 
+                href="/profile/pengaturan"
+                className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 transition-all text-gray-700 font-bold text-sm group"
+              >
                 <span className="flex items-center gap-3">
-                  <Settings className="w-5 h-5 text-gray-400" />
+                  <Settings className="w-5 h-5 text-gray-400 group-hover:text-[#FF5C1A] transition-colors" />
                   Pengaturan
                 </span>
-                <ArrowRight className="w-4 h-4 text-gray-300" />
-              </button>
+                <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-[#FF5C1A] group-hover:translate-x-1 transition-all" />
+              </Link>
             </div>
           </div>
         </div>
