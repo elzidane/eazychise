@@ -5,7 +5,7 @@ import {
   ArrowRight, Target, Eye, Heart, Shield, Users, Lightbulb, 
   Rocket, Star, CheckCircle2, Linkedin, Coffee, TrendingUp 
 } from "lucide-react";
-import WhyUs from "@/components/WhyUs";
+import WhyUs from "@/components/sections/WhyUs";
 
 import Image from "next/image";
 

@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import { ShieldCheck, FileText, Lock, Eye, Bell, Info, ArrowLeft, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
-import SpotlightCard from "@/components/SpotlightCard";
+import SpotlightCard from "@/components/cards/SpotlightCard";
 
 export default function KebijakanPage() {
   const sections = [

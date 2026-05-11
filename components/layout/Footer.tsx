@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { ScrollReveal, StaggerReveal, fadeUp, fadeRight, slideUp } from "./ScrollMotion";
+import { ScrollReveal, StaggerReveal, fadeUp, fadeRight, slideUp } from "../effects/ScrollMotion";
 
 type NavItem = { label: string; href: string };
 

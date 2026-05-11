@@ -3,8 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { BlurText, CountUp, ShinyText } from "./Reactbitseffects";
-import MagneticButton from "./MagneticButton";
+import { BlurText, CountUp, ShinyText } from "../effects/Reactbitseffects";
+import MagneticButton from "../effects/MagneticButton";
 import { STATS, HERO_IMAGES } from "@/lib/constants";
 import {
   Search, ArrowRight, Flame, CheckCircle2, Utensils, Coffee,

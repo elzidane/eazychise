@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 import { Calculator, TrendingUp, DollarSign, Clock, Pencil, Rocket, AlertCircle, Brain, Sparkles, Zap } from "lucide-react";
 import { MdLightbulb } from "react-icons/md";
 import { formatRupiah } from "@/lib/utils/formatRupiah";
-import SpotlightCard from "@/components/SpotlightCard";
-import Typewriter from "@/components/Typewriter";
+import SpotlightCard from "@/components/cards/SpotlightCard";
+import Typewriter from "@/components/effects/Typewriter";
 
 export default function BEPCalculator() {
   const [modalAwal, setModalAwal] = useState<number>(50000000);

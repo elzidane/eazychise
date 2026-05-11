@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { MapPin, TrendingUp, Users, Activity, Zap } from "lucide-react";
-import { useToast } from "./ui/Toast";
+import { useToast } from "../ui/Toast";
 
 const TRACKER_DATA = [
   { area: "Jakarta Selatan", growth: "+12.5%", demand: "Sangat Tinggi", category: "Coffee Shop", traffic: "15k/day" },

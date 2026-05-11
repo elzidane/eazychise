@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2, Search, Handshake, Rocket, Check, ArrowDown, Zap } from "lucide-react";
-import { ScrollReveal, StaggerReveal, ParallaxScroll, fadeUp, slideUp } from "./ScrollMotion";
+import { ScrollReveal, StaggerReveal, ParallaxScroll, fadeUp, slideUp } from "../effects/ScrollMotion";
 
 const steps = [
   {

@@ -1,9 +1,9 @@
-import Hero from "@/components/Hero";
-import TrustMarquee from "@/components/TrustMarquee";
-import FeaturedSection from "@/components/Featured";
-import ReactBitsShowcase from "@/components/Reactbitsshowcase";
-import AIAdvisorSection from "@/components/AIAdvisorSection";
-import CTASection from "@/components/CTA";
+import Hero from "@/components/sections/Hero";
+import TrustMarquee from "@/components/sections/TrustMarquee";
+import FeaturedSection from "@/components/sections/Featured";
+import ReactBitsShowcase from "@/components/effects/Reactbitsshowcase";
+import AIAdvisorSection from "@/components/sections/AIAdvisorSection";
+import CTASection from "@/components/sections/CTA";
 import { createClient } from "@/utils/supabase/server";
 
 async function getFranchises() {

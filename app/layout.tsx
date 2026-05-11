@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { Syne, Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 // @ts-ignore
 import "./globals.css";
-import GlobalEffects from "@/components/Globaleffect";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ScrollReveal from "@/components/ScrollReveal";
-import FranchiseAdvisor from "@/components/FranchiseAdvisor";
-import SplashScreen from "@/components/SplashScreen";
+import GlobalEffects from "@/components/effects/Globaleffect";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import ScrollReveal from "@/components/effects/ScrollReveal";
+import FranchiseAdvisor from "@/components/features/FranchiseAdvisor";
+import SplashScreen from "@/components/effects/SplashScreen";
 
 import { ToastProvider } from "@/components/ui/Toast";
 

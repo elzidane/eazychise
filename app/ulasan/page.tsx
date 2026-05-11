@@ -2,11 +2,11 @@
 
 import { motion } from "framer-motion";
 import { Star, CheckCircle2, TrendingUp, Users, Award, ShieldCheck, ArrowRight } from "lucide-react";
-import ReviewsSection from "@/components/ReviewsSection";
+import ReviewsSection from "@/components/sections/ReviewsSection";
 import Link from "next/link";
 import { STATS } from "@/lib/constants";
-import Counterup from "@/components/Counterup";
-import SpotlightCard from "@/components/SpotlightCard";
+import Counterup from "@/components/effects/Counterup";
+import SpotlightCard from "@/components/cards/SpotlightCard";
 
 export default function UlasanPage() {
   return (

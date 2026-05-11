@@ -1,7 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, Send, CheckCircle2 } from "lucide-react";
-import { Review } from "../types";
+import { Review } from "../../types";
 
 export function ReviewCard({ review, index }: { review: Review; index: number }) {
   return (

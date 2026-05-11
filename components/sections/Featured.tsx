@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Star } from "lucide-react";
 import { FRANCHISE_DATA } from "@/lib/franchise-data";
-import { ScrollReveal, StaggerReveal, fadeLeft, fadeRight, slideUp } from "./ScrollMotion";
+import { ScrollReveal, StaggerReveal, fadeLeft, fadeRight, slideUp } from "../effects/ScrollMotion";
 
 export default function FeaturedSection({ initialData = FRANCHISE_DATA }: { initialData?: any[] }) {
   const items = [
