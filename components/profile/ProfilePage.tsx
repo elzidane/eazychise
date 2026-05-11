@@ -13,21 +13,43 @@ function ProfilePage() {
     email: '',
     bio: 'Wirausahawan muda yang tertarik pada ekosistem franchise F&B di Indonesia.',
     location: 'Jakarta, Indonesia',
-    joinedDate: '...'
+    joinedDate: '...',
+    avatarUrl: null as string | null
   });
 
   useEffect(() => {
     const fetchUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        setUserData({
-          name: user.user_metadata?.full_name || 'User',
-          username: user.user_metadata?.username || user.email?.split('@')[0] || 'user',
-          email: user.email || '',
-          bio: user.user_metadata?.bio || 'Belum ada bio.',
-          location: user.user_metadata?.location || 'Indonesia',
-          joinedDate: new Date(user.created_at).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })
-        });
+        // Fetch from profiles table
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (profile) {
+          setUserData({
+            name: profile.full_name || 'User',
+            username: profile.username || user.email?.split('@')[0] || 'user',
+            email: user.email || '',
+            bio: profile.bio || 'Belum ada bio.',
+            location: profile.location || 'Indonesia',
+            joinedDate: new Date(user.created_at).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }),
+            avatarUrl: profile.avatar_url || null
+          });
+        } else {
+          // Fallback to metadata
+          setUserData({
+            name: user.user_metadata?.full_name || 'User',
+            username: user.user_metadata?.username || user.email?.split('@')[0] || 'user',
+            email: user.email || '',
+            bio: user.user_metadata?.bio || 'Belum ada bio.',
+            location: user.user_metadata?.location || 'Indonesia',
+            joinedDate: new Date(user.created_at).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }),
+            avatarUrl: user.user_metadata?.avatar_url || null
+          });
+        }
       }
       setLoading(false);
     };
@@ -57,8 +79,12 @@ function ProfilePage() {
             <div className="relative flex justify-between items-end -mt-12 mb-6">
               <div className="relative">
                 <div className="w-32 h-32 rounded-3xl bg-white p-1.5 shadow-xl">
-                  <div className="w-full h-full rounded-2xl bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-4xl font-bold">
-                    {userData.name.charAt(0).toUpperCase()}
+                  <div className="w-full h-full rounded-2xl bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-4xl font-bold overflow-hidden">
+                    {userData.avatarUrl ? (
+                      <img src={userData.avatarUrl} alt={userData.name} className="w-full h-full object-cover" />
+                    ) : (
+                      userData.name.charAt(0).toUpperCase()
+                    )}
                   </div>
                 </div>
                 <div className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 border-4 border-white rounded-full" />

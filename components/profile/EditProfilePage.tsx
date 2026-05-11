@@ -22,10 +22,26 @@ function EditProfilePage() {
     const fetchUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        setNama(user.user_metadata?.full_name || '');
-        setUsername(user.user_metadata?.username || user.email?.split('@')[0] || '');
-        setBio(user.user_metadata?.bio || '');
         setEmail(user.email || '');
+        
+        // Fetch from profiles table
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+        
+        if (profile) {
+          setNama(profile.full_name || '');
+          setUsername(profile.username || '');
+          setBio(profile.bio || '');
+          if (profile.avatar_url) setPreviewUrl(profile.avatar_url);
+        } else {
+          // Fallback to metadata if profile doesn't exist yet
+          setNama(user.user_metadata?.full_name || '');
+          setUsername(user.user_metadata?.username || user.email?.split('@')[0] || '');
+          setBio(user.user_metadata?.bio || '');
+        }
       }
       setLoading(false);
     };
@@ -38,15 +54,58 @@ function EditProfilePage() {
     setSaving(true);
 
     try {
-      const { error } = await supabase.auth.updateUser({
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Tidak ada sesi pengguna');
+
+      let avatarUrl = previewUrl;
+
+      // 1. Upload photo if selected
+      if (foto) {
+        const fileExt = foto.name.split('.').pop();
+        const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+        const filePath = `${user.id}/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(filePath, foto, {
+            upsert: true
+          });
+
+        if (uploadError) throw uploadError;
+
+        // Get public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from('avatars')
+          .getPublicUrl(filePath);
+        
+        avatarUrl = publicUrl;
+      }
+
+      // 2. Update profiles table
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert({
+          id: user.id,
+          full_name: nama,
+          username: username,
+          bio: bio,
+          avatar_url: avatarUrl,
+          updated_at: new Date().toISOString()
+        });
+
+      if (profileError) throw profileError;
+
+      // 3. Also update auth metadata for consistency
+      const { error: authError } = await supabase.auth.updateUser({
         data: { 
           full_name: nama,
           username: username,
-          bio: bio
+          bio: bio,
+          avatar_url: avatarUrl
         }
       });
 
-      if (error) throw error;
+      if (authError) throw authError;
 
       alert('Profil berhasil diperbarui!');
       router.push('/profile');
