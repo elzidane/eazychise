@@ -17,6 +17,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useToast } from "@/components/ui/Toast";
 import DashboardSkeleton from "@/components/skeletons/DashboardSkeleton";
 import LocalBusinessTracker from "@/components/features/LocalBusinessTracker";
+import { toSlug } from "@/lib/utils/slugify";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -494,7 +495,7 @@ export default function DashboardPage() {
                   {recommendedFranchises.map((f) => (
                     <Link
                       key={f.name}
-                      href={`/franchise/${f.name.toLowerCase().replace(/\s+/g, '-')}`}
+                      href={`/franchise/${toSlug(f.name)}`}
                       className="flex flex-col gap-3 p-4 rounded-2xl bg-[#F8F8F6] hover:bg-[#FFF3E5] border border-transparent hover:border-[#FF5C1A]/10 transition-all group"
                     >
                       <div className="flex items-center gap-3">
@@ -746,7 +747,7 @@ export default function DashboardPage() {
       {/* ── Brand Details Modal ── */}
       <AnimatePresence>
         {showBrandDetails && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+          <div className="fixed inset-0 z-[60] flex items-center justify-center px-4">
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

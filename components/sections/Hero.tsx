@@ -57,14 +57,14 @@ export default function Hero() {
 
           {/* Headline */}
           <motion.h1 initial={{ opacity:0, y:30 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.7, delay:0.1, ease:[0.16,1,0.3,1] }} className="h1-responsive mb-6">
-            <span className="block text-[#111111] whitespace-nowrap"><BlurText text="Bisnis" delay={120} animateBy="chars" /></span>
-            <span className="relative block font-fraunces italic text-[#FF5C1A] py-1 whitespace-nowrap">
+            <span className="block text-[#111111]"><BlurText text="Bisnis" delay={120} animateBy="chars" /></span>
+            <span className="relative block font-fraunces italic text-[#FF5C1A] py-1">
               Kuliner &amp;
               <motion.svg className="absolute -bottom-1 left-0 w-48 md:w-64" viewBox="0 0 320 12" fill="none" preserveAspectRatio="none" style={{ height:"8px" }}>
                 <motion.path d="M2 7 C40 2, 80 11, 120 6 S200 1, 240 7 S290 11, 318 6" stroke="#FF5C1A" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.4" initial={{ pathLength:0 }} animate={{ pathLength:1 }} transition={{ duration:1.2, delay:0.8 }} />
               </motion.svg>
             </span>
-            <span className="block mt-1 whitespace-nowrap" style={{ WebkitTextStroke:"2px #111111", color:"transparent" }}>
+            <span className="block mt-1" style={{ WebkitTextStroke:"2px #111111", color:"transparent" }}>
               <BlurText text="Minuman" delay={100} animateBy="chars" />
             </span>
           </motion.h1>
@@ -134,54 +134,96 @@ export default function Hero() {
         </motion.div>
 
         {/* RIGHT */}
-        <motion.div style={{ y: yRight }} initial={{ opacity:0, x:60 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.9, delay:0.2, ease:[0.16,1,0.3,1] }} className="hidden lg:block">
-          <div className="relative">
-            <div className="grid grid-cols-[1.15fr_0.85fr] grid-rows-[280px_220px] gap-4">
-              <motion.div whileHover={{ scale:1.01 }} className="row-span-2 rounded-[32px] overflow-hidden relative group shadow-[0_30px_70px_rgba(0,0,0,0.1)] border border-black/5">
-                <Image src={HERO_IMAGES[0].src} alt={HERO_IMAGES[0].alt} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" sizes="450px" priority />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute top-4 left-4 bg-[#FF5C1A] text-white text-[0.65rem] font-bold px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg"><Utensils className="w-3.5 h-3.5" /> Kuliner</div>
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <p className="text-white font-black text-lg leading-tight mb-1">{HERO_IMAGES[0].name}</p>
-                  <p className="text-white/70 text-[0.75rem]">{HERO_IMAGES[0].meta}</p>
-                  <div className="flex items-center gap-2 mt-2.5">
-                    {[...Array(5)].map((_,i) => <Star key={i} className="w-3 h-3 fill-[#FFCF40] text-[#FFCF40]" />)}
-                    <span className="text-white/60 text-[0.7rem] font-bold">4.9 / 5.0</span>
-                  </div>
-                </div>
-              </motion.div>
-              {[1,2].map((idx) => (
-                <motion.div key={idx} whileHover={{ scale:1.02 }} className="rounded-[24px] overflow-hidden relative group shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-black/5">
-                  <Image src={HERO_IMAGES[idx].src} alt={HERO_IMAGES[idx].alt} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" sizes="300px" priority />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                  <div className="absolute top-3.5 left-3.5 bg-black/40 backdrop-blur-md text-white text-[0.6rem] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5">
-                    {idx === 1 ? <Coffee className="w-3 h-3" /> : <Pizza className="w-3 h-3" />}
-                    {idx === 1 ? "Minuman" : "Kuliner"}
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <p className="text-white font-bold text-sm">{HERO_IMAGES[idx].name}</p>
-                    <p className="text-white/60 text-[0.68rem]">{HERO_IMAGES[idx].meta}</p>
+        <motion.div style={{ y: yRight }} initial={{ opacity:0, x:60 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.9, delay:0.2, ease:[0.16,1,0.3,1] }} className="relative">
+          {/* Main Desktop Visual */}
+          <div className="hidden lg:block">
+            <div className="relative">
+              <div className="grid grid-cols-[1.15fr_0.85fr] grid-rows-[280px_220px] gap-4">
+                <motion.div whileHover={{ scale:1.01 }} className="row-span-2 rounded-[32px] overflow-hidden relative group shadow-[0_30px_70px_rgba(0,0,0,0.1)] border border-black/5">
+                  <Image src={HERO_IMAGES[0].src} alt={HERO_IMAGES[0].alt} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" sizes="450px" priority />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                  <div className="absolute top-4 left-4 bg-[#FF5C1A] text-white text-[0.65rem] font-bold px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg"><Utensils className="w-3.5 h-3.5" /> Kuliner</div>
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <p className="text-white font-black text-lg leading-tight mb-1">{HERO_IMAGES[0].name}</p>
+                    <p className="text-white/70 text-[0.75rem]">{HERO_IMAGES[0].meta}</p>
+                    <div className="flex items-center gap-2 mt-2.5">
+                      {[...Array(5)].map((_,i) => <Star key={i} className="w-3 h-3 fill-[#FFCF40] text-[#FFCF40]" />)}
+                      <span className="text-white/60 text-[0.7rem] font-bold">4.9 / 5.0</span>
+                    </div>
                   </div>
                 </motion.div>
-              ))}
+                {[1,2].map((idx) => (
+                  <motion.div key={idx} whileHover={{ scale:1.02 }} className="rounded-[24px] overflow-hidden relative group shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-black/5">
+                    <Image src={HERO_IMAGES[idx].src} alt={HERO_IMAGES[idx].alt} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" sizes="300px" priority />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                    <div className="absolute top-3.5 left-3.5 bg-black/40 backdrop-blur-md text-white text-[0.6rem] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                      {idx === 1 ? <Coffee className="w-3 h-3" /> : <Pizza className="w-3 h-3" />}
+                      {idx === 1 ? "Minuman" : "Kuliner"}
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <p className="text-white font-bold text-sm">{HERO_IMAGES[idx].name}</p>
+                      <p className="text-white/60 text-[0.68rem]">{HERO_IMAGES[idx].meta}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Floating badges */}
+              <motion.div animate={{ y:[0,-8,0] }} transition={{ duration:3, repeat:Infinity, ease:"easeInOut" }} className="absolute -top-4 -right-4 bg-[#FFCF40] rounded-2xl px-5 py-4 shadow-[0_15px_40px_rgba(0,0,0,0.12)] border border-white/20 flex items-center gap-3.5 z-20" style={{ minWidth:180 }}>
+                <div className="w-11 h-11 rounded-xl bg-white/30 flex items-center justify-center flex-shrink-0"><Flame className="w-6 h-6 fill-[#FF5C1A] text-[#FF5C1A]" /></div>
+                <div><p className="font-black text-[0.95rem] text-[#111] leading-none">Terlaris</p><p className="text-[0.7rem] text-black/60 mt-1 font-bold">Bulan Ini</p></div>
+              </motion.div>
+              <motion.div animate={{ y:[0,-10,0] }} transition={{ duration:3.5, repeat:Infinity, ease:"easeInOut", delay:0.6 }} className="absolute -bottom-6 -left-8 bg-white rounded-2xl px-5 py-4 shadow-[0_15px_40px_rgba(0,0,0,0.1)] border border-black/[0.03] flex items-center gap-3.5 z-20" style={{ minWidth:200 }}>
+                <div className="w-11 h-11 rounded-xl bg-[#1B8C5A]/10 flex items-center justify-center text-[#1B8C5A] flex-shrink-0"><CheckCircle2 className="w-6 h-6" /></div>
+                <div><p className="font-black text-[0.95rem] text-[#1B8C5A] leading-none">Terverifikasi</p><p className="text-[0.7rem] text-[#888] mt-1 font-bold">BPOM &amp; Halal</p></div>
+              </motion.div>
+              <motion.div animate={{ y:[0,-7,0] }} transition={{ duration:4, repeat:Infinity, ease:"easeInOut", delay:1.2 }} className="absolute top-[45%] -right-10 bg-[#111111] rounded-2xl px-4 py-3.5 shadow-[0_12px_32px_rgba(0,0,0,0.25)] z-20">
+                <p className="text-[#FFCF40] font-syne font-black text-xl leading-none">6 bln</p>
+                <p className="text-white/50 text-[0.65rem] mt-1 font-bold tracking-wider uppercase">Avg. ROI</p>
+              </motion.div>
+
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] rounded-[40px] border border-[#FF5C1A]/8 -z-10 pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[125%] h-[125%] rounded-[50px] border border-[#FF5C1A]/4 -z-10 pointer-events-none" />
             </div>
+          </div>
 
-            {/* Floating badges */}
-            <motion.div animate={{ y:[0,-8,0] }} transition={{ duration:3, repeat:Infinity, ease:"easeInOut" }} className="absolute -top-4 -right-4 bg-[#FFCF40] rounded-2xl px-5 py-4 shadow-[0_15px_40px_rgba(0,0,0,0.12)] border border-white/20 flex items-center gap-3.5 z-20" style={{ minWidth:180 }}>
-              <div className="w-11 h-11 rounded-xl bg-white/30 flex items-center justify-center flex-shrink-0"><Flame className="w-6 h-6 fill-[#FF5C1A] text-[#FF5C1A]" /></div>
-              <div><p className="font-black text-[0.95rem] text-[#111] leading-none">Terlaris</p><p className="text-[0.7rem] text-black/60 mt-1 font-bold">Bulan Ini</p></div>
+          {/* Mobile Visual Replacement (Glassy Card) */}
+          <div className="block lg:hidden mt-8">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-white/80 backdrop-blur-xl border border-white rounded-[32px] p-6 shadow-xl relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF5C1A]/10 rounded-full blur-2xl -mr-16 -mt-16" />
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 rounded-2xl bg-[#FF5C1A] flex items-center justify-center text-white shadow-lg shadow-[#FF5C1A]/20">
+                  <Flame className="w-6 h-6 fill-white" />
+                </div>
+                <div>
+                  <h4 className="font-syne font-bold text-lg text-[#111]">Pilihan Terpopuler</h4>
+                  <p className="text-[0.7rem] text-[#999] font-bold uppercase tracking-wider">Update 2026</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { name: "Kopi Kenangan", cat: "Minuman", badge: "ROI 6 Bln" },
+                  { name: "Wizzmie", cat: "Kuliner", badge: "Verified" }
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-black/[0.03] border border-black/[0.02]">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-[#FF5C1A] font-black text-xs">
+                        {item.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="font-bold text-sm text-[#111]">{item.name}</p>
+                        <p className="text-[0.6rem] text-[#999] font-medium">{item.cat}</p>
+                      </div>
+                    </div>
+                    <span className="text-[0.6rem] font-black text-[#FF5C1A] bg-[#FF5C1A]/10 px-2 py-0.5 rounded-full">{item.badge}</span>
+                  </div>
+                ))}
+              </div>
             </motion.div>
-            <motion.div animate={{ y:[0,-10,0] }} transition={{ duration:3.5, repeat:Infinity, ease:"easeInOut", delay:0.6 }} className="absolute -bottom-6 -left-8 bg-white rounded-2xl px-5 py-4 shadow-[0_15px_40px_rgba(0,0,0,0.1)] border border-black/[0.03] flex items-center gap-3.5 z-20" style={{ minWidth:200 }}>
-              <div className="w-11 h-11 rounded-xl bg-[#1B8C5A]/10 flex items-center justify-center text-[#1B8C5A] flex-shrink-0"><CheckCircle2 className="w-6 h-6" /></div>
-              <div><p className="font-black text-[0.95rem] text-[#1B8C5A] leading-none">Terverifikasi</p><p className="text-[0.7rem] text-[#888] mt-1 font-bold">BPOM &amp; Halal</p></div>
-            </motion.div>
-            <motion.div animate={{ y:[0,-7,0] }} transition={{ duration:4, repeat:Infinity, ease:"easeInOut", delay:1.2 }} className="absolute top-[45%] -right-10 bg-[#111111] rounded-2xl px-4 py-3.5 shadow-[0_12px_32px_rgba(0,0,0,0.25)] z-20">
-              <p className="text-[#FFCF40] font-syne font-black text-xl leading-none">6 bln</p>
-              <p className="text-white/50 text-[0.65rem] mt-1 font-bold tracking-wider uppercase">Avg. ROI</p>
-            </motion.div>
-
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] rounded-[40px] border border-[#FF5C1A]/8 -z-10 pointer-events-none" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[125%] h-[125%] rounded-[50px] border border-[#FF5C1A]/4 -z-10 pointer-events-none" />
           </div>
         </motion.div>
       </motion.div>

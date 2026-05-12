@@ -390,6 +390,55 @@ export default function Navbar() {
                 />
               ))}
             </button>
+
+            {/* Mobile Notification Bell */}
+            {user && (
+              <div className="relative">
+                <button 
+                  onClick={() => { setShowNotifications(!showNotifications); setMenuOpen(false); }}
+                  className={`relative p-2 rounded-lg transition-colors cursor-pointer ${scrolled ? "hover:bg-white/10 text-white" : "hover:bg-black/5 text-[#555]"}`}
+                >
+                  <Bell className="w-5 h-5" />
+                  {notifications.length > 0 && (
+                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+                  )}
+                </button>
+                {showNotifications && (
+                  <div className="fixed left-4 right-4 top-20 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.2)] border border-black/5 overflow-hidden z-[60] animate-fade-up lg:hidden">
+                     <div className="p-4 border-b border-black/5 flex items-center justify-between">
+                       <h4 className="font-bold text-sm text-[#111]">Notifikasi</h4>
+                       {notifications.length > 0 && (
+                         <button onClick={markNotificationsAsRead} className="text-[0.65rem] font-bold uppercase tracking-wider text-[#FF5C1A] cursor-pointer hover:underline">
+                           Tandai dibaca
+                         </button>
+                       )}
+                     </div>
+                     <div className="max-h-80 overflow-y-auto">
+                       {notifications.length === 0 ? (
+                         <div className="p-8 text-center text-sm font-medium text-gray-400">Belum ada notifikasi baru</div>
+                       ) : (
+                         notifications.map(n => (
+                           <div 
+                             key={n.id} 
+                             onClick={() => handleNotificationClick(n)}
+                             className="p-4 border-b border-black/5 hover:bg-[#F8F8F6] transition-colors cursor-pointer"
+                           >
+                             <div className="flex items-start gap-3">
+                               <div className="w-2 h-2 mt-1.5 rounded-full bg-[#FF5C1A] flex-shrink-0" />
+                               <div>
+                                 <p className="font-bold text-sm text-[#111]">{n.title}</p>
+                                 <p className="text-xs text-[#666] mt-1 leading-relaxed">{n.message}</p>
+                                 <p className="text-[0.6rem] text-[#999] mt-2 font-medium">{new Date(n.created_at).toLocaleString('id-ID')}</p>
+                               </div>
+                             </div>
+                           </div>
+                         ))
+                       )}
+                     </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </nav>
       </div>

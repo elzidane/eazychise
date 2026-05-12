@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Star } from "lucide-react";
 import { FRANCHISE_DATA } from "@/lib/franchise-data";
 import { ScrollReveal, StaggerReveal, fadeLeft, fadeRight, slideUp } from "../effects/ScrollMotion";
+import { toSlug } from "@/lib/utils/slugify";
 
 export default function FeaturedSection({ initialData = FRANCHISE_DATA }: { initialData?: any[] }) {
   const items = [
@@ -59,7 +60,7 @@ export default function FeaturedSection({ initialData = FRANCHISE_DATA }: { init
         {/* Main card */}
         <ScrollReveal variants={fadeRight} threshold={0.1}>
           <Link
-            href={`/franchise/${main.title.toLowerCase().replace(/\s+/g, '-')}`}
+            href={`/franchise/${toSlug(main.title)}`}
             className="relative rounded-[18px] overflow-hidden group cursor-pointer h-[440px] lg:h-[520px] block"
           >
             <Image src={main.src} alt={main.alt} fill sizes="700px" priority
@@ -92,7 +93,7 @@ export default function FeaturedSection({ initialData = FRANCHISE_DATA }: { init
           {rest.map((item, i) => (
             <motion.div key={item.title} variants={slideUp}>
               <Link
-                href={`/franchise/${item.title.toLowerCase().replace(/\s+/g, '-')}`}
+                href={`/franchise/${toSlug(item.title)}`}
                 className="relative rounded-[18px] overflow-hidden group cursor-pointer flex-1 block"
                 style={{ minHeight: 190 }}
               >

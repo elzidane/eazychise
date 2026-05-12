@@ -3,7 +3,7 @@ import { Franchise } from "@/types";
 export const FRANCHISE_DATA: Franchise[] = [
   // ─── Minuman ───────────────────────────────────────────────────
   {
-    img: "https://images.glints.com/unsafe/glints-dashboard.oss-ap-southeast-1.aliyuncs.com/company-logo/40ab6f55ddd8c16fe55c615a99b30ecb.jpg",
+    img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=800&auto=format&fit=crop",
     alt: "Kopi", cat: "Minuman", catKey: "minuman",
     name: "Kopi Studio 24", rating: 4.9, city: "25+ kota Indonesia",
     invest: "Rp 2,8 Juta", investNum: 2_800_000, roi: "3–5 bln",
@@ -92,7 +92,7 @@ export const FRANCHISE_DATA: Franchise[] = [
     badge: "Legendaris", badgeColor: "#FF5C1A",
   },
   {
-    img: "https://cdn-jpr.jawapos.com/images/15/2025/06/04/WhatsApp-Image-2025-06-04-at-111052-3515085851.jpeg",
+    img: "https://images.unsplash.com/photo-1555126634-323283e090fa?q=80&w=800&auto=format&fit=crop",
     alt: "Mie", cat: "Kuliner", catKey: "kuliner",
     name: "Warmindo", rating: 4.7, city: "Jawa & Sumatera",
     invest: "Rp 25 Juta", investNum: 25_000_000, roi: "10–14 bln",
@@ -100,7 +100,7 @@ export const FRANCHISE_DATA: Franchise[] = [
     badge: "Brand Artis", badgeColor: "#7C3AED",
   },
   {
-    img: "https://nahwatravel.co.id/wp-content/uploads/2025/04/IMG_20250422_095834.jpg",
+    img: "https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?q=80&w=800&auto=format&fit=crop",
     alt: "Mie Pedas", cat: "Kuliner", catKey: "kuliner",
     name: "Mie Gacoan", rating: 4.9, city: "Jawa, Bali, Sumatera",
     invest: "Rp 30 Juta", investNum: 30_000_000, roi: "10–15 bln",

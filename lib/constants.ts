@@ -11,6 +11,9 @@ export const STATS = {
   poinVerifikasi: 47,
 };
 
+export const OFFICIAL_WA_NUMBER = "6287792735999";
+export const OFFICIAL_WA_LINK = `https://wa.me/${OFFICIAL_WA_NUMBER}`;
+
 export const INITIAL_REVIEWS: Review[] = [
   {
     id: 1,

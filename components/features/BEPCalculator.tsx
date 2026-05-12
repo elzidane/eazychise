@@ -134,8 +134,13 @@ Gaya bahasa: Tajam, analitis, dan suportif (Senior Business Consultant).`;
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         type="number"
+                        min="5000000"
+                        max="500000000"
                         value={modalAwal}
-                        onChange={(e) => setModalAwal(Number(e.target.value))}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          if (val >= 0) setModalAwal(val);
+                        }}
                         onBlur={() => setEditingField(null)}
                         onKeyDown={(e) => e.key === 'Enter' && setEditingField(null)}
                         autoFocus
@@ -174,8 +179,13 @@ Gaya bahasa: Tajam, analitis, dan suportif (Senior Business Consultant).`;
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         type="number"
+                        min="5000000"
+                        max="200000000"
                         value={omsetBulan}
-                        onChange={(e) => setOmsetBulan(Number(e.target.value))}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          if (val >= 0) setOmsetBulan(val);
+                        }}
                         onBlur={() => setEditingField(null)}
                         onKeyDown={(e) => e.key === 'Enter' && setEditingField(null)}
                         autoFocus
@@ -217,8 +227,13 @@ Gaya bahasa: Tajam, analitis, dan suportif (Senior Business Consultant).`;
                       >
                         <input
                           type="number"
+                          min="20"
+                          max="80"
                           value={hppPercent}
-                          onChange={(e) => setHppPercent(Number(e.target.value))}
+                          onChange={(e) => {
+                            const val = Number(e.target.value);
+                            if (val >= 0) setHppPercent(val);
+                          }}
                           onBlur={() => setEditingField(null)}
                           onKeyDown={(e) => e.key === 'Enter' && setEditingField(null)}
                           autoFocus
@@ -260,8 +275,13 @@ Gaya bahasa: Tajam, analitis, dan suportif (Senior Business Consultant).`;
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         type="number"
+                        min="1000000"
+                        max="50000000"
                         value={biayaOperasional}
-                        onChange={(e) => setBiayaOperasional(Number(e.target.value))}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          if (val >= 0) setBiayaOperasional(val);
+                        }}
                         onBlur={() => setEditingField(null)}
                         onKeyDown={(e) => e.key === 'Enter' && setEditingField(null)}
                         autoFocus

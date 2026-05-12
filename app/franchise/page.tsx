@@ -1,5 +1,15 @@
 import FranchiseListings from "@/components/features/FranchiseList";
 import { createClient } from "@/utils/supabase/server";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Daftar Franchise & Kemitraan F&B Terbaik | EazyChise",
+  description: "Temukan ratusan peluang bisnis franchise kuliner dan minuman terbaik di Indonesia. Bandingkan modal, ROI, dan potensi keuntungan secara transparan.",
+  openGraph: {
+    title: "Katalog Franchise F&B Terlengkap | EazyChise",
+    description: "Cari bisnis franchise impian Anda di EazyChise. Analisis ROI dan BEP secara instan.",
+  }
+};
 
 async function getFranchises() {
   const supabase = await createClient();

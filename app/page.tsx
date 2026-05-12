@@ -5,10 +5,24 @@ import ReactBitsShowcase from "@/components/effects/Reactbitsshowcase";
 import AIAdvisorSection from "@/components/sections/AIAdvisorSection";
 import CTASection from "@/components/sections/CTA";
 import { createClient } from "@/utils/supabase/server";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "EazyChise - Platform Franchise F&B Terlengkap & Terpercaya",
+  description: "Cari dan bandingkan ratusan peluang franchise F&B terbaik di Indonesia. Analisis modal, profit, dan lokasi secara instan dengan bantuan teknologi AI.",
+  openGraph: {
+    title: "EazyChise - Mudahkan Jalan Jadi Pengusaha",
+    description: "Platform kurasi franchise kuliner dan minuman #1 di Indonesia.",
+  }
+};
 
 async function getFranchises() {
   const supabase = await createClient();
-  const { data } = await supabase.from('franchises').select('*');
+  const { data } = await supabase
+    .from('franchises')
+    .select('*')
+    .limit(6)
+    .order('rating', { ascending: false });
   
   if (!data) return undefined;
   
