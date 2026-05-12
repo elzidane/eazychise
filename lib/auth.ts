@@ -128,8 +128,13 @@ export function syncSessionWithLocal(sessionUser: { name?: string | null; email?
       savedFranchises: [],
       searchHistory: [],
     };
-    saveUsers(users);
+  } else {
+    // Update existing user data with session data if available
+    if (sessionUser.name) users[emailKey].name = sessionUser.name;
+    // You could also update image/avatar if you add it to the User type
   }
+  
+  saveUsers(users);
 
   const { password: _, ...userWithoutPassword } = users[emailKey];
   // Always update current user in localStorage to match session

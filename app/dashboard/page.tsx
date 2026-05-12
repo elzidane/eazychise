@@ -275,7 +275,27 @@ export default function DashboardPage() {
       setLoading(false);
     };
 
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        const role = session.user.user_metadata.role || 'franchisee';
+        setUser({
+          id: session.user.id,
+          name: session.user.user_metadata.full_name || session.user.email,
+          email: session.user.email,
+          role: role,
+          savedFranchises: [],
+          searchHistory: []
+        } as any);
+      } else if (event === 'SIGNED_OUT') {
+        router.replace("/masuk");
+      }
+    });
+
     checkUserAndFetchData();
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [router, supabase]);
 
   // Handle deep link to specific lead

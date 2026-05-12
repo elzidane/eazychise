@@ -59,7 +59,33 @@ function ProfilePage() {
       }
       setLoading(false);
     };
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        // Re-fetch everything to be sure
+        const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+        const joined = new Date(session.user.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        
+        if (profile) {
+          setUserData({
+            name: profile.full_name || 'User',
+            username: profile.username || session.user.email?.split('@')[0] || 'user',
+            email: session.user.email || '',
+            bio: profile.bio || '',
+            location: profile.location || 'Indonesia',
+            phone: profile.phone || '',
+            website: profile.website || '',
+            joinedDate: joined,
+            avatarUrl: profile.avatar_url || null,
+          });
+        }
+      }
+    });
+
     fetchUser();
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [supabase]);
 
   if (loading) {

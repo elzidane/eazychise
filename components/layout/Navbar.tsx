@@ -60,7 +60,14 @@ export default function Navbar() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      if (!session) {
+      if (session?.user) {
+        const syncedUser = syncSessionWithLocal({
+          name: session.user.user_metadata.full_name || session.user.email,
+          email: session.user.email,
+          image: session.user.user_metadata.avatar_url,
+        });
+        setUser(syncedUser);
+      } else {
         setUser(null);
       }
     });

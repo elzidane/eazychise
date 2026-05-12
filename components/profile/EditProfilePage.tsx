@@ -5,6 +5,7 @@ import { Camera, User, Mail, FileText, ChevronLeft, Save, Loader2, Phone, MapPin
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
+import { syncSessionWithLocal } from '@/lib/auth';
 
 function EditProfilePage() {
   const supabase = createClient();
@@ -99,12 +100,25 @@ function EditProfilePage() {
       if (profileError) throw profileError;
 
       // 3. Sync auth metadata
-      await supabase.auth.updateUser({ data: { full_name: nama, username, bio, avatar_url: avatarUrl } });
+      const { data: { user: updatedUser }, error: updateError } = await supabase.auth.updateUser({ 
+        data: { full_name: nama, username, bio, avatar_url: avatarUrl } 
+      });
+      
+      if (updateError) throw updateError;
+
+      // 4. Sync with local storage for other components
+      if (updatedUser) {
+        syncSessionWithLocal({
+          name: nama,
+          email: user.email,
+          image: avatarUrl
+        });
+      }
 
       setSaved(true);
       setTimeout(() => {
-        router.push('/profile');
         router.refresh();
+        router.push('/profile');
       }, 1200);
     } catch (err: any) {
       setError(err.message || 'Terjadi kesalahan');
