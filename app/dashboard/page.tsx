@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,7 +19,7 @@ import DashboardSkeleton from "@/components/skeletons/DashboardSkeleton";
 import LocalBusinessTracker from "@/components/features/LocalBusinessTracker";
 import { toSlug } from "@/lib/utils/slugify";
 
-export default function DashboardPage() {
+function DashboardPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
@@ -1224,5 +1224,13 @@ export default function DashboardPage() {
         )}
       </AnimatePresence>
     </main>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<DashboardSkeleton />}>
+      <DashboardPageInner />
+    </Suspense>
   );
 }

@@ -42,8 +42,11 @@ export const metadata: Metadata = {
     "Platform franchise digital fokus makanan & minuman terpercaya untuk UMKM Indonesia. Modal kecil, dukungan penuh.",
   keywords: "franchise, makanan, minuman, UMKM, Indonesia, F&B, kopi, bubble tea",
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: [
+      { url: "/favicon.png", sizes: "any" },
+    ],
+    apple: "/favicon.png",
+    shortcut: "/favicon.png",
   },
   openGraph: {
     title: "EazyChise – Platform Franchise F&B Indonesia",
