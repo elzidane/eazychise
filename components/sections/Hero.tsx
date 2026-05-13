@@ -57,14 +57,14 @@ export default function Hero() {
 
           {/* Headline */}
           <motion.h1 initial={{ opacity:0, y:30 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.7, delay:0.1, ease:[0.16,1,0.3,1] }} className="h1-responsive mb-6">
-            <span className="block text-[#111111]"><BlurText text="Bisnis" delay={120} animateBy="chars" /></span>
-            <span className="relative block font-fraunces italic text-[#FF5C1A] py-1">
+            <span className="block text-[#111111] whitespace-nowrap"><BlurText text="Bisnis" delay={120} animateBy="chars" /></span>
+            <span className="relative block font-fraunces italic text-[#FF5C1A] py-1 whitespace-nowrap">
               Kuliner &amp;
               <motion.svg className="absolute -bottom-1 left-0 w-48 md:w-64" viewBox="0 0 320 12" fill="none" preserveAspectRatio="none" style={{ height:"8px" }}>
                 <motion.path d="M2 7 C40 2, 80 11, 120 6 S200 1, 240 7 S290 11, 318 6" stroke="#FF5C1A" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.4" initial={{ pathLength:0 }} animate={{ pathLength:1 }} transition={{ duration:1.2, delay:0.8 }} />
               </motion.svg>
             </span>
-            <span className="block mt-1" style={{ WebkitTextStroke:"2px #111111", color:"transparent" }}>
+            <span className="block mt-1 whitespace-nowrap" style={{ WebkitTextStroke:"2px #111111", color:"transparent" }}>
               <BlurText text="Minuman" delay={100} animateBy="chars" />
             </span>
           </motion.h1>
