@@ -9,7 +9,7 @@ import WhyUs from "@/components/sections/WhyUs";
 import Image from "next/image";
 
 const team = [
-  { name: "El Zidane Ardyansyah", role: "FullStack Developer", image: "/images/team/avatar_rizky.png", color: "#FF5C1A" },
+  { name: "El Zidane Ardyansyah", role: "FullStack Developer, Mobile Developer", image: "/images/team/profile.jpg", color: "#FF5C1A" },
   { name: "Avis Zola Raditya Kurniawan", role: "Mobile App Developer", image: "/images/team/avatar_sari.png", color: "#7C3AED" },
 ];
 
