@@ -88,8 +88,8 @@ Sebutkan 1 risiko utama dan 1 solusi mitigasi.
 
 // Model aktif per Mei 2026 — urutan dari paling direkomendasikan untuk kecerdasan maksimal
 const MODELS = [
-  "gemini-2.5-flash",        // Sangat cepat dan cukup cerdas (Utama untuk kecepatan)
-  "gemini-2.5-pro",          // Lebih pintar namun lebih lambat (Fallback)
+  "gemini-2.5-pro",          // Sangat pintar dan analitis (Utama untuk kecerdasan)
+  "gemini-2.5-flash",        // Cepat (Fallback)
   "gemini-2.5-flash-lite",   // Versi efisien
   "gemini-2.0-flash",        // Fallback lama
   "gemini-1.5-flash",        // Stable fallback

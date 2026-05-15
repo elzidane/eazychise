@@ -212,7 +212,7 @@ function MessageBubble({ msg, isNew, animate }: { msg: Message; isNew?: boolean;
           }} />
         )}
         {showTypewriter
-          ? <TypewriterText text={msg.content} speed={5} />
+          ? <TypewriterText text={msg.content} speed={1} />
           : <span style={{ whiteSpace: "pre-wrap", position: "relative", zIndex: 1 }}>
               {msg.content.split(/(\*\*.*?\*\*|### .*?\n|### .*?$)/g).map((part, i) => {
                 if (part.startsWith("**") && part.endsWith("**")) {
@@ -406,7 +406,7 @@ export default function FranchiseAdvisor() {
         setAnimIdx(next.length - 1);
         if (!open) setHasNew(true);
         setLoading(false);
-      }, 800);
+      }, 200);
 
     } catch (e) {
       // Catch network errors and use fallback
@@ -417,7 +417,7 @@ export default function FranchiseAdvisor() {
         setNewMsgIdx(next.length - 1);
         setAnimIdx(next.length - 1);
         setLoading(false);
-      }, 600);
+      }, 200);
     } finally {
       // Loading is handled inside the setTimeouts for fallback or before return in success
     }
