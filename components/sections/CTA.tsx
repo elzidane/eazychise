@@ -8,8 +8,7 @@ export default function CTASection() {
   return (
     <section id="daftar" className="section-padding bg-[#111111] relative overflow-hidden">
 
-      {/* ── Background layers ── */}
-      {/* Animated warm glow */}
+            {/* Animated warm glow */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
         animate={{ opacity: [0.6, 1, 0.6] }}
@@ -22,8 +21,7 @@ export default function CTASection() {
       {/* Top fade line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-      {/* ── Content ── */}
-      <div className="relative z-10 max-w-3xl mx-auto text-center">
+            <div className="relative z-10 max-w-3xl mx-auto text-center">
 
         {/* Label */}
         <ScrollReveal variants={fadeUp}>
@@ -98,8 +96,7 @@ export default function CTASection() {
         </StaggerReveal>
       </div>
 
-      {/* ── Decorative bottom strip ── */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FF5C1A]/30 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FF5C1A]/30 to-transparent" />
     </section>
   );
 }

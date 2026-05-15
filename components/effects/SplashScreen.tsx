@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 interface GridPoint {
   x: number;
   y: number;
@@ -26,7 +25,6 @@ interface Particle {
   draw: (ctx: CanvasRenderingContext2D) => void;
 }
 
-// ─── Status messages ──────────────────────────────────────────────────────────
 const STATUS_MESSAGES = [
   "Initializing systems...",
   "Loading franchise data...",
@@ -35,7 +33,6 @@ const STATUS_MESSAGES = [
   "Almost ready...",
 ];
 
-// ─── Particle factory ─────────────────────────────────────────────────────────
 function createParticle(W: number, H: number): Particle {
   const p: Particle = {
     x: 0, y: 0, vx: 0, vy: 0, life: 0, size: 0, hue: "orange",
@@ -79,7 +76,6 @@ function createParticle(W: number, H: number): Particle {
   return p;
 }
 
-// ─── Canvas renderer ──────────────────────────────────────────────────────────
 function drawFrame(
   ctx: CanvasRenderingContext2D,
   W: number,
@@ -159,7 +155,6 @@ function drawFrame(
   ctx.fillRect(0, 0, W, H);
 }
 
-// ─── Hex Ring SVG ─────────────────────────────────────────────────────────────
 function HexRing() {
   return (
     <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%" }}>
@@ -215,7 +210,6 @@ function HexRing() {
   );
 }
 
-// ─── Corner Bracket ───────────────────────────────────────────────────────────
 function CornerBracket({ position }: { position: "tl" | "tr" | "bl" | "br" }) {
   const styles: Record<string, React.CSSProperties> = {
     tl: { top: 24, left: 24, borderTop: "1px solid rgba(255,92,26,0.3)", borderLeft: "1px solid rgba(255,92,26,0.3)" },
@@ -237,7 +231,6 @@ function CornerBracket({ position }: { position: "tl" | "tr" | "bl" | "br" }) {
   );
 }
 
-// ─── Main SplashScreen ────────────────────────────────────────────────────────
 export default function SplashScreen() {
   const [isVisible, setIsVisible] = useState(true);
   const [mounted, setMounted] = useState(false);
@@ -251,8 +244,7 @@ export default function SplashScreen() {
   const gridRef = useRef<GridPoint[]>([]);
   const particlesRef = useRef<Particle[]>([]);
 
-  // ── Canvas setup ────────────────────────────────────────────────────────────
-  const initCanvas = useCallback(() => {
+    const initCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const W = canvas.width = window.innerWidth;
@@ -272,8 +264,7 @@ export default function SplashScreen() {
     particlesRef.current = Array.from({ length: 80 }, () => createParticle(W, H));
   }, []);
 
-  // ── Render loop ─────────────────────────────────────────────────────────────
-  const startLoop = useCallback(() => {
+    const startLoop = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -293,8 +284,7 @@ export default function SplashScreen() {
     rafRef.current = requestAnimationFrame(loop);
   }, []);
 
-  // ── Lifecycle ────────────────────────────────────────────────────────────────
-  useEffect(() => {
+    useEffect(() => {
     setMounted(true);
     document.body.style.overflow = "hidden";
 

@@ -8,7 +8,6 @@ import L from "leaflet";
 import { renderToString } from "react-dom/server";
 import { MdLocationOn, MdHome, MdWarning } from "react-icons/md";
 
-// ── Leaflet Icon Fix ─────────────────────────────────────────────
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
@@ -64,7 +63,6 @@ const userIcon = L.divIcon({
   `,
 });
 
-// ── Types ────────────────────────────────────────────────────────
 type POI = {
   trafficScore: any;
   id: number;
@@ -77,7 +75,6 @@ type POI = {
   why: string;
 };
 
-// ── Traffic analysis per type ────────────────────────────────────
 const WHY: Record<string, string> = {
   kampus:       "Ratusan mahasiswa setiap hari butuh minuman & camilan saat kuliah, ujian, dan istirahat.",
   sekolah:      "Pelajar dan orang tua adalah konsumen harian yang konsisten saat jam masuk & pulang sekolah.",
@@ -112,7 +109,6 @@ function classifyElement(el: any): { type: string; typeKey: string } | null {
   return null;
 }
 
-// ── Build Overpass query per category ───────────────────────────
 function buildQuery(catLower: string, lat: number, lon: number, r = 4000) {
   const c = `around:${r},${lat},${lon}`;
 
@@ -152,7 +148,6 @@ function buildQuery(catLower: string, lat: number, lon: number, r = 4000) {
   );out center 30;`;
 }
 
-// ── Map Events & Sync ──────────────────────────────────────────
 import { useToast } from "../ui/Toast";
 
 function MapControl({ center, onMoveEnd }: { center: [number, number], onMoveEnd: (center: [number, number]) => void }) {
@@ -184,7 +179,6 @@ function MapControl({ center, onMoveEnd }: { center: [number, number], onMoveEnd
   return null;
 }
 
-// ── Main Component ───────────────────────────────────────────────
 export default function LocationRecommenderMap({ category }: { category: string }) {
   const [center, setCenter] = useState<[number, number]>([-6.2088, 106.8456]);
   const [userLoc, setUserLoc] = useState<[number, number] | null>(null);

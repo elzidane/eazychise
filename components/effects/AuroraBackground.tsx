@@ -49,8 +49,7 @@ export default function AuroraBackground() {
       smoothMouse.current.x += (mouse.current.x - smoothMouse.current.x) * 0.06;
       smoothMouse.current.y += (mouse.current.y - smoothMouse.current.y) * 0.06;
 
-      // ── Cursor glow orb ─────────────────────────────────────
-      const cx = smoothMouse.current.x;
+            const cx = smoothMouse.current.x;
       const cy = smoothMouse.current.y;
       const cursorR = 320;
       const cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, cursorR);
@@ -68,8 +67,7 @@ export default function AuroraBackground() {
       ctx.fillStyle = inner;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // ── Ambient floating orbs ───────────────────────────────
-      for (const orb of orbs) {
+            for (const orb of orbs) {
         const ox = (orb.x + Math.sin(t * orb.speed) * orb.amp) * canvas.width;
         const oy = (orb.y + Math.cos(t * orb.speed * 1.4) * orb.amp) * canvas.height;
         const r  = orb.r * Math.max(canvas.width, canvas.height);
@@ -81,8 +79,7 @@ export default function AuroraBackground() {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
-      // ── Ripple rings on click ───────────────────────────────
-      ripples.current = ripples.current.filter(rp => rp.life > 0);
+            ripples.current = ripples.current.filter(rp => rp.life > 0);
       for (const rp of ripples.current) {
         rp.r    += 18;
         rp.life -= 0.028;

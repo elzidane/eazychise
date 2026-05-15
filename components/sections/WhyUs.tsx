@@ -45,8 +45,7 @@ export default function WhyUs() {
 
       <div className="relative z-10 grid lg:grid-cols-2 gap-16 xl:gap-32 items-center">
 
-        {/* ── LEFT ── */}
-        <div>
+                <div>
           <ScrollReveal variants={fadeRight}>
             <p className="label-caps mb-6 flex items-center gap-3 text-[#FF5C1A]">
               <span className="w-8 h-px bg-[#FF5C1A]" />
@@ -103,8 +102,7 @@ export default function WhyUs() {
           </ScrollReveal>
         </div>
 
-        {/* ── RIGHT: image collage ── */}
-        <ScrollReveal variants={fadeLeft} className="hidden lg:block">
+                <ScrollReveal variants={fadeLeft} className="hidden lg:block">
           <div className="grid grid-cols-2 grid-rows-[300px_220px] gap-4">
             {/* Tall */}
             <ParallaxScroll speed={0.2} className="row-span-2 rounded-[32px] overflow-hidden relative group shadow-2xl border border-white/5">

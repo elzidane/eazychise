@@ -12,7 +12,7 @@
   color-scheme: dark;
 }
 
-/* ── Grid ─────────────────────────────────────────────── */
+
 .card-grid {
   display: grid;
   gap: 14px;
@@ -59,7 +59,7 @@
   }
 }
 
-/* ── Base Card ────────────────────────────────────────── */
+
 .magic-bento-card {
   display: flex;
   flex-direction: column;
@@ -106,7 +106,7 @@
   transform: translateY(-3px);
 }
 
-/* ── Header ───────────────────────────────────────────── */
+
 .magic-bento-card__header {
   display: flex;
   align-items: flex-start;
@@ -117,7 +117,7 @@
   margin-bottom: 2rem;
 }
 
-/* ── Icon badge ───────────────────────────────────────── */
+
 .magic-bento-card__icon {
   width: 44px;
   height: 44px;
@@ -137,7 +137,7 @@
   background: linear-gradient(135deg, rgba(var(--mb-orange), 0.28), rgba(var(--mb-orange), 0.12));
 }
 
-/* ── Label badge ──────────────────────────────────────── */
+
 .magic-bento-card__label {
   font-size: 0.64rem;
   font-weight: 700;
@@ -151,7 +151,7 @@
   white-space: nowrap;
 }
 
-/* ── Content ──────────────────────────────────────────── */
+
 .magic-bento-card__content {
   display: flex;
   flex-direction: column;
@@ -197,7 +197,7 @@
 .magic-bento-card--text-autohide .magic-bento-card__title { -webkit-line-clamp: 2; }
 .magic-bento-card--text-autohide .magic-bento-card__description { -webkit-line-clamp: 3; }
 
-/* ── Stat chip (optional) ─────────────────────────────── */
+
 .magic-bento-card__stat {
   display: inline-flex;
   align-items: baseline;
@@ -222,7 +222,7 @@
   font-weight: 500;
 }
 
-/* ── Bottom accent line ───────────────────────────────── */
+
 .magic-bento-card__accent {
   position: absolute;
   bottom: 0;
@@ -239,7 +239,7 @@
   opacity: 1;
 }
 
-/* ── Border glow effect (cursor-following) ────────────── */
+
 .magic-bento-card--border-glow::after {
   content: '';
   position: absolute;
@@ -264,7 +264,7 @@
   z-index: 4;
 }
 
-/* ── Particles ────────────────────────────────────────── */
+
 .particle-container {
   position: relative;
   overflow: hidden;
@@ -279,7 +279,7 @@
   z-index: -1;
 }
 
-/* ── Global spotlight ─────────────────────────────────── */
+
 .global-spotlight {
   mix-blend-mode: screen;
   will-change: transform, opacity;

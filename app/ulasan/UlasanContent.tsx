@@ -11,7 +11,7 @@ import SpotlightCard from "@/components/cards/SpotlightCard";
 export default function UlasanContent() {
   return (
     <main className="bg-[#FFF9F0] min-h-screen pt-24 lg:pt-32 pb-20 overflow-hidden">
-      {/* ── HERO SECTION ── */}
+      
       <section className="px-[5%] mb-16 lg:mb-24 relative">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#FF5C1A]/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4 pointer-events-none" />
         
@@ -59,7 +59,7 @@ export default function UlasanContent() {
         </div>
       </section>
 
-      {/* ── STATS SUMMARY (4 Premium Cards) ── */}
+      
       <section className="px-[5%] mb-24 relative">
         <div className="max-w-6xl mx-auto">
           <motion.div 
@@ -131,14 +131,14 @@ export default function UlasanContent() {
         </div>
       </section>
 
-      {/* ── REVIEWS GRID ── */}
+      
       <section className="px-[5%] mb-24">
         <div className="max-w-7xl mx-auto">
           <ReviewsSection hideHeader />
         </div>
       </section>
 
-      {/* ── CTA SECTION ── */}
+      
       <section className="px-[5%]">
         <div className="max-w-5xl mx-auto">
           <div className="bg-[#111] rounded-[48px] p-10 md:p-20 text-center relative overflow-hidden group">

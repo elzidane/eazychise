@@ -26,7 +26,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Typography Hierarchy ── */
+
 .h1-responsive {
   font-family: var(--font-syne), sans-serif;
   font-weight: 800;
@@ -56,7 +56,7 @@ body {
   letter-spacing: 0.2em;
 }
 
-/* ── Spacing Rhythm ── */
+
 .section-padding {
   padding-top: clamp(4rem, 10vw, 7rem);
   padding-bottom: clamp(4rem, 10vw, 7rem);
@@ -64,7 +64,7 @@ body {
   padding-right: 5%;
 }
 
-/* ── Marquee ── */
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
@@ -75,7 +75,7 @@ body {
   white-space: nowrap;
 }
 
-/* ── Float ── */
+
 @keyframes floatY {
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(-10px); }
@@ -83,7 +83,7 @@ body {
 .animate-float       { animation: floatY 3s ease-in-out infinite; }
 .animate-float-delay { animation: floatY 3s ease-in-out infinite 0.6s; }
 
-/* ── Basic reveal (CSS fallback for no-JS) ── */
+
 @keyframes fadeUp {
   from { transform: translateY(20px); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
@@ -119,14 +119,14 @@ body {
   transform: translateY(0);
 }
 
-/* ── Glow pulse ── */
+
 @keyframes glowPulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(255, 92, 26, 0.0); }
   50%       { box-shadow: 0 0 32px 8px rgba(255, 92, 26, 0.2); }
 }
 .animate-glow-pulse { animation: glowPulse 3s ease-in-out infinite; }
 
-/* ── Shimmer card effect ── */
+
 @keyframes cardShimmer {
   0%   { background-position: -400px 0; }
   100% { background-position: 400px 0; }
@@ -137,13 +137,13 @@ body {
   animation: cardShimmer 2s ease-in-out infinite;
 }
 
-/* ── Perspective tilt container ── */
+
 .perspective-container {
   perspective: 1000px;
   transform-style: preserve-3d;
 }
 
-/* ── Stagger delay utilities ── */
+
 .stagger-1  { animation-delay: 0.08s; }
 .stagger-2  { animation-delay: 0.16s; }
 .stagger-3  { animation-delay: 0.24s; }
@@ -162,7 +162,7 @@ body {
 .font-fraunces { font-family: var(--font-fraunces), serif; }
 .font-jakarta  { font-family: var(--font-jakarta), sans-serif; }
 
-/* ── BEP Slider mobile ── */
+
 @media (max-width: 768px) {
   input[type="range"] {
     height: 6px !important;
@@ -174,7 +174,7 @@ body {
   input[type="range"]::-moz-range-thumb    { width: 22px; height: 22px; }
 }
 
-/* ── Skeleton shimmer ── */
+
 @keyframes shimmer {
   0%   { background-position: -1000px 0; }
   100% { background-position:  1000px 0; }
@@ -185,14 +185,14 @@ body {
   animation: shimmer 1.5s infinite linear;
 }
 
-/* ── AI Scanning Animation ── */
+
 @keyframes scan {
   0%   { transform: translateY(-100%); }
   100% { transform: translateY(300%); }
 }
 .animate-scan { animation: scan 3s ease-in-out infinite; }
 
-/* ── Gradient text utility ── */
+
 .text-gradient-orange {
   background: linear-gradient(135deg, #FF5C1A, #FFCF40);
   -webkit-background-clip: text;
@@ -200,12 +200,12 @@ body {
   background-clip: text;
 }
 
-/* ── Smooth spring transitions on interactive elements ── */
+
 button, a, [role="button"] {
   transition-timing-function: var(--ease-out-expo);
 }
 
-/* ── Accessibility: respect reduced motion ── */
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

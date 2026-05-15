@@ -50,7 +50,7 @@ const timeline = [
 export default function TentangContent() {
   return (
     <main className="pt-20">
-      {/* ── SECTION 1: Hero Tentang ── */}
+      
       <section className="px-[5%] py-24 lg:py-32 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#FF5C1A]/5 rounded-full blur-[150px] -translate-y-1/2 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#FFCF40]/8 rounded-full blur-[120px] translate-y-1/2 pointer-events-none" />
@@ -78,7 +78,7 @@ export default function TentangContent() {
         </div>
       </section>
 
-      {/* ── SECTION 2: Cerita Kami ── */}
+      
       <section className="px-[5%] py-20 bg-[#111111] relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none opacity-30" style={{
           backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
@@ -129,7 +129,7 @@ export default function TentangContent() {
         </div>
       </section>
 
-      {/* ── SECTION 3: Tim Kami ── */}
+      
       <section className="px-[5%] py-24 relative overflow-hidden">
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#FF5C1A]/5 rounded-full blur-[150px] pointer-events-none" />
         
@@ -182,7 +182,7 @@ export default function TentangContent() {
         </div>
       </section>
 
-      {/* ── SECTION 4: Visi & Misi ── */}
+      
       <section className="px-[5%] py-24 bg-gradient-to-br from-[#111111] to-[#1a1a1a] relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none opacity-20" style={{
           backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
@@ -240,7 +240,7 @@ export default function TentangContent() {
         </div>
       </section>
 
-      {/* ── SECTION 5: Nilai-Nilai Kami ── */}
+      
       <section className="px-[5%] py-24 relative overflow-hidden">
         <div className="max-w-5xl mx-auto">
           <motion.div
@@ -289,10 +289,10 @@ export default function TentangContent() {
         </div>
       </section>
 
-      {/* ── WhyUs Component ── */}
+      
       <WhyUs />
 
-      {/* ── SECTION 6: CTA ── */}
+      
       <section className="px-[5%] py-24 relative overflow-hidden">
         <div className="max-w-3xl mx-auto text-center">
           <motion.div

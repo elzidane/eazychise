@@ -125,7 +125,7 @@ export default function RegisterPage() {
         <span className="hidden lg:inline">Kembali ke Beranda</span>
       </Link>
 
-      {/* ── Left Side: Branding/Visual (Hidden on Mobile) ── */}
+      
       <div className="hidden lg:flex lg:w-1/2 bg-[#111111] p-16 flex-col justify-between relative overflow-hidden">
         {/* Glow effect */}
         <div className="absolute top-[-100px] right-[-100px] w-[600px] h-[600px] bg-[#FF5C1A]/15 rounded-full blur-[120px]" />
@@ -184,7 +184,7 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      {/* ── Right Side: Form ── */}
+      
       <div className="flex-1 flex items-center justify-center p-8 sm:p-16 relative">
         {/* Mobile BG Decor */}
         <div className="lg:hidden absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-0">

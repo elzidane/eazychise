@@ -81,7 +81,7 @@ export default function FranchiseListings({ initialData = FRANCHISE_DATA }: { in
   return (
     <section id="franchise" className="section-padding bg-white/30">
 
-      {/* ── Header ── */}
+      
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
         <div className="max-w-2xl">
           <p className="label-caps mb-4 flex items-center gap-3">
@@ -102,7 +102,7 @@ export default function FranchiseListings({ initialData = FRANCHISE_DATA }: { in
         </Link>
       </div>
 
-      {/* ── Search bar ── */}
+      
       <div className="mb-6 max-w-xl">
         <div className="relative">
           <input 
@@ -118,7 +118,7 @@ export default function FranchiseListings({ initialData = FRANCHISE_DATA }: { in
         </div>
       </div>
 
-      {/* ── Filter bar ── */}
+      
       <div className="flex flex-wrap gap-2.5 mb-10">
         {FRANCHISE_FILTERS.map((f) => (
           <button
@@ -135,7 +135,7 @@ export default function FranchiseListings({ initialData = FRANCHISE_DATA }: { in
         ))}
       </div>
 
-      {/* ── Grid ── */}
+      
       <motion.div
         className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
       >
@@ -290,7 +290,7 @@ export default function FranchiseListings({ initialData = FRANCHISE_DATA }: { in
         </motion.div>
       )}
 
-      {/* ── Floating Compare Bar ── */}
+      
       <AnimatePresence>
         {compareList.length >= 1 && (
           <motion.div 

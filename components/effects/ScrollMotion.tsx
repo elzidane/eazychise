@@ -8,7 +8,6 @@
 import { useRef, ReactNode } from "react";
 import { motion, useInView, useScroll, useTransform, Variants } from "framer-motion";
 
-// ─── Variants Library ─────────────────────────────────────────────────────────
 
 export const fadeUp: Variants = {
   hidden: { opacity: 0, y: 40 },
@@ -54,7 +53,6 @@ export const clipReveal: Variants = {
   show:   { clipPath: "inset(0 0 0% 0)", opacity: 1, transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } },
 };
 
-// ─── Scroll-triggered Wrapper ─────────────────────────────────────────────────
 
 interface ScrollRevealProps {
   children: ReactNode;
@@ -90,7 +88,6 @@ export function ScrollReveal({
   );
 }
 
-// ─── Stagger Container ────────────────────────────────────────────────────────
 
 interface StaggerProps {
   children: ReactNode;
@@ -128,7 +125,6 @@ export function StaggerReveal({
   );
 }
 
-// ─── Parallax on Scroll ───────────────────────────────────────────────────────
 
 interface ParallaxProps {
   children: ReactNode;
@@ -148,7 +144,6 @@ export function ParallaxScroll({ children, speed = 0.3, className = "" }: Parall
   );
 }
 
-// ─── Horizontal Scroll Progress Line ─────────────────────────────────────────
 
 export function ScrollProgressLine() {
   const { scrollYProgress } = useScroll();
@@ -171,7 +166,6 @@ export function ScrollProgressLine() {
   );
 }
 
-// ─── Number Counter with scroll trigger ──────────────────────────────────────
 
 import { useEffect, useState } from "react";
 

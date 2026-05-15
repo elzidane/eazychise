@@ -176,7 +176,7 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ── Floating Nav ── */}
+      
       <div
         className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4 pointer-events-none"
         style={{ animation: "dropDown 0.7s ease both" }}
@@ -230,7 +230,7 @@ export default function Navbar() {
           {/* Desktop CTA / User Menu */}
           <div className="hidden lg:flex items-center gap-3">
             {user ? (
-              /* ── Logged-in state ── */
+              
               <div className="flex items-center gap-2">
                 {/* Notifications */}
                 <div className="relative">
@@ -345,7 +345,7 @@ export default function Navbar() {
               </div>
               </div>
             ) : (
-              /* ── Logged-out state ── */
+              
               <>
                 <Link
                   href="/masuk"
@@ -443,7 +443,7 @@ export default function Navbar() {
         </nav>
       </div>
 
-      {/* ── Mobile Backdrop ── */}
+      
       <div
         onClick={() => setMenuOpen(false)}
         className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
@@ -451,7 +451,7 @@ export default function Navbar() {
         }`}
       />
 
-      {/* ── Mobile Drawer ── */}
+      
       <div
         className={`fixed top-4 right-4 bottom-4 z-50 w-[270px] rounded-2xl bg-[#FFF9F0] shadow-[0_24px_60px_rgba(0,0,0,0.2)] border border-black/6 transition-all duration-300 ease-out lg:hidden flex flex-col overflow-hidden ${
           menuOpen ? "translate-x-0 opacity-100" : "translate-x-[110%] opacity-0"

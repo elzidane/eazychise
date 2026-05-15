@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { MdInsertChart, MdSearch, MdLocalCafe, MdRestaurant, MdLocationOn, MdAttachMoney, MdFlashOn } from "react-icons/md";
 
-// ─── Types ────────────────────────────────────────────────────
 type Message = {
   role: "user" | "assistant";
   content: string;
@@ -38,7 +37,6 @@ const GREETING: Message = {
   content: "Halo! Saya EazyChise AI Advisor.\n\nSaya bisa bantu kamu menemukan franchise F&B terbaik — lengkap dengan kalkulasi BEP, estimasi profit, dan analisis risiko!\n\nCeritakan rencana bisnismu, atau pilih pertanyaan di bawah ini.",
 };
 
-// ─── Sparkle SVG ──────────────────────────────────────────────
 function SparkleIcon({ size = 14 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -49,7 +47,6 @@ function SparkleIcon({ size = 14 }: { size?: number }) {
   );
 }
 
-// ─── Typing indicator ─────────────────────────────────────────
 function TypingIndicator() {
   return (
     <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
@@ -75,7 +72,6 @@ function TypingIndicator() {
   );
 }
 
-// ─── AI Avatar ────────────────────────────────────────────────
 function AIAvatar({ size = 34 }: { size?: number }) {
   return (
     <div style={{
@@ -96,7 +92,6 @@ function AIAvatar({ size = 34 }: { size?: number }) {
   );
 }
 
-// ─── Typewriter text ──────────────────────────────────────────
 function TypewriterText({ text, speed = 5, onDone }: { text: string; speed?: number; onDone?: () => void }) {
   const [displayed, setDisplayed] = useState("");
   const [done, setDone] = useState(false);
@@ -172,7 +167,6 @@ function TypewriterText({ text, speed = 5, onDone }: { text: string; speed?: num
   );
 }
 
-// ─── Message bubble ───────────────────────────────────────────
 function MessageBubble({ msg, isNew, animate }: { msg: Message; isNew?: boolean; animate?: boolean }) {
   const isUser = msg.role === "user";
   const showTypewriter = !isUser && isNew && animate;
@@ -242,7 +236,6 @@ function MessageBubble({ msg, isNew, animate }: { msg: Message; isNew?: boolean;
   );
 }
 
-// ─── Quick prompt button ──────────────────────────────────────
 function QuickBtn({ q, onSend }: { q: QuickPrompt; onSend: (t: string) => void }) {
   const [hover, setHover] = useState(false);
   return (
@@ -269,7 +262,6 @@ function QuickBtn({ q, onSend }: { q: QuickPrompt; onSend: (t: string) => void }
   );
 }
 
-// ─── Icon buttons ─────────────────────────────────────────────
 function IconBtn({ onClick, title, children }: { onClick: () => void; title: string; children: React.ReactNode }) {
   const [hover, setHover] = useState(false);
   return (
@@ -293,7 +285,6 @@ function IconBtn({ onClick, title, children }: { onClick: () => void; title: str
   );
 }
 
-// ─── Send button ──────────────────────────────────────────────
 function SendBtn({ onClick, active, loading }: { onClick: () => void; active: boolean; loading: boolean }) {
   const [hover, setHover] = useState(false);
   return (
@@ -323,7 +314,6 @@ function SendBtn({ onClick, active, loading }: { onClick: () => void; active: bo
   );
 }
 
-// ─── Main widget ──────────────────────────────────────────────
 export default function FranchiseAdvisor() {
   const [open, setOpen]       = useState(false);
   const [messages, setMessages] = useState<Message[]>([GREETING as Message]);
@@ -467,7 +457,7 @@ export default function FranchiseAdvisor() {
 
   return (
     <>
-      {/* ════ Global styles ════ */}
+      
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@600;700;800&display=swap');
 
@@ -542,9 +532,8 @@ export default function FranchiseAdvisor() {
         }
       `}</style>
 
-      {/* ════ FAB ════ */}
+      
       <div className="eazy-fab-container" style={{ position: "fixed", bottom: 24, zIndex: 9999 }} suppressHydrationWarning>
-        {/* Pulse rings (only when closed) */}
         {!open && (
           <>
             <div style={{
@@ -590,8 +579,6 @@ export default function FranchiseAdvisor() {
               : <SparkleIcon size={20} />
             }
           </div>
-
-          {/* New message badge */}
           {hasNew && !open && (
             <span style={{
               position: "absolute", top: -5, right: -5,
@@ -605,7 +592,7 @@ export default function FranchiseAdvisor() {
         </button>
       </div>
 
-      {/* ════ Chat Panel ════ */}
+      
       <div
         className="eazy-chat-panel"
         style={{
@@ -630,24 +617,22 @@ export default function FranchiseAdvisor() {
           fontFamily: "'DM Sans', sans-serif",
         }}>
 
-        {/* ── Ambient top glow ── */}
+        
         <div style={{
           position: "absolute", top: 0, left: 0, right: 0, height: 180,
           background: "radial-gradient(ellipse 80% 80% at 50% -10%, rgba(255,100,26,0.12) 0%, transparent 70%)",
           pointerEvents: "none", zIndex: 0,
         }} />
 
-        {/* ── Header ────────────────────────── */}
+        
         <div style={{
           display: "flex", alignItems: "center", gap: 12,
           padding: "15px 16px 15px 18px",
           borderBottom: "1px solid rgba(255,160,60,0.1)",
           flexShrink: 0, position: "relative", zIndex: 1,
         }}>
-          {/* Animated logo */}
           <div style={{ position: "relative" }}>
             <AIAvatar size={40} />
-            {/* Online ring */}
             <div style={{
               position: "absolute", bottom: -1, right: -1,
               width: 11, height: 11, borderRadius: "50%",
@@ -656,8 +641,6 @@ export default function FranchiseAdvisor() {
               boxShadow: "0 0 8px rgba(34,197,94,0.6)",
             }} />
           </div>
-
-          {/* Name block */}
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
               <span style={{
@@ -691,11 +674,7 @@ export default function FranchiseAdvisor() {
               </span>
             </div>
           </div>
-
-          {/* Divider */}
           <div style={{ width: 1, height: 24, background: "rgba(255,255,255,0.07)", margin: "0 4px" }} />
-
-          {/* Actions */}
           <IconBtn onClick={() => setMessages([GREETING])} title="Hapus chat">
             <Trash2 className="w-3.5 h-3.5" />
           </IconBtn>
@@ -704,7 +683,7 @@ export default function FranchiseAdvisor() {
           </IconBtn>
         </div>
 
-        {/* ── Messages ─────────────────────── */}
+        
         <div
           className="eazy-msgs"
           style={{
@@ -717,8 +696,6 @@ export default function FranchiseAdvisor() {
             <MessageBubble key={i} msg={m} isNew={i === newMsgIdx} animate={i === animIdx} />
           ))}
           {loading && <TypingIndicator />}
-          
-          {/* Contextual quick replies */}
           {contextualReplies.length > 0 && !loading && (
             <div style={{ 
               display: "flex", flexWrap: "wrap", gap: 6, 
@@ -758,7 +735,7 @@ export default function FranchiseAdvisor() {
           <div ref={bottomRef} />
         </div>
 
-        {/* ── Quick prompts ─────────────────── */}
+        
         {isGreeting && (
           <div style={{
             padding: "0 14px 14px",
@@ -779,7 +756,7 @@ export default function FranchiseAdvisor() {
           </div>
         )}
 
-        {/* ── Input area ────────────────────── */}
+        
         <div style={{
           padding: isGreeting ? "0 14px 14px" : "12px 14px 14px",
           flexShrink: 0,
@@ -807,7 +784,6 @@ export default function FranchiseAdvisor() {
   );
 }
 
-// ─── Input field (extracted to avoid re-render flicker) ───────
 function InputField({ inputRef, value, onChange, onKeyDown, onSend, loading }: {
   inputRef: React.RefObject<HTMLTextAreaElement>;
   value: string;

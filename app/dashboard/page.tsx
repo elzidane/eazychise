@@ -346,7 +346,7 @@ function DashboardPageInner() {
     <main className="min-h-screen bg-[#FFF9F0] pt-28 pb-16 px-[5%]">
       <div className="max-w-6xl mx-auto">
 
-        {/* ── Header ── */}
+        
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -379,7 +379,7 @@ function DashboardPageInner() {
           </div>
         </motion.div>
 
-        {/* ── Stats Cards (Franchisee Only) ── */}
+        
         {user.role === "franchisee" && (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -412,9 +412,9 @@ function DashboardPageInner() {
 
         {user.role === "franchisee" ? (
           <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-8">
-            {/* ── Left Column ── */}
+            
             <div className="space-y-8">
-              {/* ── Saved Franchises ── */}
+              
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -474,7 +474,7 @@ function DashboardPageInner() {
                 )}
               </motion.div>
 
-              {/* ── Recommended For You ── */}
+              
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -517,7 +517,7 @@ function DashboardPageInner() {
               </motion.div>
             </div>
 
-            {/* ── Right Column ── */}
+            
             <div className="space-y-6">
               <LocalBusinessTracker />
               
@@ -555,7 +555,7 @@ function DashboardPageInner() {
           </div>
         ) : (
           <>
-          {/* ── Franchisor Dashboard ── */}
+          
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
             {/* Left Column: Stats + Leads */}
@@ -744,7 +744,7 @@ function DashboardPageInner() {
         )}
       </div>
 
-      {/* ── Brand Details Modal ── */}
+      
       <AnimatePresence>
         {showBrandDetails && (
           <div className="fixed inset-0 z-[60] flex items-center justify-center px-4">
@@ -923,7 +923,7 @@ function DashboardPageInner() {
         )}
       </AnimatePresence>
 
-      {/* ── Brand Form Modal (Add/Edit) ── */}
+      
       <AnimatePresence>
         {showBrandForm && (
           <div className="fixed inset-0 z-[60] flex items-center justify-center px-4">

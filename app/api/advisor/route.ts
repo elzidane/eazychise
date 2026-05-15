@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// ════════════════════════════════════════════════════════════════
-//  EazyChise AI Advisor — Gemini Backend
-//  Lebih pintar: multi-turn context, analisis BEP, risk scoring,
-//  personalisasi berdasarkan profil user, rekomendasi bertahap
-// ════════════════════════════════════════════════════════════════
 
 const SYSTEM_PROMPT = `Kamu adalah **EazyChise AI Advisor** (Senior F&B Business Consultant) — pakar strategi bisnis franchise F&B terkemuka di Indonesia yang bekerja eksklusif untuk platform EazyChise.
 
@@ -86,14 +81,13 @@ Sebutkan 1 risiko utama dan 1 solusi mitigasi.
 - CONCISENESS (SANGAT PENTING): Jawab langsung ke inti. Hindari basa-basi panjang. Pastikan jawaban tidak terlalu panjang agar mudah dibaca di layar HP.
 - Tutup dengan CTA singkat ke katalog/daftar.`;
 
-// Model aktif per Mei 2026 — urutan dari paling direkomendasikan untuk kecerdasan maksimal
 const MODELS = [
-  "gemini-2.5-pro",          // Sangat pintar dan analitis (Utama untuk kecerdasan)
-  "gemini-2.5-flash",        // Cepat (Fallback)
-  "gemini-2.5-flash-lite",   // Versi efisien
-  "gemini-2.0-flash",        // Fallback lama
-  "gemini-1.5-flash",        // Stable fallback
-  "gemini-1.5-pro",          // Smartest stable fallback
+  "gemini-2.5-pro",          
+  "gemini-2.5-flash",        
+  "gemini-2.5-flash-lite",  
+  "gemini-2.0-flash",        
+  "gemini-1.5-flash",        
+  "gemini-1.5-pro",          
 ];
 
 export async function POST(req: NextRequest) {
@@ -112,7 +106,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Field 'messages' wajib diisi." }, { status: 400 });
     }
 
-    // Build Gemini history (role: "user" | "model", bergantian, dimulai "user")
     const history = messages
       .slice(0, -1)
       .map((m: { role: string; content: string }) => ({
@@ -177,7 +170,6 @@ export async function POST(req: NextRequest) {
 
     const data = await response.json();
 
-    // Handle safety block
     if (data.candidates?.[0]?.finishReason === "SAFETY") {
       return NextResponse.json({
         reply: "Maaf, pertanyaan tersebut tidak bisa saya jawab. Yuk tanya seputar franchise F&B dan bisnis UMKM ya! 😊",

@@ -17,7 +17,6 @@
 
 import { useEffect, useRef, useState, ReactNode } from "react";
 
-// ─── 1. BLUR TEXT ────────────────────────────────────────────────────────────
 interface BlurTextProps {
   text: string;
   delay?: number;
@@ -71,7 +70,6 @@ export function BlurText({ text, delay = 80, animateBy = "words", className = ""
   );
 }
 
-// ─── 2. COUNT UP ─────────────────────────────────────────────────────────────
 interface CountUpProps {
   end: number;
   duration?: number;
@@ -115,7 +113,6 @@ export function CountUp({ end, duration = 2000, prefix = "", suffix = "", classN
   );
 }
 
-// ─── 3. SHINY TEXT ───────────────────────────────────────────────────────────
 interface ShinyTextProps {
   text: string;
   speed?: number;
@@ -152,7 +149,6 @@ export function ShinyText({ text, speed = 3, className = "", shimmerWidth = 100 
   );
 }
 
-// ─── 4. GRADIENT TEXT ────────────────────────────────────────────────────────
 interface GradientTextProps {
   text: string;
   colors?: string[];
@@ -189,7 +185,6 @@ export function GradientText({ text, colors = ["#FF5C1A", "#FF8C42", "#FFCF40", 
   );
 }
 
-// ─── 5. PARTICLES BACKGROUND ─────────────────────────────────────────────────
 interface ParticlesProps {
   count?: number;
   color?: string;
@@ -274,7 +269,6 @@ export function Particles({ count = 40, color = "#FF5C1A", speed = 0.3, size = 2
   );
 }
 
-// ─── 6. TILT CARD ────────────────────────────────────────────────────────────
 interface TiltCardProps {
   children: ReactNode;
   className?: string;
@@ -339,7 +333,6 @@ export function TiltCard({ children, className = "", style, maxTilt = 12, scale 
   );
 }
 
-// ─── 7. SCROLL REVEAL TEXT ───────────────────────────────────────────────────
 interface ScrollRevealTextProps {
   text: string;
   className?: string;
@@ -393,7 +386,6 @@ export function ScrollRevealText({ text, className = "", stagger = 60, from = "b
   );
 }
 
-// ─── 8. NOISE TEXTURE OVERLAY ────────────────────────────────────────────────
 export function NoiseTexture({ opacity = 0.03, className = "" }: { opacity?: number; className?: string }) {
   return (
     <>

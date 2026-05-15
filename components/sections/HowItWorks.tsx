@@ -45,8 +45,7 @@ export default function HowItWorks() {
         style={{ backgroundImage: "radial-gradient(circle at 20% 50%, rgba(255,92,26,0.04) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,207,64,0.06) 0%, transparent 40%)" }} />
 
       <div className="relative z-10">
-        {/* ── Header ── */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-16">
+                <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-16">
           <ScrollReveal variants={fadeUp}>
             <span className="inline-flex items-center gap-2 bg-[#FFF3E5] text-[#FF5C1A] border border-[#FF5C1A]/20 px-4 py-1.5 rounded-full text-[0.72rem] font-bold uppercase tracking-widest mb-5">
               <span className="w-1.5 h-1.5 rounded-full bg-[#FF5C1A]" />
@@ -64,8 +63,7 @@ export default function HowItWorks() {
           </ScrollReveal>
         </div>
 
-        {/* ── Steps ── */}
-        <StaggerReveal className="grid md:grid-cols-3 gap-5 relative" threshold={0.1}>
+                <StaggerReveal className="grid md:grid-cols-3 gap-5 relative" threshold={0.1}>
           {/* Connector line (desktop only) */}
           <div className="hidden md:block absolute top-[52px] left-[calc(16.67%+20px)] right-[calc(16.67%+20px)] h-px z-0">
             <div className="w-full h-full bg-gradient-to-r from-[#FF5C1A]/30 via-[#FFCF40]/40 to-[#1B8C5A]/30" />
@@ -141,8 +139,7 @@ export default function HowItWorks() {
           ))}
         </StaggerReveal>
 
-        {/* ── Bottom CTA bar ── */}
-        <ScrollReveal variants={fadeUp} delay={0.2} className="mt-14">
+                <ScrollReveal variants={fadeUp} delay={0.2} className="mt-14">
           <div className="bg-[#111111] rounded-[24px] px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-5">
             <div className="flex items-center gap-4">
               <div className="w-11 h-11 rounded-xl bg-[#FF5C1A]/15 flex items-center justify-center text-[#FF5C1A]">

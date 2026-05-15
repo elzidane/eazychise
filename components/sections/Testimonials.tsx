@@ -56,8 +56,7 @@ export default function Testimonials() {
       />
 
       <div className="relative z-10">
-        {/* ── Header ── */}
-        <div className="reveal flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
+                <div className="reveal flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
           <div>
             <p className="text-[#FF5C1A] text-[0.72rem] font-bold uppercase tracking-[3px] mb-3 flex items-center gap-2">
               <span className="w-6 h-px bg-[#FF5C1A]" />
@@ -86,8 +85,7 @@ export default function Testimonials() {
           </div>
         </div>
 
-        {/* ── Cards ── */}
-        <div className="grid md:grid-cols-3 gap-5">
+                <div className="grid md:grid-cols-3 gap-5">
           {testimonials.map((t, i) => (
             <div
               key={t.id}
@@ -151,8 +149,7 @@ export default function Testimonials() {
           ))}
         </div>
 
-        {/* ── Bottom bar ── */}
-        <div className="reveal mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#FFF3E5] rounded-[20px] px-8 py-5 border border-[#FF5C1A]/10">
+                <div className="reveal mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#FFF3E5] rounded-[20px] px-8 py-5 border border-[#FF5C1A]/10">
           <p className="text-[#555] text-[0.88rem]">
             Bergabung bersama <strong className="text-[#111]">9.000+ mitra aktif</strong> yang sudah membuktikan sendiri.
           </p>

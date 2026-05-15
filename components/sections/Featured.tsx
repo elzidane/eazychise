@@ -32,7 +32,7 @@ export default function FeaturedSection({ initialData = FRANCHISE_DATA }: { init
   return (
     <section id="unggulan" className="bg-[#111111] px-[5%] py-24 overflow-hidden">
 
-      {/* ── Header ── */}
+      
       <div className="flex items-center justify-between mb-12">
         <ScrollReveal variants={fadeRight}>
           <p className="text-[#FF5C1A] text-[0.72rem] font-bold uppercase tracking-[3px] mb-3 flex items-center gap-2">
@@ -54,7 +54,7 @@ export default function FeaturedSection({ initialData = FRANCHISE_DATA }: { init
         </ScrollReveal>
       </div>
 
-      {/* ── Layout ── */}
+      
       <div className="grid lg:grid-cols-[1.4fr_1fr] gap-3">
 
         {/* Main card */}
