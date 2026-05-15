@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2, TrendingUp, Users, MapPin, Star, Download, Brain, Sparkles, Zap, Heart } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { generateProposalPDF } from "@/lib/pdf-generator";
 import { createClient } from "@/utils/supabase/client";
 import PartnershipModal from "@/components/modals/PartnershipModal";
@@ -23,6 +24,7 @@ interface Props {
 
 export default function FranchiseDetailContent({ initialFranchise, initialReviews }: Props) {
   const { showToast } = useToast();
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [analysis, setAnalysis] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -71,6 +73,7 @@ export default function FranchiseDetailContent({ initialFranchise, initialReview
   const handleSave = async () => {
     if (!userId) {
       showToast("Silakan login terlebih dahulu untuk menyimpan franchise.", "error");
+      router.push("/masuk");
       return;
     }
     setSaving(true);
@@ -117,10 +120,29 @@ export default function FranchiseDetailContent({ initialFranchise, initialReview
     }
   };
 
+  const handlePartnershipRequest = () => {
+    if (!userId) {
+      showToast("Silakan login untuk mengajukan kemitraan.", "error");
+      router.push("/masuk");
+      return;
+    }
+    setIsModalOpen(true);
+  };
+
+  const handleDownloadProposal = () => {
+    if (!userId) {
+      showToast("Silakan login untuk mengunduh proposal.", "error");
+      router.push("/masuk");
+      return;
+    }
+    generateProposalPDF(initialFranchise);
+  };
+
   const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userId) {
       showToast("Silakan login untuk memberikan ulasan.", "error");
+      router.push("/masuk");
       return;
     }
     if (!reviewForm.comment.trim()) {
@@ -288,13 +310,13 @@ export default function FranchiseDetailContent({ initialFranchise, initialReview
 
                 <div className="space-y-3">
                   <button 
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={handlePartnershipRequest}
                     className="w-full bg-[#FF5C1A] text-white py-4 rounded-2xl font-bold text-[1rem] shadow-[0_12px_24px_rgba(255,92,26,0.3)] hover:bg-[#e04710] hover:-translate-y-0.5 transition-all active:scale-95 flex items-center justify-center gap-2"
                   >
                     Ajukan Kemitraan
                   </button>
                   <button 
-                    onClick={() => generateProposalPDF(initialFranchise)}
+                    onClick={handleDownloadProposal}
                     className="w-full bg-white border-2 border-black/5 text-[#111] py-4 rounded-2xl font-bold text-[0.9rem] hover:border-[#FF5C1A] hover:text-[#FF5C1A] transition-all flex items-center justify-center gap-2 active:scale-95"
                   >
                     <Download className="w-5 h-5" />
@@ -506,8 +528,8 @@ export default function FranchiseDetailContent({ initialFranchise, initialReview
 
                 <button
                   type="submit"
-                  disabled={isSubmittingReview || !userId}
-                  className="w-full bg-[#111] hover:bg-[#FF5C1A] text-white py-3.5 rounded-xl font-bold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  disabled={isSubmittingReview}
+                  className="w-full bg-[#111] hover:bg-[#FF5C1A] text-white py-3.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
                 >
                   {isSubmittingReview ? "Mengirim..." : !userId ? "Login untuk Ulasan" : "Kirim Ulasan"}
                 </button>
@@ -526,7 +548,7 @@ export default function FranchiseDetailContent({ initialFranchise, initialReview
             <motion.button 
               whileHover={{ scale: 1.05, backgroundColor: "#fff", color: "#111" }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => setIsModalOpen(true)}
+              onClick={handlePartnershipRequest}
               className="relative z-10 bg-[#FF5C1A] text-white px-10 py-4 rounded-2xl font-bold text-lg transition-all shadow-xl"
             >
               Daftar Sekarang

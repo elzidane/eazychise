@@ -3,6 +3,7 @@ import TrustMarquee from "@/components/sections/TrustMarquee";
 import FeaturedSection from "@/components/sections/Featured";
 import ReactBitsShowcase from "@/components/effects/Reactbitsshowcase";
 import AIAdvisorSection from "@/components/sections/AIAdvisorSection";
+import HowItWorks from "@/components/sections/HowItWorks";
 import CTASection from "@/components/sections/CTA";
 import { createClient } from "@/utils/supabase/server";
 import { Metadata } from "next";
@@ -69,6 +70,10 @@ export default async function Home() {
 
       <section id="ai-advisor">
         <AIAdvisorSection />
+      </section>
+
+      <section id="how-it-works">
+        <HowItWorks />
       </section>
 
       <section id="cta">

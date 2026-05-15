@@ -339,9 +339,15 @@ export default function SplashScreen() {
       {isVisible && (
         <motion.div
           key="splash"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.0, ease: [0.76, 0, 0.24, 1] }}
+          initial={{ y: 0, borderBottomLeftRadius: "0%", borderBottomRightRadius: "0%" }}
+          exit={{ 
+            y: "-110vh",
+            borderBottomLeftRadius: "50%",
+            borderBottomRightRadius: "50%",
+            filter: "blur(4px)",
+            opacity: 0.8
+          }}
+          transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
           suppressHydrationWarning
           style={{
             position: "fixed",
@@ -430,6 +436,7 @@ export default function SplashScreen() {
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.5, y: -100 }}
               transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
             >
