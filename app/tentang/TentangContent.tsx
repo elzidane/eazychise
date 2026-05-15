@@ -10,7 +10,7 @@ import Image from "next/image";
 
 const team = [
   { name: "El Zidane Ardyansyah", role: "FullStack Developer, Mobile Developer", image: "/images/team/profile.jpg", color: "#FF5C1A" },
-  { name: "Avis Zola Raditya Kurniawan", role: "Mobile App Developer", image: "/images/team/avatar_sari.png", color: "#7C3AED" },
+  { name: "Avis Zola Raditya Kurniawan", role: "Mobile App Developer, Frontend Developer", image: "/images/team/profile.png", color: "#7C3AED" },
 ];
 
 const values = [
@@ -164,12 +164,10 @@ export default function TentangContent() {
                   className="w-16 h-16 rounded-2xl mx-auto mb-4 overflow-hidden relative shadow-sm"
                   style={{ background: `${member.color}15`, border: `2px solid ${member.color}30` }}
                 >
-                  <Image 
+                  <img 
                     src={member.image} 
                     alt={member.name}
-                    fill
-                    className="object-cover"
-                    sizes="64px"
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 <h3 className="font-bold text-[#111] text-sm mb-1 group-hover:text-[#FF5C1A] transition-colors">
