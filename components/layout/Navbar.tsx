@@ -139,6 +139,15 @@ export default function Navbar() {
     setShowNotifications(false);
   };
 
+  // Listen for storage changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setUser(getUser());
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
   // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
