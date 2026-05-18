@@ -44,49 +44,73 @@ export default function Navbar() {
 
   // Check auth state from Supabase and local
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data: { session: currentSession } }: { data: { session: Session | null } }) => {
+    supabase.auth.getSession().then(({ data: { session: currentSession } }: { data: { session: Session | null } }) => {
       setSession(currentSession);
       if (currentSession?.user) {
-        // Query the profile from Supabase profiles table (the source of truth)
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('full_name, avatar_url')
-          .eq('id', currentSession.user.id)
-          .single();
-
-        const name = profile?.full_name || currentSession.user.user_metadata.full_name || currentSession.user.email;
-        const image = profile?.avatar_url || currentSession.user.user_metadata.avatar_url;
-
+        // Set initial state from session metadata instantly
+        const initialName = currentSession.user.user_metadata?.full_name || currentSession.user.email;
+        const initialImage = currentSession.user.user_metadata?.avatar_url;
         const syncedUser = syncSessionWithLocal({
-          name,
+          name: initialName,
           email: currentSession.user.email,
-          image,
+          image: initialImage,
         });
         setUser(syncedUser);
+
+        // Fetch source of truth asynchronously outside the lock
+        setTimeout(async () => {
+          try {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('full_name, avatar_url')
+              .eq('id', currentSession.user.id)
+              .single();
+
+            if (profile) {
+              const name = profile.full_name || initialName;
+              const image = profile.avatar_url || initialImage;
+              setUser(syncSessionWithLocal({ name, email: currentSession.user.email, image }));
+            }
+          } catch (err) {
+            console.error("Error fetching profile in getSession:", err);
+          }
+        }, 0);
       } else {
         setUser(getUser());
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       if (session?.user) {
-        // Query the profile from Supabase profiles table (the source of truth)
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('full_name, avatar_url')
-          .eq('id', session.user.id)
-          .single();
-
-        const name = profile?.full_name || session.user.user_metadata.full_name || session.user.email;
-        const image = profile?.avatar_url || session.user.user_metadata.avatar_url;
-
+        // Set initial state from session metadata instantly
+        const initialName = session.user.user_metadata?.full_name || session.user.email;
+        const initialImage = session.user.user_metadata?.avatar_url;
         const syncedUser = syncSessionWithLocal({
-          name,
+          name: initialName,
           email: session.user.email,
-          image,
+          image: initialImage,
         });
         setUser(syncedUser);
+
+        // Fetch source of truth asynchronously outside the lock
+        setTimeout(async () => {
+          try {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('full_name, avatar_url')
+              .eq('id', session.user.id)
+              .single();
+
+            if (profile) {
+              const name = profile.full_name || initialName;
+              const image = profile.avatar_url || initialImage;
+              setUser(syncSessionWithLocal({ name, email: session.user.email, image }));
+            }
+          } catch (err) {
+            console.error("Error fetching profile in onAuthStateChange:", err);
+          }
+        }, 0);
       } else {
         setUser(null);
       }

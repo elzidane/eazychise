@@ -1,4 +1,4 @@
-// ─── Auth helpers (localStorage-based for demo/lomba) ──────────────────
+
 export type UserRole = "franchisee" | "franchisor";
 
 export type User = {
@@ -83,7 +83,7 @@ export function loginWithGoogle(role: UserRole = "franchisee"): { success: boole
   const emailKey = "google_user@demo.com";
   
   if (!users[emailKey]) {
-    // Create mock user if doesn't exist
+
     users[emailKey] = {
       name: "Google User",
       email: emailKey,
