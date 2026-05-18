@@ -103,75 +103,68 @@ export default function PartnershipModal({ isOpen, onClose, franchiseName, franc
 
           {/* Modal Content */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-[32px] shadow-2xl z-[101] overflow-y-auto max-h-[90vh] md:max-h-[min(800px,90vh)]"
+            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2.5rem)] md:w-full max-w-lg bg-white rounded-[24px] sm:rounded-[32px] shadow-2xl z-[101] overflow-y-auto max-h-[85vh] md:max-h-[min(800px,90vh)]"
           >
-            <div className="p-6 sm:p-8 relative">
-              {/* Back Button (Mobile) */}
+            <div className="p-5 sm:p-8 relative">
+              {/* Close Button (Responsive for both Mobile & Desktop) */}
               <button 
                 onClick={onClose}
-                className="md:hidden flex items-center gap-1 text-gray-500 font-bold text-sm mb-6 hover:text-[#FF5C1A] transition-colors"
+                aria-label="Tutup modal"
+                className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 transition-colors z-10 cursor-pointer"
               >
-                <ChevronLeft className="w-5 h-5" />
-                Kembali
-              </button>
-
-              {/* Close Button (Desktop) */}
-              <button 
-                onClick={onClose}
-                className="hidden md:block absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors"
-              >
-                <X className="w-6 h-6 text-gray-400" />
+                <X className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
 
               {step === "form" && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
+                  className="pt-2 sm:pt-0"
                 >
-                  <h2 className="font-syne font-extrabold text-3xl text-[#111] mb-2">
+                  <h2 className="font-syne font-extrabold text-2xl sm:text-3xl text-[#111] mb-2 pr-8">
                     Ajukan Kemitraan
                   </h2>
-                  <p className="text-gray-500 mb-8 font-medium">
+                  <p className="text-xs sm:text-sm text-gray-500 mb-6 sm:mb-8 font-medium leading-relaxed">
                     Lengkapi formulir di bawah untuk bergabung dengan <span className="text-[#FF5C1A] font-bold">{franchiseName}</span>.
                   </p>
 
-                  <form onSubmit={handleSubmit} className="space-y-5">
+                  <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
                     <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-2">Nama Lengkap</label>
+                      <label className="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">Nama Lengkap</label>
                       <input
                         required
                         type="text"
                         placeholder="Contoh: Budi Santoso"
-                        className={`w-full bg-gray-50 border ${errors.name ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#FF5C1A] focus:ring-2 focus:ring-[#FF5C1A]/10 transition-all`}
+                        className={`w-full bg-gray-50 border ${errors.name ? 'border-red-500' : 'border-gray-200'} rounded-xl px-3.5 py-3 sm:px-4 sm:py-3.5 text-sm sm:text-base focus:outline-none focus:border-[#FF5C1A] focus:ring-2 focus:ring-[#FF5C1A]/10 transition-all`}
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       />
                       {errors.name && <p className="text-red-500 text-[0.7rem] font-bold mt-1.5 ml-1">{errors.name}</p>}
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-2">Email</label>
+                        <label className="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">Email</label>
                         <input
                           required
                           type="email"
                           placeholder="budi@email.com"
-                          className={`w-full bg-gray-50 border ${errors.email ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#FF5C1A] focus:ring-2 focus:ring-[#FF5C1A]/10 transition-all`}
+                          className={`w-full bg-gray-50 border ${errors.email ? 'border-red-500' : 'border-gray-200'} rounded-xl px-3.5 py-3 sm:px-4 sm:py-3.5 text-sm sm:text-base focus:outline-none focus:border-[#FF5C1A] focus:ring-2 focus:ring-[#FF5C1A]/10 transition-all`}
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         />
                         {errors.email && <p className="text-red-500 text-[0.7rem] font-bold mt-1.5 ml-1">{errors.email}</p>}
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-2">WhatsApp</label>
+                        <label className="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">WhatsApp</label>
                         <input
                           required
                           type="tel"
                           placeholder="0812xxxx"
-                          className={`w-full bg-gray-50 border ${errors.phone ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#FF5C1A] focus:ring-2 focus:ring-[#FF5C1A]/10 transition-all`}
+                          className={`w-full bg-gray-50 border ${errors.phone ? 'border-red-500' : 'border-gray-200'} rounded-xl px-3.5 py-3 sm:px-4 sm:py-3.5 text-sm sm:text-base focus:outline-none focus:border-[#FF5C1A] focus:ring-2 focus:ring-[#FF5C1A]/10 transition-all`}
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         />
@@ -180,23 +173,23 @@ export default function PartnershipModal({ isOpen, onClose, franchiseName, franc
                     </div>
 
                     <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-2">Rencana Lokasi Bisnis</label>
+                      <label className="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">Rencana Lokasi Bisnis</label>
                       <input
                         required
                         type="text"
                         placeholder="Contoh: Jakarta Selatan / Bandung"
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#FF5C1A] focus:ring-2 focus:ring-[#FF5C1A]/10 transition-all"
+                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-3 sm:px-4 sm:py-3.5 text-sm sm:text-base focus:outline-none focus:border-[#FF5C1A] focus:ring-2 focus:ring-[#FF5C1A]/10 transition-all"
                         value={formData.location}
                         onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-2">Pesan Tambahan (Opsional)</label>
+                      <label className="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">Pesan Tambahan (Opsional)</label>
                       <textarea
                         rows={3}
                         placeholder="Beritahu kami lebih lanjut tentang minat Anda..."
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#FF5C1A] focus:ring-2 focus:ring-[#FF5C1A]/10 transition-all resize-none"
+                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-3 sm:px-4 sm:py-3.5 text-sm sm:text-base focus:outline-none focus:border-[#FF5C1A] focus:ring-2 focus:ring-[#FF5C1A]/10 transition-all resize-none"
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       />
@@ -204,24 +197,24 @@ export default function PartnershipModal({ isOpen, onClose, franchiseName, franc
 
                     <button
                       type="submit"
-                      className="w-full bg-[#111] text-white py-4 rounded-xl font-bold hover:bg-[#FF5C1A] transition-all flex items-center justify-center gap-3 shadow-lg hover:shadow-[#FF5C1A]/20 mt-4 group"
+                      className="w-full bg-[#111] text-white py-3.5 sm:py-4 rounded-xl text-sm sm:text-base font-bold hover:bg-[#FF5C1A] transition-all flex items-center justify-center gap-2 sm:gap-3 shadow-lg hover:shadow-[#FF5C1A]/20 mt-4 group cursor-pointer"
                     >
                       Kirim Pengajuan
-                      <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                      <Send className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                     </button>
                   </form>
                 </motion.div>
               )}
 
               {step === "submitting" && (
-                <div className="py-20 flex flex-col items-center justify-center">
+                <div className="py-16 sm:py-20 flex flex-col items-center justify-center text-center">
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                   >
-                    <Loader2 className="w-16 h-16 text-[#FF5C1A]" />
+                    <Loader2 className="w-12 h-12 sm:w-16 sm:h-16 text-[#FF5C1A]" />
                   </motion.div>
-                  <p className="mt-6 text-xl font-bold text-gray-700">Mengirimkan Pengajuan...</p>
+                  <p className="mt-4 sm:mt-6 text-base sm:text-xl font-bold text-gray-700">Mengirimkan Pengajuan...</p>
                 </div>
               )}
 
@@ -229,20 +222,20 @@ export default function PartnershipModal({ isOpen, onClose, franchiseName, franc
                 <motion.div
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className="py-12 flex flex-col items-center text-center"
+                  className="py-8 sm:py-12 flex flex-col items-center text-center"
                 >
-                  <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-6">
-                    <CheckCircle2 className="w-12 h-12 text-green-500" />
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 bg-green-100 rounded-full flex items-center justify-center mb-4 sm:mb-6">
+                    <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12 text-green-500" />
                   </div>
-                  <h2 className="font-syne font-extrabold text-3xl text-[#111] mb-2">
+                  <h2 className="font-syne font-extrabold text-2xl sm:text-3xl text-[#111] mb-2">
                     Berhasil Dikirim!
                   </h2>
-                  <p className="text-gray-500 mb-10 max-w-sm">
-                    Terima kasih telah mengajukan kemitraan. Tim <span className="font-bold">{franchiseName}</span> akan menghubungi Anda segera melalui WhatsApp atau Email.
+                  <p className="text-xs sm:text-sm text-gray-500 mb-8 sm:mb-10 max-w-sm leading-relaxed">
+                    Terima kasih telah mengajukan kemitraan. Tim <span className="font-bold text-[#111]">{franchiseName}</span> akan menghubungi Anda segera melalui WhatsApp atau Email.
                   </p>
                   <button
                     onClick={onClose}
-                    className="bg-[#111] text-white px-8 py-3 rounded-xl font-bold hover:bg-black transition-colors"
+                    className="bg-[#111] text-white px-8 py-3 rounded-xl text-sm sm:text-base font-bold hover:bg-black transition-colors cursor-pointer"
                   >
                     Tutup
                   </button>

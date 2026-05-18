@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function UnggulanPage() {
   return (
-    <main className="pt-20">
+    <main className="bg-[#111111] pt-20 min-h-screen">
       <FeaturedSection />
     </main>
   );
