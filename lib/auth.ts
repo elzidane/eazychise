@@ -10,6 +10,7 @@ export type User = {
   createdAt: string;
   savedFranchises: string[];
   searchHistory: string[];
+  image?: string;
 };
 
 const USERS_KEY = "eazychise_users";
@@ -127,11 +128,12 @@ export function syncSessionWithLocal(sessionUser: { name?: string | null; email?
       createdAt: new Date().toISOString(),
       savedFranchises: [],
       searchHistory: [],
+      image: sessionUser.image || undefined,
     };
   } else {
     // Update existing user data with session data if available
     if (sessionUser.name) users[emailKey].name = sessionUser.name;
-    // You could also update image/avatar if you add it to the User type
+    if (sessionUser.image) users[emailKey].image = sessionUser.image;
   }
   
   saveUsers(users);

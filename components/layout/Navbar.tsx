@@ -44,13 +44,23 @@ export default function Navbar() {
 
   // Check auth state from Supabase and local
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session: currentSession } }: { data: { session: Session | null } }) => {
+    supabase.auth.getSession().then(async ({ data: { session: currentSession } }: { data: { session: Session | null } }) => {
       setSession(currentSession);
       if (currentSession?.user) {
+        // Query the profile from Supabase profiles table (the source of truth)
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name, avatar_url')
+          .eq('id', currentSession.user.id)
+          .single();
+
+        const name = profile?.full_name || currentSession.user.user_metadata.full_name || currentSession.user.email;
+        const image = profile?.avatar_url || currentSession.user.user_metadata.avatar_url;
+
         const syncedUser = syncSessionWithLocal({
-          name: currentSession.user.user_metadata.full_name || currentSession.user.email,
+          name,
           email: currentSession.user.email,
-          image: currentSession.user.user_metadata.avatar_url,
+          image,
         });
         setUser(syncedUser);
       } else {
@@ -58,13 +68,23 @@ export default function Navbar() {
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       if (session?.user) {
+        // Query the profile from Supabase profiles table (the source of truth)
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name, avatar_url')
+          .eq('id', session.user.id)
+          .single();
+
+        const name = profile?.full_name || session.user.user_metadata.full_name || session.user.email;
+        const image = profile?.avatar_url || session.user.user_metadata.avatar_url;
+
         const syncedUser = syncSessionWithLocal({
-          name: session.user.user_metadata.full_name || session.user.email,
+          name,
           email: session.user.email,
-          image: session.user.user_metadata.avatar_url,
+          image,
         });
         setUser(syncedUser);
       } else {
@@ -300,15 +320,15 @@ export default function Navbar() {
                   }`}
                 >
                   <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-sm font-bold shadow-[0_4px_12px_rgba(255,92,26,0.3)] overflow-hidden relative">
-                    {session?.user?.user_metadata?.avatar_url ? (
+                    {user?.image ? (
                       <Image 
-                        src={session.user.user_metadata.avatar_url} 
+                        src={user.image} 
                         alt={user.name} 
                         fill 
                         className="object-cover"
                       />
                     ) : (
-                      user.name.charAt(0).toUpperCase()
+                      user?.name ? user.name.charAt(0).toUpperCase() : "?"
                     )}
                   </div>
                   <span className={`text-[0.83rem] font-semibold ${scrolled ? "text-white/80" : "text-[#333]"}`}>
@@ -485,15 +505,15 @@ export default function Navbar() {
         {user && (
           <div className="px-5 py-4 border-b border-black/6 flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#FF5C1A] to-[#FF8C42] flex items-center justify-center text-white text-sm font-bold overflow-hidden relative">
-              {session?.user?.user_metadata?.avatar_url ? (
+              {user?.image ? (
                 <Image 
-                  src={session.user.user_metadata.avatar_url} 
+                  src={user.image} 
                   alt={user.name} 
                   fill 
                   className="object-cover"
                 />
               ) : (
-                user.name.charAt(0).toUpperCase()
+                user?.name ? user.name.charAt(0).toUpperCase() : "?"
               )}
             </div>
             <div className="flex-1 min-w-0">

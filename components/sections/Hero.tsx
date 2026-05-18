@@ -105,11 +105,11 @@ export default function Hero() {
           </motion.div>
 
           {/* Stats */}
-          <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.7, delay:0.55, ease:[0.16,1,0.3,1] }} className="flex gap-6 flex-wrap">
+          <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.7, delay:0.55, ease:[0.16,1,0.3,1] }} className="grid grid-cols-3 gap-2.5 md:flex md:gap-6">
             {stats.map((s) => (
-              <motion.div key={s.label} whileHover={{ y:-4 }} className="flex flex-col gap-0.5 px-5 py-4 rounded-2xl bg-white border border-black/[0.04] hover:border-[#FF5C1A]/20 hover:shadow-[0_8px_30px_rgba(255,92,26,0.08)] transition-all duration-300 cursor-default">
-                <div className="font-syne font-extrabold text-[2rem] leading-none text-[#111111]"><CountUp end={s.num} duration={2000} suffix={s.suffix} /></div>
-                <p className="text-[0.7rem] text-[#888] font-bold uppercase tracking-[0.15em] mt-1">{s.label}</p>
+              <motion.div key={s.label} whileHover={{ y:-4 }} className="flex flex-col justify-center gap-0.5 px-3 py-3.5 md:px-5 md:py-4 rounded-xl md:rounded-2xl bg-white border border-black/[0.04] hover:border-[#FF5C1A]/20 hover:shadow-[0_8px_30px_rgba(255,92,26,0.08)] transition-all duration-300 cursor-default">
+                <div className="font-syne font-extrabold text-[1.4rem] md:text-[2rem] leading-none text-[#111111]"><CountUp end={s.num} duration={2000} suffix={s.suffix} /></div>
+                <p className="text-[0.58rem] md:text-[0.7rem] text-[#888] font-bold uppercase tracking-[0.06em] md:tracking-[0.15em] mt-1 leading-tight">{s.label}</p>
               </motion.div>
             ))}
           </motion.div>
