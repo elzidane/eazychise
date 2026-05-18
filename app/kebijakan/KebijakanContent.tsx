@@ -37,7 +37,7 @@ export default function KebijakanContent() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           
-          <aside className="lg:col-span-3 h-fit sticky top-32">
+          <aside className="lg:col-span-3 h-fit lg:sticky lg:top-32 z-20">
             <div className="bg-white/60 backdrop-blur-xl border border-black/[0.03] rounded-3xl p-6 shadow-sm">
               <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6 px-2">Daftar Isi</h4>
               <nav className="flex flex-col gap-2">
