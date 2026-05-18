@@ -35,9 +35,11 @@ function DashboardPageInner() {
   const [isGeneratingDesc, setIsGeneratingDesc] = useState(false);
   
   const [savedFranchises, setSavedFranchises] = useState<any[]>([]);
+  const [myFranchises, setMyFranchises] = useState<any[]>([]);
   const [franchisorBrands, setFranchisorBrands] = useState<any[]>([]);
   const [franchisorLeads, setFranchisorLeads] = useState<any[]>([]);
   const [franchisorStats, setFranchisorStats] = useState<{totalViews: number, organicPercent: number, aiPercent: number, leadsCount: number} | null>(null);
+  const [highlightedMyFranchiseId, setHighlightedMyFranchiseId] = useState<string | null>(null);
 
 
   const [brandFormData, setBrandFormData] = useState({
@@ -228,6 +230,16 @@ function DashboardPageInner() {
           const keywords = Array.from(new Set(history.map((h: any) => h.keyword))).slice(0, 5);
           setUser(prev => prev ? { ...prev, searchHistory: keywords } : prev);
         }
+
+        // Fetch My Partnership Requests (Franchise Anda)
+        const { data: myReqs } = await supabase
+          .from('partnership_requests')
+          .select('*, franchises(*)')
+          .eq('user_id', session.user.id)
+          .order('created_at', { ascending: false });
+        if (myReqs) {
+          setMyFranchises(myReqs);
+        }
       } else {
         // Get brands owned by this user
         const { data: brands } = await supabase
@@ -299,7 +311,7 @@ function DashboardPageInner() {
     };
   }, [router, supabase]);
 
-  // Handle deep link to specific lead
+  // Handle deep link to specific lead or my franchise
   useEffect(() => {
     const leadId = searchParams.get('leadId');
     if (leadId && franchisorLeads.length > 0) {
@@ -311,6 +323,20 @@ function DashboardPageInner() {
         const newUrl = window.location.pathname;
         window.history.replaceState({}, '', newUrl);
       }
+    }
+
+    const myFranchiseId = searchParams.get('myFranchiseId');
+    if (myFranchiseId) {
+      setHighlightedMyFranchiseId(myFranchiseId);
+      // Optional: scroll to it
+      setTimeout(() => {
+        const el = document.getElementById(`my-franchise-${myFranchiseId}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 500);
+      
+      // Clear param
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
     }
   }, [searchParams, franchisorLeads]);
 
@@ -468,6 +494,93 @@ function DashboardPageInner() {
                             ✕
                           </button>
                         </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+
+              {/* Franchise Anda Section (NEW) */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25 }}
+                className="bg-white rounded-3xl p-7 border border-black/5 shadow-sm relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF5C1A]/5 rounded-full blur-2xl -mr-16 -mt-16" />
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="font-syne font-extrabold text-lg text-[#111] flex items-center gap-2">
+                    <Coffee className="w-5 h-5 text-[#FF5C1A]" />
+                    Franchise Anda
+                    {myFranchises.length > 0 && (
+                      <span className="ml-1 text-[0.65rem] font-black bg-[#FF5C1A] text-white px-2 py-0.5 rounded-full">
+                        {myFranchises.length}
+                      </span>
+                    )}
+                  </h2>
+                </div>
+
+                {myFranchises.length === 0 ? (
+                  <div className="text-center py-10 bg-[#F8F8F6] rounded-2xl border border-dashed border-gray-200">
+                    <div className="w-14 h-14 mx-auto bg-white rounded-full flex items-center justify-center mb-3 shadow-sm">
+                      <Zap className="w-6 h-6 text-gray-300" />
+                    </div>
+                    <p className="text-[#999] font-bold text-sm">Belum ada kemitraan</p>
+                    <p className="text-xs text-[#bbb] mt-1 max-w-[200px] mx-auto">Ajukan kemitraan untuk mulai membangun bisnis Anda sendiri.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {myFranchises.map((req) => (
+                      <div 
+                        key={req.id} 
+                        id={`my-franchise-${req.id}`}
+                        className={`group relative p-4 rounded-2xl border transition-all duration-500 ${
+                          highlightedMyFranchiseId === req.id 
+                            ? 'bg-[#FFF3E5] border-[#FF5C1A] shadow-[0_8px_30px_rgba(255,92,26,0.15)] ring-2 ring-[#FF5C1A]/20' 
+                            : 'bg-[#F8F8F6] border-transparent hover:border-[#FF5C1A]/10 hover:bg-white hover:shadow-md'
+                        }`}
+                      >
+                        <div className="flex items-start gap-4">
+                          <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 relative shadow-sm">
+                            <img src={req.franchises?.img} alt={req.franchises?.name} className="w-full h-full object-cover" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-2 mb-1">
+                              <h3 className="font-bold text-[#111] text-sm truncate">{req.franchises?.name}</h3>
+                              <span className={`text-[0.55rem] font-black uppercase tracking-widest px-2 py-1 rounded-lg ${
+                                req.status === "Baru" ? "bg-green-100 text-green-700" : 
+                                req.status === "Dihubungi" ? "bg-blue-600 text-white shadow-lg shadow-blue-200" : "bg-orange-100 text-orange-700"
+                              }`}>
+                                {req.status}
+                              </span>
+                            </div>
+                            <p className="text-[0.65rem] text-[#999] font-medium flex items-center gap-1">
+                              <Calendar className="w-3 h-3" /> Diajukan {new Date(req.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            </p>
+                            
+                            {req.status === "Dihubungi" && (
+                              <motion.div 
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                className="mt-3 flex items-center gap-2"
+                              >
+                                <div className="p-1.5 rounded-lg bg-blue-50 text-blue-600">
+                                  <MessageCircle className="w-3.5 h-3.5" />
+                                </div>
+                                <p className="text-[0.65rem] font-bold text-blue-700">Brand Owner ingin menghubungi Anda!</p>
+                              </motion.div>
+                            )}
+                          </div>
+                        </div>
+                        
+                        {highlightedMyFranchiseId === req.id && (
+                          <motion.div 
+                            layoutId="highlight-glow"
+                            className="absolute inset-0 bg-gradient-to-r from-[#FF5C1A]/5 to-transparent pointer-events-none rounded-2xl"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                          />
+                        )}
                       </div>
                     ))}
                   </div>

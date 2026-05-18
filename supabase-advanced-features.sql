@@ -129,6 +129,47 @@ CREATE TRIGGER on_new_partnership_request
 AFTER INSERT ON public.partnership_requests
 FOR EACH ROW EXECUTE FUNCTION notify_brand_owner_on_lead();
 
+-- 6. TRIGGER FOR STATUS CHANGE -> NOTIFICATION TO REQUESTER
+-- This function creates a notification for the requester when the brand owner updates the status.
+CREATE OR REPLACE FUNCTION notify_requester_on_status_change()
+RETURNS TRIGGER AS $$
+DECLARE
+    brand_name TEXT;
+BEGIN
+    -- Notify when status changes to 'Dihubungi'
+    IF OLD.status != NEW.status AND NEW.status = 'Dihubungi' AND NEW.user_id IS NOT NULL THEN
+        -- Get franchise name
+        SELECT name INTO brand_name
+        FROM public.franchises 
+        WHERE id = NEW.franchise_id;
+
+        INSERT INTO public.notifications (user_id, title, message, type, metadata)
+        VALUES (
+            NEW.user_id, 
+            'Update Kemitraan: ' || brand_name, 
+            'Selamat! Pihak ' || brand_name || ' telah menandai pengajuan Anda sebagai "Dihubungi". Tunggu kabar selanjutnya!', 
+            'update',
+            jsonb_build_object(
+                'lead_id', NEW.id,
+                'franchise_name', brand_name,
+                'status', NEW.status
+            )
+        );
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Drop trigger if exists
+DROP TRIGGER IF EXISTS on_partnership_status_change ON public.partnership_requests;
+
+-- Create trigger
+CREATE TRIGGER on_partnership_status_change
+AFTER UPDATE ON public.partnership_requests
+FOR EACH ROW EXECUTE FUNCTION notify_requester_on_status_change();
+
+
 -- =========================================================================
 -- ENABLE REALTIME FOR NOTIFICATIONS
 -- =========================================================================

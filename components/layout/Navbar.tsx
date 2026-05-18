@@ -135,6 +135,8 @@ export default function Navbar() {
     // Handle navigation
     if (notification.type === 'lead' && notification.metadata?.lead_id) {
       router.push(`/dashboard?leadId=${notification.metadata.lead_id}`);
+    } else if (notification.type === 'update' && notification.metadata?.lead_id) {
+      router.push(`/dashboard?myFranchiseId=${notification.metadata.lead_id}`);
     }
     setShowNotifications(false);
   };

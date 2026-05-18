@@ -14,9 +14,9 @@ const navLinks: Record<string, NavItem[]> = {
   "Franchise F&B": [
     { label: "Cari Franchise", href: "/franchise" },
     { label: "Franchise Terlaris", href: "/unggulan" },
-    { label: "Modal < Rp 5 Juta", href: "/franchise" },
-    { label: "Franchise Minuman", href: "/franchise" },
-    { label: "Franchise Kuliner", href: "/franchise" },
+    { label: "Modal < Rp 5 Juta", href: "/franchise?filter=under5" },
+    { label: "Franchise Minuman", href: "/franchise?filter=minuman" },
+    { label: "Franchise Kuliner", href: "/franchise?filter=kuliner" },
   ],
   "Franchisor": [
     { label: "Daftarkan Brand", href: "/daftar" },

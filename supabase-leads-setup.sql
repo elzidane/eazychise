@@ -45,3 +45,9 @@ WITH CHECK (
     SELECT id FROM public.franchises WHERE owner_id = auth.uid()
   )
 );
+
+-- 6. Policy: Pengguna bisa melihat pengajuan mereka sendiri
+CREATE POLICY "Users can view their own partnership requests" 
+ON public.partnership_requests FOR SELECT 
+TO authenticated
+USING (user_id = auth.uid());

@@ -1,6 +1,7 @@
 import FranchiseListings from "@/components/features/FranchiseList";
 import { createClient } from "@/utils/supabase/server";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Daftar Franchise & Kemitraan F&B Terbaik | EazyChise",
@@ -41,7 +42,14 @@ export default async function FranchisePage() {
 
   return (
     <main className="pt-20">
-      <FranchiseListings initialData={safeData} />
+      <Suspense fallback={
+        <div className="min-h-[50vh] flex flex-col items-center justify-center">
+          <span className="w-10 h-10 border-4 border-[#FF5C1A]/30 border-t-[#FF5C1A] rounded-full animate-spin mb-4" />
+          <p className="text-sm text-gray-500 font-medium font-syne">Memuat katalog franchise...</p>
+        </div>
+      }>
+        <FranchiseListings initialData={safeData} />
+      </Suspense>
     </main>
   );
 }

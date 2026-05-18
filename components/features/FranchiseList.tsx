@@ -2,7 +2,7 @@
 import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { GitCompareArrows, X, ChevronDown, Sparkles } from "lucide-react";
 import { MdRestaurant } from "react-icons/md";
@@ -30,12 +30,38 @@ function applyFilter(list: Franchise[], key: string, query: string) {
 
 export default function FranchiseListings({ initialData = FRANCHISE_DATA }: { initialData?: Franchise[] }) {
   const data = initialData;
-  const [active, setActive] = useState("all");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const supabase = createClient();
+
+  // Read initial filter from URL if present
+  const initialFilter = searchParams.get("filter");
+  const defaultActive = (initialFilter && FRANCHISE_FILTERS.some(f => f.key === initialFilter)) ? initialFilter : "all";
+
+  const [active, setActive] = useState(defaultActive);
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
   const [compareList, setCompareList] = useState<string[]>([]);
-  const router = useRouter();
-  const supabase = createClient();
+
+  // Sync filter state when URL search parameters change
+  useEffect(() => {
+    const filterParam = searchParams.get("filter");
+    if (filterParam && FRANCHISE_FILTERS.some(f => f.key === filterParam)) {
+      setActive(filterParam);
+    } else if (!filterParam) {
+      setActive("all");
+    }
+  }, [searchParams]);
+
+  const handleFilterClick = (key: string) => {
+    setActive(key);
+    setVisibleCount(INITIAL_COUNT);
+    if (key === "all") {
+      router.push("/franchise", { scroll: false });
+    } else {
+      router.push(`/franchise?filter=${key}`, { scroll: false });
+    }
+  };
 
   // Debounce search query to save to database
   useEffect(() => {
@@ -123,7 +149,7 @@ export default function FranchiseListings({ initialData = FRANCHISE_DATA }: { in
         {FRANCHISE_FILTERS.map((f) => (
           <button
             key={f.key}
-            onClick={() => { setActive(f.key); setVisibleCount(INITIAL_COUNT); }}
+            onClick={() => handleFilterClick(f.key)}
             className={`px-5 py-2.5 rounded-full text-[0.85rem] font-bold transition-all duration-300 cursor-pointer ${
               active === f.key
                 ? "bg-[#111] text-white shadow-[0_10px_25px_rgba(0,0,0,0.15)] scale-[1.02]"
@@ -282,7 +308,7 @@ export default function FranchiseListings({ initialData = FRANCHISE_DATA }: { in
           <h3 className="text-[#111] font-black text-xl mb-2">Ops! Brand Tidak Ditemukan</h3>
           <p className="text-[#777] font-bold text-sm">Coba gunakan filter atau kata kunci lain.</p>
           <button 
-            onClick={() => setActive("all")}
+            onClick={() => handleFilterClick("all")}
             className="mt-6 text-[#FF5C1A] font-black text-sm hover:underline"
           >
             Reset Filter
