@@ -43,6 +43,14 @@ export const FRANCHISE_DATA: Franchise[] = [
     badge: "Lokal Terbaik", badgeColor: "#FF5C1A",
   },
   {
+    img: "https://franchiseindo.co.id/wp-content/uploads/2025/12/image-7-1024x538.webp",
+    alt: "Nescafe", cat: "Minuman", catKey: "minuman",
+    name: "Nescafe", rating: 4.8, city: "Seluruh Indonesia",
+    invest: "Rp 3,5 Juta", investNum: 3_500_000, roi: "4–6 bln",
+    omzet: "Rp 8–15 Juta", mitra: "1.200+",
+    badge: "Terlaris", badgeColor: "#FFCF40",
+  },
+  {
     img: "https://i.gojekapi.com/darkroom/gofood-indonesia/v2/images/uploads/e4f13c30-ae96-4e41-8d7c-654861057ae9_Oolong-Silken-Milk-Tea.jpg",
     alt: "Chatime Bubble Tea", cat: "Minuman", catKey: "minuman",
     name: "Chatime", rating: 4.6, city: "50+ kota Indonesia",
@@ -75,6 +83,14 @@ export const FRANCHISE_DATA: Franchise[] = [
     invest: "Rp 7 Juta", investNum: 7_000_000, roi: "5–7 bln",
     omzet: "Rp 14–25 Juta", mitra: "1.200+",
     badge: "Trending", badgeColor: "#7C3AED",
+  },
+  {
+    img: "https://cdn.sanity.io/images/kbqq3e0r/production/d19beba03d5c400bb058dfe803e8994e653a5516-2400x1334.png",
+    alt: "KFC", cat: "Kuliner", catKey: "kuliner",
+    name: "KFC", rating: 4.9, city: "Seluruh Indonesia",
+    invest: "Rp 7 Juta", investNum: 7_000_000, roi: "5–8 bln",
+    omzet: "Rp 25–50 Juta", mitra: "800+",
+    badge: "Global Brand", badgeColor: "#7C3AED",
   },
   {
     img: "https://www.waralabaku.com/logo/logo_franchise_peluang_usaha_ayam%20gepuk_pak_gembus.jpg",

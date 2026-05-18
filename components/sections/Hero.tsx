@@ -26,7 +26,7 @@ export default function Hero() {
   const scale   = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen overflow-hidden section-padding flex items-center">
+    <section ref={sectionRef} className="relative min-h-screen overflow-hidden section-padding flex items-center pt-28 md:pt-32">
       {/* Dot grid */}
       <div className="absolute inset-0 pointer-events-none opacity-40" style={{ backgroundImage: "radial-gradient(circle, rgba(0,0,0,0.04) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
 
@@ -139,33 +139,40 @@ export default function Hero() {
           <div className="hidden lg:block">
             <div className="relative">
               <div className="grid grid-cols-[1.15fr_0.85fr] grid-rows-[280px_220px] gap-4">
-                <motion.div whileHover={{ scale:1.01 }} className="row-span-2 rounded-[32px] overflow-hidden relative group shadow-[0_30px_70px_rgba(0,0,0,0.1)] border border-black/5">
-                  <Image src={HERO_IMAGES[0].src} alt={HERO_IMAGES[0].alt} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" sizes="450px" priority />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-                  <div className="absolute top-4 left-4 bg-[#FF5C1A] text-white text-[0.65rem] font-bold px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg"><Utensils className="w-3.5 h-3.5" /> Kuliner</div>
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <p className="text-white font-black text-lg leading-tight mb-1">{HERO_IMAGES[0].name}</p>
-                    <p className="text-white/70 text-[0.75rem]">{HERO_IMAGES[0].meta}</p>
-                    <div className="flex items-center gap-2 mt-2.5">
-                      {[...Array(5)].map((_,i) => <Star key={i} className="w-3 h-3 fill-[#FFCF40] text-[#FFCF40]" />)}
-                      <span className="text-white/60 text-[0.7rem] font-bold">4.9 / 5.0</span>
-                    </div>
-                  </div>
-                </motion.div>
-                {[1,2].map((idx) => (
-                  <motion.div key={idx} whileHover={{ scale:1.02 }} className="rounded-[24px] overflow-hidden relative group shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-black/5">
-                    <Image src={HERO_IMAGES[idx].src} alt={HERO_IMAGES[idx].alt} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" sizes="300px" priority />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                    <div className="absolute top-3.5 left-3.5 bg-black/40 backdrop-blur-md text-white text-[0.6rem] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5">
-                      {idx === 1 ? <Coffee className="w-3 h-3" /> : <Pizza className="w-3 h-3" />}
-                      {idx === 1 ? "Minuman" : "Kuliner"}
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <p className="text-white font-bold text-sm">{HERO_IMAGES[idx].name}</p>
-                      <p className="text-white/60 text-[0.68rem]">{HERO_IMAGES[idx].meta}</p>
+                <Link href="/franchise/janji-jiwa" className="row-span-2 block rounded-[32px] overflow-hidden relative group shadow-[0_30px_70px_rgba(0,0,0,0.1)] border border-black/5 cursor-pointer">
+                  <motion.div whileHover={{ scale:1.01 }} className="w-full h-full relative">
+                    <Image src={HERO_IMAGES[0].src} alt={HERO_IMAGES[0].alt} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" sizes="450px" priority />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                    <div className="absolute top-4 left-4 bg-[#FF5C1A] text-white text-[0.65rem] font-bold px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg"><Utensils className="w-3.5 h-3.5" /> Kuliner</div>
+                    <div className="absolute bottom-0 left-0 right-0 p-6">
+                      <p className="text-white font-black text-lg leading-tight mb-1">{HERO_IMAGES[0].name}</p>
+                      <p className="text-white/70 text-[0.75rem]">{HERO_IMAGES[0].meta}</p>
+                      <div className="flex items-center gap-2 mt-2.5">
+                        {[...Array(5)].map((_,i) => <Star key={i} className="w-3 h-3 fill-[#FFCF40] text-[#FFCF40]" />)}
+                        <span className="text-white/60 text-[0.7rem] font-bold">4.9 / 5.0</span>
+                      </div>
                     </div>
                   </motion.div>
-                ))}
+                </Link>
+                {[1,2].map((idx) => {
+                  const href = idx === 1 ? "/franchise/nescafe" : "/franchise/kfc";
+                  return (
+                    <Link href={href} key={idx} className="block rounded-[24px] overflow-hidden relative group shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-black/5 cursor-pointer">
+                      <motion.div whileHover={{ scale:1.02 }} className="w-full h-full relative">
+                        <Image src={HERO_IMAGES[idx].src} alt={HERO_IMAGES[idx].alt} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" sizes="300px" priority />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                        <div className="absolute top-3.5 left-3.5 bg-black/40 backdrop-blur-md text-white text-[0.6rem] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                          {idx === 1 ? <Coffee className="w-3 h-3" /> : <Pizza className="w-3 h-3" />}
+                          {idx === 1 ? "Minuman" : "Kuliner"}
+                        </div>
+                        <div className="absolute bottom-0 left-0 right-0 p-4">
+                          <p className="text-white font-bold text-sm">{HERO_IMAGES[idx].name}</p>
+                          <p className="text-white/60 text-[0.68rem]">{HERO_IMAGES[idx].meta}</p>
+                        </div>
+                      </motion.div>
+                    </Link>
+                  );
+                })}
               </div>
 
               {/* Floating badges */}
@@ -206,21 +213,23 @@ export default function Hero() {
               </div>
               <div className="space-y-3">
                 {[
-                  { name: "Kopi Kenangan", cat: "Minuman", badge: "ROI 6 Bln" },
-                  { name: "Wizzmie", cat: "Kuliner", badge: "Verified" }
+                  { name: "Kopi Kenangan", cat: "Minuman", badge: "ROI 6 Bln", href: "/franchise/kopi-kenangan" },
+                  { name: "Wizzmie", cat: "Kuliner", badge: "Verified", href: "/franchise/wizzmie" }
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-black/[0.03] border border-black/[0.02]">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-[#FF5C1A] font-black text-xs">
-                        {item.name.charAt(0)}
+                  <Link href={item.href} key={i} className="block transition-transform hover:scale-[1.01] cursor-pointer">
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-black/[0.03] border border-black/[0.02]">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-[#FF5C1A] font-black text-xs">
+                          {item.name.charAt(0)}
+                        </div>
+                        <div>
+                          <p className="font-bold text-sm text-[#111]">{item.name}</p>
+                          <p className="text-[0.6rem] text-[#999] font-medium">{item.cat}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-bold text-sm text-[#111]">{item.name}</p>
-                        <p className="text-[0.6rem] text-[#999] font-medium">{item.cat}</p>
-                      </div>
+                      <span className="text-[0.6rem] font-black text-[#FF5C1A] bg-[#FF5C1A]/10 px-2 py-0.5 rounded-full">{item.badge}</span>
                     </div>
-                    <span className="text-[0.6rem] font-black text-[#FF5C1A] bg-[#FF5C1A]/10 px-2 py-0.5 rounded-full">{item.badge}</span>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </motion.div>

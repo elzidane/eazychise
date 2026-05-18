@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import FranchiseDetailContent from "./FranchiseDetailContent";
 import { DbFranchise, DbReview } from "@/types";
 import { toSlug } from "@/lib/utils/slugify";
+import { FRANCHISE_DATA } from "@/lib/franchise-data";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -18,15 +19,40 @@ async function getFranchiseData(slug: string) {
     .from('franchises')
     .select('id, name, cat, cat_key, city, rating, invest_text, invest_num, roi, omzet, mitra_count, badge, badge_color, img');
 
-  if (!franchises) return null;
-
   const decodedSlug = decodeURIComponent(slug);
   
   // Use the robust toSlug utility for matching to ensure consistency
-  const f = (franchises as DbFranchise[]).find(item => {
+  let f = (franchises as DbFranchise[] || []).find(item => {
     const brandSlug = toSlug(item.name);
     return brandSlug === decodedSlug || brandSlug === slug;
   });
+
+  // Robust Fallback: check static local data if not found in database
+  if (!f) {
+    const localF = FRANCHISE_DATA.find(item => {
+      const brandSlug = toSlug(item.name);
+      return brandSlug === decodedSlug || brandSlug === slug;
+    });
+
+    if (localF) {
+      f = {
+        id: "local-" + toSlug(localF.name),
+        name: localF.name,
+        cat: localF.cat,
+        cat_key: localF.catKey,
+        city: localF.city,
+        rating: localF.rating,
+        invest_text: localF.invest,
+        invest_num: localF.investNum,
+        roi: localF.roi,
+        omzet: localF.omzet,
+        mitra_count: localF.mitra,
+        badge: localF.badge || null,
+        badge_color: localF.badgeColor || null,
+        img: localF.img
+      } as any;
+    }
+  }
 
   if (!f) return null;
 
