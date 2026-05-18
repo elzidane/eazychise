@@ -42,7 +42,7 @@ export default function Hero() {
       <motion.div style={{ scale }} className="relative z-10 w-full grid lg:grid-cols-[1fr_1.05fr] gap-12 xl:gap-24 items-center">
 
         {/* LEFT */}
-        <motion.div style={{ y: yLeft }}>
+        <motion.div style={{ y: yLeft }} className="mt-14 lg:mt-0">
           {/* Badge */}
           <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.6, ease:[0.16,1,0.3,1] }} className="inline-flex items-center gap-2.5 bg-[#111111] border border-white/10 px-4 py-2 rounded-full text-[0.7rem] font-bold text-white mb-8 shadow-[0_8px_20px_rgba(0,0,0,0.2)]">
             <span className="relative flex h-2 w-2">
