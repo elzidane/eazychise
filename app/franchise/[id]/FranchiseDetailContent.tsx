@@ -170,7 +170,7 @@ export default function FranchiseDetailContent({ initialFranchise, initialReview
   };
 
   return (
-    <main className="pt-24 pb-20 min-h-screen bg-[#FFF9F0]">
+    <main className="pt-28 md:pt-32 pb-20 min-h-screen bg-[#FFF9F0]">
       <div className="max-w-5xl mx-auto px-5">
         
         <Link 

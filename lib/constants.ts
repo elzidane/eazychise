@@ -4,7 +4,7 @@ import { MdAttachMoney, MdLocationOn, MdExtension, MdRestaurant } from "react-ic
 // ── Single Source of Truth for all platform statistics ──
 export const STATS = {
   totalBrand: 23,
-  totalMitra: 9247,
+  totalMitra: 507,
   totalProvinsi: 27,
   rataRataBEP: 5.9,
   akurasiAI: 94,
