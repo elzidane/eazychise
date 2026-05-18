@@ -313,7 +313,6 @@ function SendBtn({ onClick, active, loading }: { onClick: () => void; active: bo
     </button>
   );
 }
-
 export default function FranchiseAdvisor() {
   const [open, setOpen]       = useState(false);
   const [messages, setMessages] = useState<Message[]>([GREETING as Message]);
@@ -323,10 +322,19 @@ export default function FranchiseAdvisor() {
   const [newMsgIdx, setNewMsgIdx] = useState<number | null>(null);
   const [animIdx, setAnimIdx]   = useState<number | null>(null);
   const [fabHover, setFabHover] = useState(false);
+  const [showFab, setShowFab]   = useState(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef  = useRef<HTMLTextAreaElement>(null);
   const pathname  = usePathname();
+
+  // Wait for splash screen to finish before showing the chatbot FAB
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowFab(true);
+    }, 3800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Auto-close when navigating to different page
   useEffect(() => {
@@ -461,6 +469,10 @@ export default function FranchiseAdvisor() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@600;700;800&display=swap');
 
+        @keyframes eazyFabIn {
+          from { opacity: 0; transform: scale(0.5) rotate(-30deg); }
+          to { opacity: 1; transform: scale(1) rotate(0); }
+        }
         @keyframes eazyBounce {
           0%,60%,100%{transform:translateY(0);opacity:.35}
           30%{transform:translateY(-6px);opacity:1}
@@ -532,71 +544,72 @@ export default function FranchiseAdvisor() {
         }
       `}</style>
 
-      
-      <div className="eazy-fab-container" style={{ position: "fixed", bottom: 24, zIndex: 9999 }} suppressHydrationWarning>
-        {!open && (
-          <>
-            <div style={{
-              position: "absolute", inset: 0, borderRadius: 17,
-              border: "1.5px solid rgba(255,140,66,0.5)",
-              animation: "eazyPulseRing 2s ease-out infinite",
-              pointerEvents: "none",
-            }} />
-            <div style={{
-              position: "absolute", inset: 0, borderRadius: 17,
-              border: "1.5px solid rgba(255,140,66,0.3)",
-              animation: "eazyPulseRing 2s ease-out 0.7s infinite",
-              pointerEvents: "none",
-            }} />
-          </>
-        )}
-
-        <button
-          onClick={() => setOpen(o => !o)}
-          onMouseEnter={() => setFabHover(true)}
-          onMouseLeave={() => setFabHover(false)}
-          aria-label="Toggle EazyChise AI"
-          style={{
-            width: 56, height: 56, borderRadius: 17,
-            background: open
-              ? "rgba(20,18,16,0.95)"
-              : `linear-gradient(145deg,#FF5C1A,#FF8C42,#FFCF40)`,
-            boxShadow: open
-              ? "0 8px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)"
-              : `0 8px 30px rgba(255,92,26,0.52), inset 0 1px 0 rgba(255,255,255,0.25)`,
-            animation: !open ? "eazyFabGlow 2.8s ease-in-out infinite" : "none",
-            border: open ? "1px solid rgba(255,255,255,0.08)" : "none",
-            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-            transition: "all 0.28s cubic-bezier(0.34,1.56,0.64,1)",
-            transform: fabHover ? "scale(1.08) translateY(-2px)" : "scale(1)",
-            position: "relative",
-          }}
-          suppressHydrationWarning={true}
-        >
-          <div style={{ transition: "transform 0.32s cubic-bezier(0.34,1.56,0.64,1)", transform: open ? "rotate(90deg) scale(0.9)" : "rotate(0) scale(1)" }}>
-            {open
-              ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-              : <SparkleIcon size={20} />
-            }
-          </div>
-          {hasNew && !open && (
-            <span style={{
-              position: "absolute", top: -5, right: -5,
-              width: 16, height: 16, borderRadius: "50%",
-              background: "linear-gradient(135deg,#FFCF40,#FFE082)",
-              border: "2.5px solid #0e0c0a",
-              animation: "eazyBadgePop 0.4s cubic-bezier(0.34,1.56,0.64,1) both",
-              boxShadow: "0 2px 8px rgba(255,207,64,0.5)",
-            }} />
+      {showFab && (
+        <div className="eazy-fab-container" style={{ position: "fixed", bottom: 24, zIndex: 45, animation: "eazyFabIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both" }} suppressHydrationWarning>
+          {!open && (
+            <>
+              <div style={{
+                position: "absolute", inset: 0, borderRadius: 17,
+                border: "1.5px solid rgba(255,140,66,0.5)",
+                animation: "eazyPulseRing 2s ease-out infinite",
+                pointerEvents: "none",
+              }} />
+              <div style={{
+                position: "absolute", inset: 0, borderRadius: 17,
+                border: "1.5px solid rgba(255,140,66,0.3)",
+                animation: "eazyPulseRing 2s ease-out 0.7s infinite",
+                pointerEvents: "none",
+              }} />
+            </>
           )}
-        </button>
-      </div>
+
+          <button
+            onClick={() => setOpen(o => !o)}
+            onMouseEnter={() => setFabHover(true)}
+            onMouseLeave={() => setFabHover(false)}
+            aria-label="Toggle EazyChise AI"
+            style={{
+              width: 56, height: 56, borderRadius: 17,
+              background: open
+                ? "rgba(20,18,16,0.95)"
+                : `linear-gradient(145deg,#FF5C1A,#FF8C42,#FFCF40)`,
+              boxShadow: open
+                ? "0 8px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)"
+                : `0 8px 30px rgba(255,92,26,0.52), inset 0 1px 0 rgba(255,255,255,0.25)`,
+              animation: !open ? "eazyFabGlow 2.8s ease-in-out infinite" : "none",
+              border: open ? "1px solid rgba(255,255,255,0.08)" : "none",
+              cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+              transition: "all 0.28s cubic-bezier(0.34,1.56,0.64,1)",
+              transform: fabHover ? "scale(1.08) translateY(-2px)" : "scale(1)",
+              position: "relative",
+            }}
+            suppressHydrationWarning={true}
+          >
+            <div style={{ transition: "transform 0.32s cubic-bezier(0.34,1.56,0.64,1)", transform: open ? "rotate(90deg) scale(0.9)" : "rotate(0) scale(1)" }}>
+              {open
+                ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                : <SparkleIcon size={20} />
+              }
+            </div>
+            {hasNew && !open && (
+              <span style={{
+                position: "absolute", top: -5, right: -5,
+                width: 16, height: 16, borderRadius: "50%",
+                background: "linear-gradient(135deg,#FFCF40,#FFE082)",
+                border: "2.5px solid #0e0c0a",
+                animation: "eazyBadgePop 0.4s cubic-bezier(0.34,1.56,0.64,1) both",
+                boxShadow: "0 2px 8px rgba(255,207,64,0.5)",
+              }} />
+            )}
+          </button>
+        </div>
+      )}
 
       
       <div
         className="eazy-chat-panel"
         style={{
-          position: "fixed", bottom: 92, right: 24, zIndex: 9998,
+          position: "fixed", bottom: 92, right: 24, zIndex: 46,
           width: 388, maxWidth: "calc(100vw - 48px)", height: 580,
           borderRadius: 26,
           background: "rgba(10,9,8,0.92)",
