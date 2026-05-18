@@ -231,11 +231,18 @@ function DashboardPageInner() {
           setUser(prev => prev ? { ...prev, searchHistory: keywords } : prev);
         }
 
-        // Fetch My Partnership Requests (Franchise Anda)
+        // ELITE AUTO-HEALING & LINKING: Automatically link orphaned partnership requests matching email
+        await supabase
+          .from('partnership_requests')
+          .update({ user_id: session.user.id })
+          .eq('email', session.user.email)
+          .is('user_id', null);
+
+        // Fetch My Partnership Requests (Franchise Anda) matching user_id OR email
         const { data: myReqs } = await supabase
           .from('partnership_requests')
           .select('*, franchises(*)')
-          .eq('user_id', session.user.id)
+          .or(`user_id.eq.${session.user.id},email.eq.${session.user.email}`)
           .order('created_at', { ascending: false });
         if (myReqs) {
           setMyFranchises(myReqs);
@@ -351,10 +358,71 @@ function DashboardPageInner() {
       return;
     }
 
+    // ELITE FALLBACK & GUARANTEE: Insert notification directly from client to ensure real-time delivery.
+    // Also resolve orphaned user_id matching email if user_id is null!
+    if (selectedLead && (selectedLead.user_id || selectedLead.email)) {
+      let targetUserId = selectedLead.user_id;
+
+      if (!targetUserId && selectedLead.email) {
+        try {
+          const { data: profileMatch } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('username', selectedLead.email.split('@')[0])
+            .limit(1)
+            .single();
+          
+          if (profileMatch?.id) {
+            targetUserId = profileMatch.id;
+            await supabase
+              .from('partnership_requests')
+              .update({ user_id: targetUserId })
+              .eq('id', id);
+          }
+        } catch (err) {
+          console.error("Error looking up user by email:", err);
+        }
+      }
+
+      const brandName = selectedLead.franchises?.name || "Franchise";
+      let title = `Update Kemitraan: ${brandName}`;
+      let message = `Status pengajuan kemitraan Anda untuk ${brandName} telah diperbarui menjadi "${newStatus}".`;
+      let type = 'update';
+
+      if (newStatus === 'Diterima') {
+        title = `Kemitraan Diterima!: ${brandName}`;
+        message = `Selamat! Pengajuan kemitraan Anda untuk ${brandName} telah DITERIMA secara resmi oleh pemilik brand. Franchise kini aktif di bagian Franchise Anda!`;
+        type = 'success';
+      } else if (newStatus === 'Dihubungi') {
+        title = `Update Kemitraan: ${brandName}`;
+        message = `Selamat! Pihak ${brandName} telah menandai pengajuan Anda sebagai "Dihubungi". Tunggu kabar selanjutnya!`;
+        type = 'update';
+      }
+
+      try {
+        await supabase.from('notifications').insert({
+          user_id: targetUserId || null,
+          email: selectedLead.email,
+          title,
+          message,
+          type,
+          metadata: {
+            lead_id: id,
+            franchise_name: brandName,
+            status: newStatus
+          }
+        });
+      } catch (err) {
+        console.error("Error inserting notification fallback:", err);
+      }
+    }
+
     setFranchisorLeads(prev => prev.map(l => l.id === id ? { ...l, status: newStatus } : l));
     if (selectedLead && selectedLead.id === id) {
       setSelectedLead({ ...selectedLead, status: newStatus });
     }
+
+    showToast(`Status berhasil diperbarui menjadi ${newStatus}`, "success");
   };
 
   const handleRemoveSaved = async (savedId: string) => {
@@ -500,37 +568,37 @@ function DashboardPageInner() {
                 )}
               </motion.div>
 
-              {/* Franchise Anda Section (NEW) */}
+              {/* Status Pengajuan Kemitraan Section */}
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25 }}
                 className="bg-white rounded-3xl p-7 border border-black/5 shadow-sm relative overflow-hidden"
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF5C1A]/5 rounded-full blur-2xl -mr-16 -mt-16" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#7C3AED]/5 rounded-full blur-2xl -mr-16 -mt-16" />
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="font-syne font-extrabold text-lg text-[#111] flex items-center gap-2">
-                    <Coffee className="w-5 h-5 text-[#FF5C1A]" />
-                    Franchise Anda
-                    {myFranchises.length > 0 && (
-                      <span className="ml-1 text-[0.65rem] font-black bg-[#FF5C1A] text-white px-2 py-0.5 rounded-full">
-                        {myFranchises.length}
+                    <ClockIcon className="w-5 h-5 text-[#7C3AED]" />
+                    Status Pengajuan Kemitraan
+                    {myFranchises.filter(r => r.status !== 'Diterima').length > 0 && (
+                      <span className="ml-1 text-[0.65rem] font-black bg-[#7C3AED] text-white px-2 py-0.5 rounded-full">
+                        {myFranchises.filter(r => r.status !== 'Diterima').length}
                       </span>
                     )}
                   </h2>
                 </div>
 
-                {myFranchises.length === 0 ? (
+                {myFranchises.filter(r => r.status !== 'Diterima').length === 0 ? (
                   <div className="text-center py-10 bg-[#F8F8F6] rounded-2xl border border-dashed border-gray-200">
                     <div className="w-14 h-14 mx-auto bg-white rounded-full flex items-center justify-center mb-3 shadow-sm">
-                      <Zap className="w-6 h-6 text-gray-300" />
+                      <ClockIcon className="w-6 h-6 text-gray-300" />
                     </div>
-                    <p className="text-[#999] font-bold text-sm">Belum ada kemitraan</p>
-                    <p className="text-xs text-[#bbb] mt-1 max-w-[200px] mx-auto">Ajukan kemitraan untuk mulai membangun bisnis Anda sendiri.</p>
+                    <p className="text-[#999] font-bold text-sm">Belum ada pengajuan aktif</p>
+                    <p className="text-xs text-[#bbb] mt-1 max-w-[250px] mx-auto">Pengajuan kemitraan yang sedang dalam proses atau menunggu tanggapan akan muncul di sini.</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {myFranchises.map((req) => (
+                    {myFranchises.filter(r => r.status !== 'Diterima').map((req) => (
                       <div 
                         key={req.id} 
                         id={`my-franchise-${req.id}`}
@@ -557,17 +625,17 @@ function DashboardPageInner() {
                             <p className="text-[0.65rem] text-[#999] font-medium flex items-center gap-1">
                               <Calendar className="w-3 h-3" /> Diajukan {new Date(req.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
                             </p>
-                            
+
                             {req.status === "Dihubungi" && (
                               <motion.div 
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
-                                className="mt-3 flex items-center gap-2"
+                                className="mt-3 flex items-center gap-2 bg-blue-50 p-2 rounded-xl border border-blue-100"
                               >
-                                <div className="p-1.5 rounded-lg bg-blue-50 text-blue-600">
+                                <div className="p-1.5 rounded-lg bg-blue-600 text-white flex-shrink-0">
                                   <MessageCircle className="w-3.5 h-3.5" />
                                 </div>
-                                <p className="text-[0.65rem] font-bold text-blue-700">Brand Owner ingin menghubungi Anda!</p>
+                                <p className="text-[0.65rem] font-bold text-blue-700">Brand Owner telah merespons dan ingin menghubungi Anda!</p>
                               </motion.div>
                             )}
                           </div>
@@ -581,6 +649,75 @@ function DashboardPageInner() {
                             animate={{ opacity: 1 }}
                           />
                         )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+
+              {/* Franchise Anda (Bisnis Aktif) Section */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.28 }}
+                className="bg-white rounded-3xl p-7 border border-black/5 shadow-sm relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF5C1A]/5 rounded-full blur-2xl -mr-16 -mt-16" />
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="font-syne font-extrabold text-lg text-[#111] flex items-center gap-2">
+                    <Coffee className="w-5 h-5 text-[#FF5C1A]" />
+                    Franchise Anda (Bisnis Aktif)
+                    {myFranchises.filter(r => r.status === 'Diterima').length > 0 && (
+                      <span className="ml-1 text-[0.65rem] font-black bg-[#FF5C1A] text-white px-2 py-0.5 rounded-full">
+                        {myFranchises.filter(r => r.status === 'Diterima').length}
+                      </span>
+                    )}
+                  </h2>
+                </div>
+
+                {myFranchises.filter(r => r.status === 'Diterima').length === 0 ? (
+                  <div className="text-center py-10 bg-[#F8F8F6] rounded-2xl border border-dashed border-gray-200">
+                    <div className="w-14 h-14 mx-auto bg-white rounded-full flex items-center justify-center mb-3 shadow-sm">
+                      <Zap className="w-6 h-6 text-gray-300" />
+                    </div>
+                    <p className="text-[#999] font-bold text-sm">Belum ada franchise aktif</p>
+                    <p className="text-xs text-[#bbb] mt-1 max-w-[280px] mx-auto">Pengajuan kemitraan yang telah resmi DITERIMA oleh pemilik brand akan otomatis masuk dan menjadi bisnis aktif Anda di sini.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {myFranchises.filter(r => r.status === 'Diterima').map((req) => (
+                      <div 
+                        key={req.id} 
+                        id={`my-franchise-${req.id}`}
+                        className="group relative p-5 rounded-2xl bg-gradient-to-r from-[#FFF9F5] to-white border border-[#FF5C1A]/20 hover:border-[#FF5C1A]/40 hover:shadow-lg transition-all duration-500"
+                      >
+                        <div className="flex items-start gap-4">
+                          <div className="w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0 relative shadow-md border border-black/5">
+                            <img src={req.franchises?.img} alt={req.franchises?.name} className="w-full h-full object-cover" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-2 mb-1">
+                              <h3 className="font-syne font-extrabold text-[#111] text-base truncate">{req.franchises?.name}</h3>
+                              <span className="text-[0.55rem] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg bg-emerald-600 text-white shadow-md shadow-emerald-200 flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3" /> Diterima & Aktif
+                              </span>
+                            </div>
+                            <p className="text-xs text-[#777] font-medium mb-3">
+                              {req.franchises?.cat} • Pusat: {req.franchises?.city || req.franchises?.location || "Indonesia"}
+                            </p>
+                            
+                            <motion.div 
+                              initial={{ opacity: 0, y: 5 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="flex items-center gap-2 bg-emerald-50/80 border border-emerald-200/80 p-3 rounded-xl"
+                            >
+                              <div className="p-1.5 rounded-lg bg-emerald-500 text-white flex-shrink-0 shadow-sm">
+                                <CheckCircle2 className="w-4 h-4" />
+                              </div>
+                              <p className="text-xs font-bold text-emerald-800 leading-snug">Kemitraan Resmi Aktif! Anda kini terdaftar sebagai mitra pengelola sah dari brand ini.</p>
+                            </motion.div>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -751,6 +888,7 @@ function DashboardPageInner() {
                           )}
                           <span className={`text-[0.55rem] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-lg ${
                             lead.status === "Baru" ? "bg-green-100 text-green-700" : 
+                            lead.status === "Diterima" ? "bg-emerald-600 text-white shadow-sm" :
                             lead.status === "Dihubungi" ? "bg-blue-100 text-blue-700" : "bg-orange-100 text-orange-700"
                           }`}>
                             {lead.status}
@@ -1256,6 +1394,7 @@ function DashboardPageInner() {
                   <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest mb-3">Status Saat Ini</p>
                   <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[0.65rem] font-black uppercase tracking-wider ${
                     selectedLead.status === 'Baru' ? 'bg-green-500/20 text-green-400' :
+                    selectedLead.status === 'Diterima' ? 'bg-emerald-500/30 text-emerald-400 border border-emerald-500/30' :
                     selectedLead.status === 'Dihubungi' ? 'bg-blue-500/20 text-blue-400' : 'bg-orange-500/20 text-orange-400'
                   }`}>
                     <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse"></span>
@@ -1304,6 +1443,16 @@ function DashboardPageInner() {
                   <p className="text-[10px] text-[#999] font-black uppercase tracking-widest">Update Tindakan</p>
                   <div className="flex flex-wrap gap-3">
                     <button 
+                      onClick={() => handleUpdateLeadStatus(selectedLead.id, 'Diterima')}
+                      className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-xs transition-all ${
+                        selectedLead.status === 'Diterima' 
+                        ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-200' 
+                        : 'bg-white border border-black/5 text-[#555] hover:border-emerald-400 hover:text-emerald-600'
+                      }`}
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5" /> Terima Mitra
+                    </button>
+                    <button 
                       onClick={() => handleUpdateLeadStatus(selectedLead.id, 'Dihubungi')}
                       className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-xs transition-all ${
                         selectedLead.status === 'Dihubungi' 
@@ -1312,16 +1461,6 @@ function DashboardPageInner() {
                       }`}
                     >
                       <Phone className="w-3.5 h-3.5" /> Tandai Dihubungi
-                    </button>
-                    <button 
-                      onClick={() => handleUpdateLeadStatus(selectedLead.id, 'Follow Up')}
-                      className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-xs transition-all ${
-                        selectedLead.status === 'Follow Up' 
-                        ? 'bg-orange-600 text-white shadow-lg shadow-orange-200' 
-                        : 'bg-white border border-black/5 text-[#555] hover:border-orange-400 hover:text-orange-600'
-                      }`}
-                    >
-                      <ClockIcon className="w-3.5 h-3.5" /> Set Follow Up
                     </button>
                     <button 
                       className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#111] text-white font-bold text-xs hover:bg-[#333] transition-all ml-auto"

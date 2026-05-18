@@ -125,11 +125,11 @@ export default function Navbar() {
 
     const setupNotifications = async () => {
       if (session?.user) {
-        // Fetch awal
+        // Fetch awal matching user_id OR email
         const { data } = await supabase
           .from('notifications')
           .select('*')
-          .eq('user_id', session.user.id)
+          .or(`user_id.eq.${session.user.id},email.eq.${session.user.email}`)
           .eq('is_read', false)
           .order('created_at', { ascending: false });
         if (data) setNotifications(data);
@@ -167,7 +167,7 @@ export default function Navbar() {
 
   const markNotificationsAsRead = async () => {
     if (!session?.user) return;
-    await supabase.from('notifications').update({ is_read: true }).eq('user_id', session.user.id);
+    await supabase.from('notifications').update({ is_read: true }).or(`user_id.eq.${session.user.id},email.eq.${session.user.email}`);
     setNotifications([]);
   };
 
@@ -179,7 +179,7 @@ export default function Navbar() {
     // Handle navigation
     if (notification.type === 'lead' && notification.metadata?.lead_id) {
       router.push(`/dashboard?leadId=${notification.metadata.lead_id}`);
-    } else if (notification.type === 'update' && notification.metadata?.lead_id) {
+    } else if ((notification.type === 'update' || notification.type === 'success') && notification.metadata?.lead_id) {
       router.push(`/dashboard?myFranchiseId=${notification.metadata.lead_id}`);
     }
     setShowNotifications(false);

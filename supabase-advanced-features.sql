@@ -72,6 +72,7 @@ USING (
 CREATE TABLE IF NOT EXISTS public.notifications (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    email TEXT,
     title TEXT NOT NULL,
     message TEXT NOT NULL,
     is_read BOOLEAN DEFAULT false,
@@ -85,7 +86,7 @@ ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can view and manage own notifications" 
 ON public.notifications FOR ALL 
 TO authenticated 
-USING (user_id = auth.uid());
+USING (user_id = auth.uid() OR email = auth.jwt()->>'email');
 
 
 -- 5. TRIGGER FOR NEW PARTNERSHIP LEADS -> NOTIFICATION
@@ -149,6 +150,27 @@ BEGIN
             'Update Kemitraan: ' || brand_name, 
             'Selamat! Pihak ' || brand_name || ' telah menandai pengajuan Anda sebagai "Dihubungi". Tunggu kabar selanjutnya!', 
             'update',
+            jsonb_build_object(
+                'lead_id', NEW.id,
+                'franchise_name', brand_name,
+                'status', NEW.status
+            )
+        );
+    END IF;
+
+    -- Notify when status changes to 'Diterima'
+    IF OLD.status != NEW.status AND NEW.status = 'Diterima' AND NEW.user_id IS NOT NULL THEN
+        -- Get franchise name
+        SELECT name INTO brand_name
+        FROM public.franchises 
+        WHERE id = NEW.franchise_id;
+
+        INSERT INTO public.notifications (user_id, title, message, type, metadata)
+        VALUES (
+            NEW.user_id, 
+            'Kemitraan Diterima!: ' || brand_name, 
+            'Selamat! Pengajuan kemitraan Anda untuk ' || brand_name || ' telah DITERIMA secara resmi oleh pemilik brand.', 
+            'success',
             jsonb_build_object(
                 'lead_id', NEW.id,
                 'franchise_name', brand_name,

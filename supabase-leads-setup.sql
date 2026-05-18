@@ -50,4 +50,4 @@ WITH CHECK (
 CREATE POLICY "Users can view their own partnership requests" 
 ON public.partnership_requests FOR SELECT 
 TO authenticated
-USING (user_id = auth.uid());
+USING (user_id = auth.uid() OR email = auth.jwt()->>'email');

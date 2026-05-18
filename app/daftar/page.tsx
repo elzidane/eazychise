@@ -113,7 +113,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#FFF9F0] flex flex-col lg:flex-row relative">
+    <main suppressHydrationWarning={true} className="min-h-screen bg-[#FFF9F0] flex flex-col lg:flex-row relative">
       {/* Back Button */}
       <Link 
         href="/" 

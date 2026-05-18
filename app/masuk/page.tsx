@@ -87,7 +87,7 @@ function LoginContent() {
 
 
   return (
-    <main className="min-h-screen bg-[#FFF9F0] flex flex-col items-center justify-center p-6 relative overflow-hidden">
+    <main suppressHydrationWarning={true} className="min-h-screen bg-[#FFF9F0] flex flex-col items-center justify-center p-6 relative overflow-hidden">
       {/* Back Button */}
       <Link 
         href="/" 
@@ -123,8 +123,8 @@ function LoginContent() {
         </div>
 
         {/* Card */}
-        <div className="bg-white p-8 sm:p-10 rounded-[40px] shadow-[0_32px_64px_rgba(0,0,0,0.06)] border border-black/5">
-          <form onSubmit={handleSubmit} className="space-y-5">
+        <div suppressHydrationWarning={true} className="bg-white p-8 sm:p-10 rounded-[40px] shadow-[0_32px_64px_rgba(0,0,0,0.06)] border border-black/5">
+          <form suppressHydrationWarning={true} onSubmit={handleSubmit} className="space-y-5">
             {/* Error message */}
             {error && (
               <motion.div 
@@ -136,11 +136,12 @@ function LoginContent() {
               </motion.div>
             )}
 
-            <div>
+            <div suppressHydrationWarning={true}>
               <label className="block text-[0.8rem] font-black text-[#111] uppercase tracking-wider mb-2 ml-1">Alamat Email</label>
-              <div className="relative">
+              <div suppressHydrationWarning={true} className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input 
+                  suppressHydrationWarning={true}
                   type="email" 
                   placeholder="nama@email.com"
                   value={email}
@@ -152,14 +153,15 @@ function LoginContent() {
               </div>
             </div>
 
-            <div>
+            <div suppressHydrationWarning={true}>
               <div className="flex justify-between items-center mb-2 ml-1">
                 <label className="block text-[0.8rem] font-black text-[#111] uppercase tracking-wider">Password</label>
                 <Link href="https://wa.me/6287792735999?text=Halo%20EazyChise%2C%20saya%20lupa%20password%20akun%20saya" target="_blank" className="text-xs font-bold text-[#FF5C1A] hover:underline">Lupa?</Link>
               </div>
-              <div className="relative">
+              <div suppressHydrationWarning={true} className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input 
+                  suppressHydrationWarning={true}
                   type={showPass ? "text" : "password"}
                   placeholder="••••••••"
                   value={password}
@@ -169,6 +171,7 @@ function LoginContent() {
                   aria-label="Password"
                 />
                 <button 
+                  suppressHydrationWarning={true}
                   type="button"
                   onClick={() => setShowPass(!showPass)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
@@ -180,6 +183,7 @@ function LoginContent() {
             </div>
 
             <button 
+              suppressHydrationWarning={true}
               type="submit"
               disabled={loading}
               className="w-full bg-[#111111] text-white py-4.5 rounded-2xl font-bold text-[0.95rem] shadow-[0_12px_24px_rgba(0,0,0,0.12)] hover:bg-[#FF5C1A] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 mt-2 group disabled:opacity-60 disabled:hover:bg-[#111111] disabled:hover:translate-y-0"
@@ -205,8 +209,9 @@ function LoginContent() {
             <span className="relative bg-white px-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Atau masuk dengan</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div suppressHydrationWarning={true} className="grid grid-cols-2 gap-4">
             <button 
+              suppressHydrationWarning={true}
               onClick={handleGoogleLogin}
               className="flex items-center justify-center gap-3 py-3.5 border border-black/5 rounded-2xl font-bold text-sm text-[#333] hover:bg-gray-50 transition-all active:scale-95"
               aria-label="Masuk dengan Google"
@@ -215,6 +220,7 @@ function LoginContent() {
               Google
             </button>
             <button 
+              suppressHydrationWarning={true}
               onClick={() => showToast("🚀 Fitur Facebook Login segera hadir!", "info")}
               className="flex items-center justify-center gap-3 py-3.5 border border-black/5 rounded-2xl font-bold text-sm text-[#333] hover:bg-gray-50 transition-all active:scale-95"
               aria-label="Masuk dengan Facebook"
