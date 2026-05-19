@@ -25,6 +25,16 @@ EazyChise hadir bukan sekadar sebagai direktori franchise, melainkan sebagai **E
 
 ---
 
+## 🤝 EazyChise untuk UMKM & Investor Pemula
+EazyChise adalah solusi pintar bagi pelaku UMKM untuk memulai bisnis franchise kuliner secara aman, transparan, dan realistis. Kami berupaya mengeliminasi risiko kegagalan bisnis dengan menyajikan kurasi brand franchise terpercaya serta memfasilitasi kalkulasi BEP yang riil.
+
+### 🔑 Akses Fitur Lanjutan via Google Auth
+Untuk menikmati fungsionalitas penuh dan mengamankan data rencana bisnis Anda, beberapa **fitur lanjutan** memerlukan proses masuk (login) terlebih dahulu:
+* **Fitur yang Memerlukan Login:** AI Franchise Advisor eksklusif, Analisis Lokasi Cerdas berbasis Peta/Heatmap, serta penyimpanan riwayat kalkulasi BEP Anda.
+* **Kemudahan Google Auth:** Anda tidak perlu mengisi form pendaftaran yang rumit atau menghafal password baru. Cukup gunakan masuk satu klik (**Secure One-Click Login**) menggunakan akun Google Anda yang terintegrasi secara aman melalui layanan Supabase Auth.
+
+---
+
 ## ✨ Panduan Fitur & Langkah Penggunaan (Step-by-Step)
 
 ### 1. 🤖 AI Franchise Advisor (Konsultan Bisnis Pribadi)
