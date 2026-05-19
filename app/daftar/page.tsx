@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { User, Mail, Lock, Phone, ArrowRight, CheckCircle2, ArrowLeft, ShieldCheck, Sparkles, Eye, EyeOff } from "lucide-react";
-import { FcGoogle } from "react-icons/fc";
 import { MdPerson, MdStore } from "react-icons/md";
 import GoogleLoginModal from "@/components/modals/GoogleLoginModal";
 import { createClient } from "@/utils/supabase/client";
