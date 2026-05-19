@@ -11,15 +11,15 @@ import Image from "next/image";
 const team = [
   { 
     name: "El Zidane Ardyansyah", 
-    roles: ["FullStack Developer", "Mobile Developer"], 
+    roles: ["FullStack Developer", "Mobile Developer", "AI/ML Engineer", "CEO"], 
     image: "/images/team/profile.jpg", 
     color: "#FF5C1A",
     bio: "Berfokus pada pengembangan arsitektur web yang tangguh, integrasi AI, serta aplikasi mobile berkinerja tinggi untuk memberikan solusi terbaik bagi UMKM.",
-    skills: ["Next.js", "Flutter", "Golang", "Supabase", "AI/ML"],
+    skills: ["Next.js", "Flutter", "Golang", "Supabase", "AI/ML", "Python", "Figma", "Dart", "JavaScript", "TypeScript", "SQL", "HTML", "CSS", "Java", "C#", "C", "Rust", "Shell", "PHP", "Jupyter Notebook", "Objective-C", "Kotlin"],
     socials: {
       github: "https://github.com/elzidane",
       linkedin: "https://linkedin.com/in/elzidane",
-      email: "mailto:elzidane@eazychise.com"
+      email: "mailto:elzidaneardyansyah265@gmail.com"
     }
   },
   { 
