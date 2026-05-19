@@ -3,14 +3,38 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { 
   ArrowRight, Target, Eye, Heart, Shield, Users, Lightbulb, 
-  CheckCircle2 
+  CheckCircle2, Github, Linkedin, Mail 
 } from "lucide-react";
 import WhyUs from "@/components/sections/WhyUs";
 import Image from "next/image";
 
 const team = [
-  { name: "El Zidane Ardyansyah", role: "FullStack Developer, Mobile Developer", image: "/images/team/profile.jpg", color: "#FF5C1A" },
-  { name: "Avis Zola Raditya Kurniawan", role: "Mobile App Developer, Frontend Developer", image: "/images/team/profile.png", color: "#7C3AED" },
+  { 
+    name: "El Zidane Ardyansyah", 
+    roles: ["FullStack Developer", "Mobile Developer"], 
+    image: "/images/team/profile.jpg", 
+    color: "#FF5C1A",
+    bio: "Berfokus pada pengembangan arsitektur web yang tangguh, integrasi AI, serta aplikasi mobile berkinerja tinggi untuk memberikan solusi terbaik bagi UMKM.",
+    skills: ["Next.js", "Flutter", "Golang", "Supabase", "AI/ML"],
+    socials: {
+      github: "https://github.com/elzidane",
+      linkedin: "https://linkedin.com/in/elzidane",
+      email: "mailto:elzidane@eazychise.com"
+    }
+  },
+  { 
+    name: "Avis Zola Raditya Kurniawan", 
+    roles: ["Mobile Developer", "Frontend Developer"], 
+    image: "/images/team/profile.png", 
+    color: "#7C3AED",
+    bio: "Spesialis dalam merancang antarmuka pengguna yang memukau, responsif, dan interaktif dengan sentuhan animasi modern yang memikat.",
+    skills: ["React/Next.js", "Flutter", "TailwindCSS", "Framer Motion", "UI Design"],
+    socials: {
+      github: "https://github.com/aviszola",
+      linkedin: "https://linkedin.com/in/aviszola",
+      email: "mailto:aviszola@eazychise.com"
+    }
+  },
 ];
 
 const values = [
@@ -130,50 +154,147 @@ export default function TentangContent() {
       </section>
 
       
-      <section className="px-[5%] py-24 relative overflow-hidden">
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#FF5C1A]/5 rounded-full blur-[150px] pointer-events-none" />
+      <section className="px-[5%] py-24 relative overflow-hidden bg-neutral-50/50">
+        {/* Dynamic slow-floating background blobs */}
+        <div className="absolute top-1/4 left-1/4 w-[350px] h-[350px] bg-[#7C3AED]/5 rounded-full blur-[100px] pointer-events-none animate-pulse" style={{ animationDuration: '8s' }} />
+        <div className="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] bg-[#FF5C1A]/5 rounded-full blur-[100px] pointer-events-none animate-pulse" style={{ animationDuration: '10s' }} />
         
         <div className="max-w-5xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
             <p className="text-[#FF5C1A] text-[0.72rem] font-bold uppercase tracking-[4px] mb-4 flex items-center justify-center gap-3">
               <span className="w-8 h-px bg-[#FF5C1A]" />
               Tim Kami
               <span className="w-8 h-px bg-[#FF5C1A]" />
             </p>
-            <h2 className="font-syne font-black text-[clamp(2rem,3.5vw,3rem)] text-[#111] leading-[1.08]">
+            <h2 className="font-syne font-black text-[clamp(2.2rem,4vw,3.2rem)] text-[#111] leading-[1.08]">
               Orang-orang di Balik <em className="text-[#FF5C1A] not-italic">EazyChise</em>
             </h2>
+            <p className="text-[#666] text-sm max-w-lg mx-auto mt-4 leading-[1.6]">
+              Tim developer muda berdedikasi tinggi yang berkomitmen merevolusi ekosistem franchise kuliner Indonesia melalui keunggulan teknologi.
+            </p>
           </motion.div>
 
-          <div className="flex flex-wrap justify-center gap-6">
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-12 max-w-4xl mx-auto justify-center px-4">
             {team.map((member, i) => (
               <motion.div
                 key={member.name}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className="group bg-white rounded-2xl p-6 border border-black/5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)] hover:border-transparent transition-all text-center w-full max-w-[200px]"
+                transition={{ delay: i * 0.15, duration: 0.6, ease: "easeOut" }}
+                style={{ '--member-color': member.color } as any}
+                className="group relative bg-white/80 backdrop-blur-xl rounded-3xl p-8 lg:p-10 border border-neutral-100 shadow-[0_8px_30px_rgb(0,0,0,0.015)] hover:shadow-[0_24px_50px_rgba(0,0,0,0.06)] hover:border-neutral-200/50 hover:-translate-y-2.5 transition-all duration-500 flex flex-col items-center text-center overflow-hidden w-full max-w-[370px] mx-auto"
               >
+                {/* Micro-glow background effect that emerges on hover */}
                 <div 
-                  className="w-16 h-16 rounded-2xl mx-auto mb-4 overflow-hidden relative shadow-sm"
-                  style={{ background: `${member.color}15`, border: `2px solid ${member.color}30` }}
-                >
-                  <img 
-                    src={member.image} 
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                  />
+                  className="absolute -bottom-24 -right-24 w-48 h-48 rounded-full blur-[50px] opacity-0 group-hover:opacity-20 transition-all duration-700 pointer-events-none"
+                  style={{ backgroundColor: member.color }}
+                />
+                <div 
+                  className="absolute -top-24 -left-24 w-48 h-48 rounded-full blur-[50px] opacity-0 group-hover:opacity-10 transition-all duration-700 pointer-events-none"
+                  style={{ backgroundColor: member.color }}
+                />
+
+                {/* Advanced Avatar with Gradient Rings */}
+                <div className="relative w-32 h-32 mb-6 group/avatar">
+                  {/* Outer glowing/spinning background ring */}
+                  <div 
+                    className="absolute inset-0 rounded-full opacity-20 group-hover:opacity-100 group-hover:rotate-180 transition-all duration-1000 ease-out pointer-events-none"
+                    style={{ 
+                      background: `linear-gradient(135deg, ${member.color}, ${member.color}22)`,
+                      padding: '3px' 
+                    }}
+                  >
+                    <div className="w-full h-full rounded-full bg-white" />
+                  </div>
+                  
+                  {/* Inner image container */}
+                  <div 
+                    className="absolute inset-[5px] rounded-full overflow-hidden shadow-md transition-transform duration-500 bg-white"
+                    style={{ border: `2px solid ${member.color}20` }}
+                  >
+                    <img 
+                      src={member.image} 
+                      alt={member.name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover/avatar:scale-108"
+                    />
+                  </div>
                 </div>
-                <h3 className="font-bold text-[#111] text-sm mb-1 group-hover:text-[#FF5C1A] transition-colors">
+
+                {/* Team Member Identity */}
+                <h3 className="font-syne font-extrabold text-xl text-[#111] mb-2 group-hover:text-[var(--member-color)] transition-colors duration-300">
                   {member.name}
                 </h3>
-                <p className="text-[#999] text-xs font-medium">{member.role}</p>
+                
+                {/* Role Pill Badges */}
+                <div className="flex flex-wrap justify-center gap-1.5 mb-4">
+                  {member.roles.map((r) => (
+                    <span 
+                      key={r}
+                      className="text-[0.68rem] font-bold px-2.5 py-0.5 rounded-full tracking-wide transition-all duration-300"
+                      style={{ 
+                        backgroundColor: `${member.color}08`, 
+                        color: member.color,
+                        border: `1px solid ${member.color}15` 
+                      }}
+                    >
+                      {r}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Bio text */}
+                <p className="text-[#666] text-xs leading-[1.6] mb-6 max-w-[280px]">
+                  {member.bio}
+                </p>
+
+                {/* Tech Stack section */}
+                <div className="w-full border-t border-black/5 pt-5 mb-6 flex flex-col items-center mt-auto">
+                  <span className="text-[0.6rem] font-bold text-neutral-400 uppercase tracking-[2px] mb-3">
+                    Tech Stack & Keahlian
+                  </span>
+                  <div className="flex flex-wrap justify-center gap-1.5">
+                    {member.skills.map((skill) => (
+                      <span 
+                        key={skill}
+                        className="text-[0.65rem] font-semibold bg-neutral-50 text-neutral-600 px-2.5 py-0.5 rounded-md border border-neutral-100 group-hover:border-[var(--member-color)]/15 group-hover:bg-[var(--member-color)]/[0.01] transition-all duration-300"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Social media connections */}
+                <div className="flex items-center gap-3">
+                  <a 
+                    href={member.socials.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-full bg-neutral-50 border border-neutral-100 flex items-center justify-center text-neutral-500 hover:text-white hover:bg-[var(--member-color)] hover:border-transparent transition-all duration-300 hover:scale-110 hover:shadow-[0_4px_12px_rgba(0,0,0,0.03)]"
+                  >
+                    <Github className="w-4.5 h-4.5" />
+                  </a>
+                  <a 
+                    href={member.socials.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-full bg-neutral-50 border border-neutral-100 flex items-center justify-center text-neutral-500 hover:text-white hover:bg-[var(--member-color)] hover:border-transparent transition-all duration-300 hover:scale-110 hover:shadow-[0_4px_12px_rgba(0,0,0,0.03)]"
+                  >
+                    <Linkedin className="w-4.5 h-4.5" />
+                  </a>
+                  <a 
+                    href={member.socials.email}
+                    className="w-9 h-9 rounded-full bg-neutral-50 border border-neutral-100 flex items-center justify-center text-neutral-500 hover:text-white hover:bg-[var(--member-color)] hover:border-transparent transition-all duration-300 hover:scale-110 hover:shadow-[0_4px_12px_rgba(0,0,0,0.03)]"
+                  >
+                    <Mail className="w-4.5 h-4.5" />
+                  </a>
+                </div>
               </motion.div>
             ))}
           </div>
