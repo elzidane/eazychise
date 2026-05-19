@@ -9,6 +9,7 @@ import { MdPerson, MdStore } from "react-icons/md";
 import GoogleLoginModal from "@/components/modals/GoogleLoginModal";
 import { createClient } from "@/utils/supabase/client";
 import { useToast } from "@/components/ui/Toast";
+import LoadingOverlay from "@/components/ui/LoadingOverlay";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -114,6 +115,7 @@ export default function RegisterPage() {
 
   return (
     <main suppressHydrationWarning={true} className="min-h-screen bg-[#FFF9F0] flex flex-col lg:flex-row relative">
+      <LoadingOverlay isOpen={loading} message="Sedang mendaftarkan akun baru Anda..." />
       {/* Back Button */}
       <Link 
         href="/" 

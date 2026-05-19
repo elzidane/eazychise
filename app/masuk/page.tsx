@@ -7,6 +7,7 @@ import { Mail, Lock, ArrowRight, ArrowLeft, ShieldCheck, Eye, EyeOff } from "luc
 import GoogleLoginModal from "@/components/modals/GoogleLoginModal";
 import { createClient } from "@/utils/supabase/client";
 import { useToast } from "@/components/ui/Toast";
+import LoadingOverlay from "@/components/ui/LoadingOverlay";
 
 function LoginContent() {
   const router = useRouter();
@@ -88,6 +89,7 @@ function LoginContent() {
 
   return (
     <main suppressHydrationWarning={true} className="min-h-screen bg-[#FFF9F0] flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      <LoadingOverlay isOpen={loading} message="Sedang masuk ke akun Anda..." />
       {/* Back Button */}
       <Link 
         href="/" 
